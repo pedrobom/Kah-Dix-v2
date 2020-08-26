@@ -2,8 +2,35 @@ import React from 'react'
 import './StartButton.css'
 import { socket } from '../../socket'
 
-
 const StartButton = props =>{
+    const [hand, setHand] = useState([])
+
+    useEffect(() => {
+        socket.on('drawCards', cards => {
+            setHand({
+            hand: cards,
+            })
+            
+        })     
+    },[hand])
+ 
+    
+
+    const renderCards = () => {
+        const { hand } = hand
+        console.log(`cartas distribuidas: ${hand}`)
+        return hand.map((card, index) => {
+            return (
+                <React.Fragment>
+                    <div key={index}></div>
+                    <div>{card}</div>   
+                </React.Fragment>
+                           
+            )
+
+        });
+
+    }
     
     function startGame(e) {
         e.preventDefault();
