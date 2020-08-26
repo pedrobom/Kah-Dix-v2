@@ -17,22 +17,32 @@ const GameRoom = ({ location }) => {
 
     const [name, setName] = useState('');
     const [room, setRoom] = useState('');
-    const [isFirst, setFirst] = useState(Boolean)
     const [users, setUsers] = useState([]);
     const [gameStarted, setStart] = useState(false)
-    
+
+    // const ENDPOINT = 'https://kah-dix.herokuapp.com/';
+
     // USER JOIN
     useEffect(() => {
-        console.log('userJoin useEffect rodando')
         const { name, room } = queryString.parse(location.search);
-        const isFirst = users.length == 0 ? true : false
-        socket.emit('join', { name, room, isFirst })
 
+        // socket = io(ENDPOINT);
+        setName(name);
+        setRoom(room);
+        const setFirst = users.length ? true : false 
 
+        socket.emit('join', { name, room, setFirst })
 
     }, [location.search]);
 
-
+    useEffect(() =>{ 
+        socket.on('roomData', roomData => {
+            const { users,  } = roomData
+            setUsers(users)
+            
+            console.log(users)
+        })
+    }, [users])
 
 
 

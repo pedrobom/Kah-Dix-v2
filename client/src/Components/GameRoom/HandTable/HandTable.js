@@ -1,27 +1,24 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import { socket } from '../../socket'
 
 
-class HandTable extends React.Component {
-    state = {
-        hand: [],
-    };
+const HandTable = () => {
+    const [hand, setHand] = useState([])
 
-    componentDidMount() {
+    useEffect(() => {
         socket.on('drawCards', cards => {
-            this.setState({
+            setHand({
             hand: cards,
             })
             
-        })
-        
-    }
+        })     
+    },[hand])
  
     
 
-    renderCards = () => {
-        const { hand } = this.state
-        console.log(hand)
+    const renderCards = () => {
+        const { hand } = hand
+        console.log(`cartas distribuidas: ${hand}`)
         return hand.map((card, index) => {
             return (
                 <React.Fragment>
@@ -35,12 +32,12 @@ class HandTable extends React.Component {
 
     }
 
-    render() {
-       return (
-           <div>{this.renderCards()}</div>
+    return (
+           <div></div>
     ) 
-    }
     
+    
+
 }
 
 export default HandTable
