@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from "react";
 import queryString from 'query-string';
 
+import AllCards from '../allCards'
 import Chat from '../Chat/Chat'
 import StartButton from './StartButton/StartButton'
 import HandTable from "./HandTable/HandTable";
+import Card from './Card/Card'
 
 import './GameRoom.css'
 
@@ -62,6 +64,11 @@ const GameRoom = ({ location }) => {
             </div>
             {true ? <StartButton /> : <h1>Esperando Começar o Jogo</h1>}
             <HandTable />
+
+            <Card hidden={true} />
+            <Card hidden={true} />
+            <Card hidden={true} />
+
             <Chat room={room} name={name}/>
         </React.Fragment>
       );
