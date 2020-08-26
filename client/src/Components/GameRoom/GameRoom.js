@@ -23,6 +23,7 @@ const GameRoom = ({ location }) => {
     const [name, setName] = useState('');
     const [room, setRoom] = useState('');
     const [users, setUsers] = useState([]);
+    const [startButton, setStartButton] = useState(true)
     const [gameStarted, setStart] = useState(false)
 
     // const ENDPOINT = 'https://kah-dix.herokuapp.com/';
@@ -40,6 +41,7 @@ const GameRoom = ({ location }) => {
 
     }, [location.search]);
 
+    // OBJECT ARRAY OF ALL USERS IN THIS ROOM:
     useEffect(() =>{ 
         socket.on('roomData', roomData => {
             const { users,  } = roomData
@@ -49,7 +51,36 @@ const GameRoom = ({ location }) => {
         })
     }, [users])
 
+    // APPLY DRAGABBLE CARDS EFFECT< FROM DEALER TO PLAYER HAND:
+    useEffect(() => {
+        const cardsElements = document.querySelectorAll('[dixit-drop-zone=drop] .card')
 
+        cardsElements.forEach( (card, index) => {
+            card.setAttribute('id', `draggable-card-${index}`)
+            card.ondragstart = e => {
+                e.dataTransfer.setData('card-id', e.target.id)
+            }
+        })
+
+        const dropzones = document.querySelectorAll('[dixit-drop-zone=drop]')
+
+        dropzones.forEach( dropzone => {
+            dropzone.ondragover = e => e.preventDefault()
+            dropzone.ondrop = function(e){
+                const id = e.dataTransfer.getData('card-id')
+                const card = document.getElementById(id)
+                dropzone.appendChild(card)
+            }    
+        })
+    }, [])
+
+
+    // DISABLE START BUTTON
+    useEffect(()=> {
+        socket.on('startButtonPressed', button => {
+            setStartButton(false)
+        })
+    }, [])
 
      const renderUsers = () => {
         return users.map((user, index) => {
@@ -60,21 +91,27 @@ const GameRoom = ({ location }) => {
     }
 
     return (
-        <React.Fragment>
+        <div className="dixit-table">
             <div> 
                 <h1>Usuários Conectados:</h1>
                 {renderUsers()}
             </div>
-            {true ? <StartButton /> : <h1>Esperando Começar o Jogo</h1>}
+            {startButton ? <StartButton /> : <h1>Esperando Começar o Jogo</h1>}
+            
             <HandTable />
 
-            <Card src={card1} />
-            <Card src={card2} />
-            <Card src={card3} />
-            <Card src={cardback} />
+            <div className="player-hand" dixit-drop-zone="drop">                
+                <Card src={card1} />
+                <Card src={card2} />
+                <Card src={card3} />
+                <Card src={cardback} />
+            </div>
 
-            <Chat room={room} name={name}/>
-        </React.Fragment>
+            <div className="dealer-table" dixit-drop-zone="drop">  
+            </div>            
+
+            {/* <Chat room={room} name={name}/> */}
+        </div>
       );
     }
 

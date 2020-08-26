@@ -47,6 +47,7 @@ io.on('connect', (socket) => {
     const user = getUser(socket.id)
     const cards = cardBack
 
+    socket.emit('startButtonPressed', false)
     io.to(user.room).emit('drawCards', cards)
 
     console.log('Jogador 1 distribuiu as cartas')
