@@ -19,11 +19,19 @@ import allCards from "../allCards";
 const GameRoom = ({ location }) => { 
 
     const { card1, card2, card3, cardback } = AllCards
-
+    const [name, setName] = useState('')
+    const [room, setRoom] = useState('')
     const [users, setUsers] = useState([]);
-    const [startButton, setStartButton] = useState(true)
-    const [gameStarted, setStart] = useState(false)
-    
+    const [startButton, setStartButton] = useState(true)   
+
+
+
+    useEffect(() => {
+        console.log("rodando useEffect setName e setRoom")
+        const {name, room} = queryString.parse(location.search)
+        setName(name)
+        setRoom(room)
+    }, [location.search])
 
     useEffect(() => {
         const cardsElements = document.querySelectorAll('[dixit-drop-zone=drop] .card')
@@ -83,7 +91,7 @@ const GameRoom = ({ location }) => {
             <div className="dealer-table" dixit-drop-zone="drop">  
             </div>            
 
-            {/* <Chat room={room} name={name}/> */}
+            <Chat room={room} name={name}/>
         </div>
     )
 }

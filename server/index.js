@@ -3,7 +3,8 @@ const express = require('express');
 const socketio = require('socket.io');
 const cors = require('cors');
 
-const { addUser, removeUser, getUser, getUsersInRoom } = require('./users');
+const Users = require('./users');
+const Rooms = require('./rooms')
 
 const cardBack = ["cardBack.png", "cad1.png"]
 
@@ -17,25 +18,51 @@ app.use(cors());
 app.use(router);
 
 io.on('connect', (socket) => {
-  socket.on('join', ({ name, room }, callback) => {
-    console.log("Usuário [%s] tentando entrar na sala [%s]", name, room)
-    const { error, user } = addUser({ id: socket.id, name, room });
-    console.log(`${user.name} criado`)
-    if(error) return callback(error);
-    socket.join(user.room);
 
-    socket.emit('message', { user: 'Andrétnik', text: `${user.name} tá na área!`});
-    socket.broadcast.to(user.room).emit('message', { user: 'Andrétnik', text: `${user.name} tá na área!` });
+  console.log("Novo usuário conectado com socket [%s]", socket.id)
+  // Assim que o usuário conecta, a gente cria um usuário para ele
+  const { error, user } = Users.addUser({ id: socket.id });
+
+  // Este metodo representa um usuário tentando entrar em uma sala
+  socket.on('join', ({ name, roomName }, callback) => {
+    console.log("Usuário [%s] tentando entrar na sala com nome [%s]", name, roomName)
+
+    // 1 - Não poderá haver duas pessoas com o mesmo nome em uma sala
+    // ou - Duas pessoas não podem ter o mesmo nome independente da sala
+    //
+    Users.changeUserName({user, name})
+
+    let room = Rooms.getRoom(roomName)
+    // Sala ainda não existe.. vamos criar uma :)
+    if(!room) {
+      console.info("A sala que o usuário tentou entrar [%s] não existem ainda, vamos criar uma para ele ", roomName)
+      let { error, createdRoom } = Rooms.createRoom({roomName, hostPlayer: user})
+      room = createdRoom
+      if (error) {
+        console.error("Não foi possivel criar a sala! [%s]", error)
+        return callback(error)
+      }
+      console.info("Sala [%s] criada para o usuário [%s]", roomName, user.id)
+    } 
+    // Sala já existe, então vamos jogar nosso usuário lá dentro!
+    else {
+      console.info("A sala [%s] que o usuário [%s] está tentando acessar já existe, colocando ele como jogador!", roomName, user.id)
+      let { error } = Rooms.addUserToRoom({room, user})
+      if (error) {
+        console.error("Não foi possivel entrar na sala [%s]: [%s]", roomName, error)
+        return callback(error)
+      }
+    }
+    
+    console.info("Adicionando usuário [%s] para a sala [%s] no socket", user, user.room)
+    socket.join(room.name);
+    socket.broadcast.to(room.name).emit('message', { user: 'Andrétnik', text: `${user.name} tá na área!` });
         
-    // callback();
+    callback(null, {user, room});
   });
 
-  socket.on('askRoomData', () => {
-    socket.emit
-  })
-
   socket.on('sendMessage', (message, callback) => {
-    const user = getUser(socket.id);
+    const user = Users.getUser(socket.id);
 
     io.to(user.room).emit('message', { user: user.name, text: message });
 
@@ -44,10 +71,11 @@ io.on('connect', (socket) => {
 
 
   socket.on('gameStart', () => {
-    const user = getUser(socket.id)
+    const user = Users.getUser(socket.id)
     const cards = cardBack
 
     socket.emit('startButtonPressed', false)
+    console.debug("Usuário [%s] apertou o botão no component StartButton", user.name)
     io.to(user.room).emit('drawCards', cards)
 
     console.log('Jogador 1 distribuiu as cartas')
@@ -57,11 +85,11 @@ io.on('connect', (socket) => {
 
   socket.on('disconnect', () => {
     console.log("usuário saiu")
-    const user = removeUser(socket.id);
+    const user = Users.removeUser(socket.id);
 
     if(user) {
       io.to(user.room).emit('message', { user: 'Admin', text: `${user.name} meteu o pé.` });
-      io.to(user.room).emit('roomData', { room: user.room, users: getUsersInRoom(user.room)});
+      io.to(user.room).emit('roomData', { room: user.room, users: Users.getUsersInRoom(user.room)});
     }
   })
 });
