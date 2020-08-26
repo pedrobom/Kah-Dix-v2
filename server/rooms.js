@@ -15,13 +15,13 @@ const createRoom = ({ roomName, hostPlayer }) => {
       return { error: 'Para criar uma sala é preciso de um jogador!' };
   }
 
-  console.debug("Criando uma sala com nome [%s] para o jogador [%s]", roomName, hostPlayer.id)
-  roomName = roomName.trim().toLowerCase();
-  
   if(!roomName) {
     console.debug("Tentativa de criar uma sala sem nome");
     return { error: 'Para criar uma sala é preciso da nome!' };
   }
+
+  console.debug("Criando uma sala com nome [%s] para o jogador [%s]", roomName, hostPlayer.id)
+  roomName = roomName.trim();
 
   const existingRoom = getRoom(roomName)
   console.debug("Procurando uma sala existente [%s]", existingRoom == undefined ? "Sala disponível" : "Sala indisponível")
@@ -36,7 +36,7 @@ const createRoom = ({ roomName, hostPlayer }) => {
   const room = { 
       createdAt: new Date(),
       name: roomName, 
-      state: RoomState.WAITING_FOR_PLAYERS, 
+      state: RoomStates.WAITING_FOR_PLAYERS, 
       players: [hostPlayer], 
       hostPlayer: hostPlayer  
     };
@@ -44,7 +44,7 @@ const createRoom = ({ roomName, hostPlayer }) => {
   rooms.push(room);
   console.info("Sala criada com nome [%s] e host player [%s]", roomName, hostPlayer.id)
 
-  return room;
+  return { room };
 }
 
 const removeRoom = (roomName) => {

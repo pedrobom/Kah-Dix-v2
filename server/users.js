@@ -16,7 +16,7 @@ const addUser = ({ id}) => {
   users.push(user);
   console.info("Usuário adicionado com ID [%s] adicionado, agora temos [%s] usuário(s)", user.id, users.length)
 
-  return user;
+  return { user };
 }
 
 
