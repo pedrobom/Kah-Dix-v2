@@ -2,21 +2,19 @@ import React from 'react'
 import { socket } from '../../socket'
 
 
-class StartButton extends React.Component {
+const StartButton = props =>{
     
-    startGame(e) {
+    function startGame(e) {
         e.preventDefault();
-        socket.emit('gameStart'); 
+        socket.emit('gameStart');
+        console.log(props)
     }
 
-    
-
-    render() {
-       return (
-        <button  className="StartButton" onClick={this.startGame}>INICIAR PARTIDA</button>
-    ) 
-    }
-    
+    return (
+        <React.Fragment>
+            <button  className="StartButton" onClick={e => startGame(e)}>INICIAR PARTIDA</button>
+        </React.Fragment>
+    )     
 }
 
 export default StartButton

@@ -17,8 +17,8 @@ app.use(cors());
 app.use(router);
 
 io.on('connect', (socket) => {
-  socket.on('join', ({ name, room }, callback) => {
-    const { error, user } = addUser({ id: socket.id, name, room });
+  socket.on('join', ({ name, room, setFirst }, callback) => {
+    const { error, user } = addUser({ id: socket.id, name, room, setFirst });
 
     // if(error) return callback(error);
 
@@ -27,11 +27,12 @@ io.on('connect', (socket) => {
     socket.emit('message', { user: 'Andrétnik', text: `${user.name} tá na área!`});
     console.log(`${user.name} entrou no chat`)
     socket.broadcast.to(user.room).emit('message', { user: 'Andrétnik', text: `${user.name} tá na área!` });
-
+    
     io.to(user.room).emit('roomData', { room: user.room, users: getUsersInRoom(user.room) });
-
+    
     // callback();
   });
+
 
   socket.on('sendMessage', (message, callback) => {
     const user = getUser(socket.id);
@@ -40,6 +41,7 @@ io.on('connect', (socket) => {
 
     callback();
   });
+
 
   socket.on('gameStart', () => {
     const user = getUser(socket.id)

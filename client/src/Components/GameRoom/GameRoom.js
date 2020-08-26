@@ -17,8 +17,8 @@ const GameRoom = ({ location }) => {
 
     const [name, setName] = useState('');
     const [room, setRoom] = useState('');
-    const [user, setUser] = useState('');
-    const [gameStarted, setStart] = useState('false')
+    const [users, setUsers] = useState([]);
+    const [gameStarted, setStart] = useState(false)
 
     // const ENDPOINT = 'https://kah-dix.herokuapp.com/';
 
@@ -29,18 +29,38 @@ const GameRoom = ({ location }) => {
         // socket = io(ENDPOINT);
         setName(name);
         setRoom(room);
+        const setFirst = users.length ? true : false 
 
-        socket.emit('join', { name, room })
-
-        
-        socket.on('UserConnected', user)
-            setUser(user)
+        socket.emit('join', { name, room, setFirst })
 
     }, [location.search]);
 
+    useEffect(() =>{ 
+        socket.on('roomData', roomData => {
+            const { users,  } = roomData
+            setUsers(users)
+            
+            console.log(users)
+        })
+    }, [users])
+
+
+
+     const renderUsers = () => {
+        return users.map((user, index) => {
+            return (
+                <h2>{user.name}</h2>
+            )
+        })
+    }
+
     return (
         <React.Fragment>
-            <StartButton user={user} gameStarted />
+            <div> 
+                <h1>Usuários Conectados:</h1>
+                {renderUsers()}
+            </div>
+            {true ? <StartButton /> : <h1>Esperando Começar o Jogo</h1>}
             <HandTable />
             <Chat room={room} name={name}/>
         </React.Fragment>
