@@ -1,4 +1,17 @@
 .card {
+    transition: 1s;
     margin: 10px;
     width: 230px;
+    height: 300px;
+    object-fit: cover;
+    cursor: grab
+}
+
+.onMouseDown{
+    cursor: grabbing;
+}
+
+.card:hover {
+    filter:grayscale(50%);
+    transform:scale(1.1)
 }

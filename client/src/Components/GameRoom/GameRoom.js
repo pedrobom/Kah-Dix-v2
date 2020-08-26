@@ -10,12 +10,15 @@ import Card from './Card/Card'
 import './GameRoom.css'
 
 import {socket} from "../socket.js"
+import allCards from "../allCards";
 
 
 // import io from 'socket.io-client'
 // let socket;
 
 const GameRoom = ({ location }) => { 
+
+    const { card1, card2, card3, cardback } = AllCards
 
     const [name, setName] = useState('');
     const [room, setRoom] = useState('');
@@ -65,9 +68,10 @@ const GameRoom = ({ location }) => {
             {true ? <StartButton /> : <h1>Esperando Começar o Jogo</h1>}
             <HandTable />
 
-            <Card hidden={true} />
-            <Card hidden={true} />
-            <Card hidden={true} />
+            <Card src={card1} />
+            <Card src={card2} />
+            <Card src={card3} />
+            <Card src={cardback} />
 
             <Chat room={room} name={name}/>
         </React.Fragment>
