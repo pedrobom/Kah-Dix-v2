@@ -18,13 +18,13 @@ app.use(router);
 
 io.on('connect', (socket) => {
   socket.on('join', ({ name, room }, callback) => {
+    console.log("Usuário [%s] tentando entrar na sala [%s]", name, room)
     const { error, user } = addUser({ id: socket.id, name, room });
-
+    console.log(`${user.name} criado`)
     if(error) return callback(error);
     socket.join(user.room);
 
     socket.emit('message', { user: 'Andrétnik', text: `${user.name} tá na área!`});
-    console.log(`${user.name} entrou no chat`)
     socket.broadcast.to(user.room).emit('message', { user: 'Andrétnik', text: `${user.name} tá na área!` });
         
     // callback();

@@ -20,35 +20,11 @@ const GameRoom = ({ location }) => {
 
     const { card1, card2, card3, cardback } = AllCards
 
-    const [name, setName] = useState('');
-    const [room, setRoom] = useState('');
-    const [isFirst, setFirst] = useState(Boolean)
     const [users, setUsers] = useState([]);
     const [startButton, setStartButton] = useState(true)
     const [gameStarted, setStart] = useState(false)
     
-    // USER JOIN
-    useEffect(() => {
-        console.log('userJoin useEffect rodando')
-        const { name, room } = queryString.parse(location.search);
-        const isFirst = users.length == 0 ? true : false
-        socket.emit('join', { name, room, isFirst })
 
-
-
-    }, [location.search]);
-
-    // OBJECT ARRAY OF ALL USERS IN THIS ROOM:
-    useEffect(() =>{ 
-        socket.on('roomData', roomData => {
-            const { users,  } = roomData
-            setUsers(users)
-            
-            console.log(users)
-        })
-    }, [users])
-
-    // APPLY DRAGABBLE CARDS EFFECT< FROM DEALER TO PLAYER HAND:
     useEffect(() => {
         const cardsElements = document.querySelectorAll('[dixit-drop-zone=drop] .card')
 
@@ -93,7 +69,7 @@ const GameRoom = ({ location }) => {
                 <h1>Usuários Conectados:</h1>
                 {renderUsers()}
             </div>
-            {startButton ? <StartButton /> : <h1>Esperando Começar o Jogo</h1>}
+            { startButton && <StartButton /> }
             
             <HandTable />
 
@@ -109,7 +85,7 @@ const GameRoom = ({ location }) => {
 
             {/* <Chat room={room} name={name}/> */}
         </div>
-      );
-    }
+    )
+}
 
 export default GameRoom
