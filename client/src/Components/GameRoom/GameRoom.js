@@ -1,71 +1,49 @@
 import React, { useState, useEffect } from "react";
 import queryString from 'query-string';
-import io from 'socket.io-client'
-import InfoChatBar from '../InfoChatBar/InfoChatBar'
-import ChatInput from '../ChatInput/ChatInput'
-import ChatMessages from '../ChatMessages/ChatMessages'
+
+import Chat from '../Chat/Chat'
+import StartButton from './StartButton/StartButton'
+import HandTable from "./HandTable/HandTable";
 
 import './GameRoom.css'
 
-let socket;
+import {socket} from "../socket.js"
+
+
+// import io from 'socket.io-client'
+// let socket;
 
 const GameRoom = ({ location }) => { 
 
     const [name, setName] = useState('');
     const [room, setRoom] = useState('');
-    const [message, setMessage] = useState('');
-    const [messages, setMessages] = useState([]);
+    const [user, setUser] = useState('');
+    const [gameStarted, setStart] = useState('false')
 
-    const ENDPOINT = 'https://kah-dix.herokuapp.com/';
+    // const ENDPOINT = 'https://kah-dix.herokuapp.com/';
 
+    // USER JOIN
     useEffect(() => {
         const { name, room } = queryString.parse(location.search);
 
-        socket = io(ENDPOINT);
+        // socket = io(ENDPOINT);
         setName(name);
         setRoom(room);
 
-        socket.emit('join', { name, room }, (error) => {
-            if(error) {
-              alert(error);
-            }
-          });
-
-        return () => {
-            socket.emit('disconnect');
-
-            socket.off();
-        }
+        socket.emit('join', { name, room })
 
         
-    }, [ENDPOINT, location.search]);
+        socket.on('UserConnected', user)
+            setUser(user)
 
-
-    useEffect(() => {
-        socket.on('message', (message) => {
-            setMessages([...messages, message]);
-        });
-    }, [messages]);
-
-    const sendMessage = (event) => {
-        event.preventDefault();
-        if(message) {
-            socket.emit('sendMessage', message, () => setMessage(''));
-
-        }
-    }
-
-
-    console.log(message, messages)
+    }, [location.search]);
 
     return (
-        <div className="outerContainer">
-          <div className="container">
-              <InfoChatBar room={room} />
-              <ChatMessages messages={messages} name={name} />
-              <ChatInput message={message} setMessage={setMessage} sendMessage={sendMessage} />
-          </div>
-        </div>
+        <React.Fragment>
+            <StartButton user={user} gameStarted />
+            <HandTable />
+            <Chat room={room} name={name}/>
+        </React.Fragment>
       );
     }
 
