@@ -16,6 +16,11 @@ const app = express();
 const server = http.createServer(app);
 const io = socketio(server);
 
+const GameSystem = require('./FiniteStateMachine/GameSystem')
+
+const gs = new GameSystem()
+console.log(gs.returnDebugString('INSTÂNCIA FUNCIONANDO!'))
+
 app.use(cors());
 app.use(router);
 

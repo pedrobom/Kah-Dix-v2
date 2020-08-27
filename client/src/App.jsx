@@ -3,7 +3,7 @@ import React from 'react';
 import { BrowserRouter as Router, Route} from 'react-router-dom';
 
 import Join from "./Components/Join/Join.js"
-import GameRoom from "./Components/GameRoom/GameRoom"
+import GameRoom from "./Components/GameRoom/GameRoom.jsx"
 
 const App = () => (
     <Router>

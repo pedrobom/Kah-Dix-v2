@@ -1,0 +1,9 @@
+.player-hand {
+    border: 3px solid black;
+    width: 100vw;
+    height: auto;
+    min-height: 400px;
+    display: flex;
+    flex-flow: row wrap;
+    justify-content: flex-start;
+  }
