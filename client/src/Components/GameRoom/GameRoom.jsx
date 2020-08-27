@@ -27,6 +27,15 @@ const GameRoom = ({ location }) => {
     const [users, setUsers] = useState([]);
     const [startButton, setStartButton] = useState(true)   
 
+    useEffect(() => {
+        socket.emit('userJoined')
+        console.log('userJoined emit')
+        socket.on('RoomInfo', (room) =>{
+            setRoom(room)
+            console.log('setRoom', room)
+        })
+    },[location.search])
+
 
 
     useEffect(() => {

@@ -57,16 +57,17 @@ const getUser = (id) => {
   console.debug("Buscando usuário com id [%s]", id)
   return users.find((user) => user.id === id);
 }
-
+// Pedro diz: acho que essa função tá desatualizada, não funcional.
+// porque não existe user.room
 const getUsersInRoom = (room) => { 
   console.debug("Buscando usuários da sala [%s]", room)
   return users.filter((user) => user.room === room);
-}
+} 
 
 const changeUserName = (user, name) => {
-  console.info("Changing user name to [%s] for user [%s]", user.id, name)
+  console.log(`Usuário [${user.id}] trocou o nome de [${user.name}] para [${name}]`)
   user.name = name
 }
 
 
-module.exports = { addUser, removeUser, getUser, getUsersInRoom, changeUserName};
+module.exports = { users, addUser, removeUser, getUser, getUsersInRoom, changeUserName};

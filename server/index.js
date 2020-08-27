@@ -10,6 +10,8 @@ const StateMachine = require('./stateMachine')
 const cardBack = ["cardBack.png", "cad1.png"]
 
 const router = require('./router');
+const users = require('./users');
+const { getRoomOfUser } = require('./rooms');
 
 const app = express();
 const server = http.createServer(app);
@@ -20,7 +22,7 @@ app.use(router);
 
 io.on('connect', (socket) => {
 
-  console.log("Novo usuário conectado com socket [%s]", socket.id)
+  console.log("[io.on('connect') - Novo usuário conectado com socket [%s]", socket.id)
   // Assim que o usuário conecta, a gente cria um usuário para ele
   const { error, user } = Users.addUser({ id: socket.id });
 
@@ -36,7 +38,7 @@ io.on('connect', (socket) => {
     var room = Rooms.getRoom(roomName)
     // Sala ainda não existe.. vamos criar uma :)
     if(!room) {
-      console.info("A sala que o usuário tentou entrar [%s] não existem ainda, vamos criar uma para ele ", roomName)
+      console.info("A sala que o usuário tentou entrar [%s] não existe ainda, vamos criar uma para ele", roomName)
       var { error, room } = Rooms.createRoom({roomName, hostPlayer: user})
       if (error) {
         console.error("Não foi possivel criar a sala! [%s]", error)
@@ -47,7 +49,8 @@ io.on('connect', (socket) => {
     // Sala já existe, então vamos jogar nosso usuário lá dentro!
     else {
       console.info("A sala [%s] que o usuário [%s] está tentando acessar já existe, colocando ele como jogador!", roomName, user.id)
-      let { error } = Rooms.addUserToRoom({room, user})
+      // mudança pedro > original = { error } = Rooms.addUserToRoom({room, user})
+      Rooms.addUserToRoom({room, user})
       if (error) {
         console.error("Não foi possivel entrar na sala [%s]: [%s]", roomName, error)
         return callback(error)
@@ -62,9 +65,16 @@ io.on('connect', (socket) => {
     callback(null, {user, room});
   });
 
+  // Aqui eu quero passar as informações da sala para o client,
+  // para renderizar lista de usuários na sala... nome da sala... etc
+  socket.on('userJoined', () =>{
+    userRoom = Rooms.getRoomOfUser(user)
+    console.log(userRoom.name)
+    socket.to(userRoom.name).emit('RoomInfo', userRoom)
+  })
+
   socket.on('sendMessage', (message, callback) => {
     const user = Users.getUser(socket.id);
-
     io.to(user.room).emit('message', { user: user.name, text: message });
 
     callback();
