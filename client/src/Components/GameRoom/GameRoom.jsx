@@ -15,6 +15,7 @@ import {socket} from "../socket.js"
 import allCards from "../allCards";
 
 
+
 // import io from 'socket.io-client'
 // let socket;
 
@@ -23,26 +24,31 @@ const GameRoom = ({ location }) => {
     const cardArray = AllCards
 
     const [name, setName] = useState('')
-    const [room, setRoom] = useState('')
+    const [room, setRoom] = useState([])
     const [users, setUsers] = useState([]);
+    const [players, setPlayers] = useState(['1']);
     const [startButton, setStartButton] = useState(true)   
 
     useEffect(() => {
         socket.emit('userJoined')
-        console.log('userJoined emit')
-        socket.on('RoomInfo', (room) =>{
-            setRoom(room)
-            console.log('setRoom', room)
-        })
-    },[location.search])
+        console.log('userJoined socket.emit')
 
+    }, [location.search] )
+
+    useEffect(() => {
+        socket.on('playerJoinedRoom', (player) => {
+            console.log('socket.on("playerJoinedRoom") - setPlayers()')
+            setPlayers([...players, player])
+
+        })
+        console.log(players)
+    }, [players])
 
 
     useEffect(() => {
         console.log("rodando useEffect setName e setRoom")
-        const {name, room} = queryString.parse(location.search)
+        const {name} = queryString.parse(location.search)
         setName(name)
-        setRoom(room)
     }, [location.search])
 
     // DRAG & DROP FUNCIONALITY
@@ -93,7 +99,6 @@ const GameRoom = ({ location }) => {
 
             <Hand>
             </Hand>
-
             {/* <Chat room={room} name={name}/> */}
 
         </div>

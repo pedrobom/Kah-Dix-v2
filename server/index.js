@@ -69,8 +69,11 @@ io.on('connect', (socket) => {
   // para renderizar lista de usuários na sala... nome da sala... etc
   socket.on('userJoined', () =>{
     userRoom = Rooms.getRoomOfUser(user)
+    console.log(userRoom)
     console.log(userRoom.name)
-    socket.to(userRoom.name).emit('RoomInfo', userRoom)
+    socket.to(userRoom.name).emit('playerJoinedRoom', {user})
+    console.log("socket.to(userRoom.name).emit(playerJoinedRoom)")
+
   })
 
   socket.on('sendMessage', (message, callback) => {
