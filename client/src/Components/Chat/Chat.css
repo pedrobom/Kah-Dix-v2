@@ -1,0 +1,21 @@
+.outerContainer {
+    display: flex;
+    position: fixed;
+    right: 0;
+    bottom: 0;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    width: 4  0vh;
+    background-color: #1A1A1D;
+  }
+  
+  .container {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    background: #c9dce9;
+    border-radius: 8px;
+    height: 50%;
+    width: 100%;
+  }

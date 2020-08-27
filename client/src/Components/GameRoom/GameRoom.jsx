@@ -3,7 +3,7 @@ import queryString from 'query-string';
 
 import AllCards from '../allCards'
 import Chat from '../Chat/Chat'
-import StartButton from './StartButton/StartButton'
+import RoomLobby from './RoomLobby/RoomLobby'
 import HandTable from "./HandTable/HandTable";
 import Card from './Card/Card'
 import Hand from './Hand/Hand'
@@ -86,12 +86,12 @@ const GameRoom = ({ location }) => {
     return (
         <div className="dixit-table">
 
+            {startButton && <RoomLobby />}
             <Table>
                 {renderCard()}
             </Table>
 
             <Hand>
-
             </Hand>
 
             {/* <Chat room={room} name={name}/> */}
