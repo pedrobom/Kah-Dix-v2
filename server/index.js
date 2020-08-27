@@ -5,6 +5,7 @@ const cors = require('cors');
 
 const Users = require('./users');
 const Rooms = require('./rooms')
+const StateMachine = require('./stateMachine')
 
 const cardBack = ["cardBack.png", "cad1.png"]
 
@@ -13,11 +14,6 @@ const router = require('./router');
 const app = express();
 const server = http.createServer(app);
 const io = socketio(server);
-
-const GameSystem = require('./FiniteStateMachine/GameSystem')
-
-const gs = new GameSystem()
-console.log(gs.returnDebugString('INSTÂNCIA FUNCIONANDO!'))
 
 app.use(cors());
 app.use(router);
