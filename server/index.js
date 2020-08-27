@@ -25,19 +25,18 @@ io.on('connect', (socket) => {
 
   // Este metodo representa um usuário tentando entrar em uma sala
   socket.on('join', ({ name, roomName }, callback) => {
-    console.log("Usuário [%s] tentando entrar na sala com nome [%s]", name, roomName)
+    console.log("Usuário [%s] tentando entrar com nome [%s] na sala com nome [%s]", user.id, name, roomName)
 
     // 1 - Não poderá haver duas pessoas com o mesmo nome em uma sala
     // ou - Duas pessoas não podem ter o mesmo nome independente da sala
     //
-    Users.changeUserName({user, name})
+    Users.changeUserName(user, name)
 
-    let room = Rooms.getRoom(roomName)
+    var room = Rooms.getRoom(roomName)
     // Sala ainda não existe.. vamos criar uma :)
     if(!room) {
       console.info("A sala que o usuário tentou entrar [%s] não existem ainda, vamos criar uma para ele ", roomName)
-      let { error, createdRoom } = Rooms.createRoom({roomName, hostPlayer: user})
-      room = createdRoom
+      var { error, room } = Rooms.createRoom({roomName, hostPlayer: user})
       if (error) {
         console.error("Não foi possivel criar a sala! [%s]", error)
         return callback(error)
@@ -54,7 +53,8 @@ io.on('connect', (socket) => {
       }
     }
     
-    console.info("Adicionando usuário [%s] para a sala [%s] no socket", user, user.room)
+    console.debug("Sala atual é: %s", room)
+    console.info("Adicionando usuário [%s] para a sala [%s] no socket", user.id, room.name)
     socket.join(room.name);
     socket.broadcast.to(room.name).emit('message', { user: 'Andrétnik', text: `${user.name} tá na área!` });
         
