@@ -1,0 +1,9 @@
+.dealer-table {
+    border: 3px solid green;
+    width: 100vw;
+    min-height: 400px;
+    height: auto;
+    display: flex;
+    flex-flow: row wrap;
+    justify-content: flex-start;
+}
