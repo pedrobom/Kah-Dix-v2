@@ -1,8 +1,24 @@
 .dealer-table {
-    width: 100vw;
+    width: 80vw;
     min-height: 400px;
     height: auto;
     display: flex;
     flex-flow: row wrap;
-    justify-content: flex-start;
+    justify-content: center;
+    align-items: center;
+    border-radius: 5px;
+
+    background-image: linear-gradient(to top, #30cfd0 0%, #330867 100%);
+
+    -webkit-box-shadow: 8px 0px 0px 0px #DCD0C0, 
+        0px 8px 0px 0px #B1938B, 
+        -8px 0px 0px 0px #4E4E56, 
+        0px 0px 0px 8px #DA635D, 
+        2px 5px 15px 5px #000000; 
+
+    box-shadow: 8px 0px 0px 0px #DCD0C0, 
+        0px 8px 0px 0px #B1938B, 
+        -8px 0px 0px 0px #4E4E56, 
+        0px 0px 0px 8px #DA635D, 
+        2px 5px 15px 5px #000000;
 }

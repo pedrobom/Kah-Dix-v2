@@ -8,6 +8,7 @@ import HandTable from "./HandTable/HandTable";
 import Card from './Card/Card'
 import Hand from './Hand/Hand'
 import Table from './Table/Table'
+import Score from './Score/Score'
 
 import './GameRoom.css'
 
@@ -26,8 +27,7 @@ const GameRoom = ({ location }) => {
     const [name, setName] = useState('')
     const [room, setRoom] = useState([])
     const [users, setUsers] = useState([]);
-    const [players, setPlayers] = useState(['1']);
-    const [startButton, setStartButton] = useState(true)   
+    const [startButton, setStartButton] = useState(false)   
 
     useEffect(() => {
         socket.emit('userJoined')
@@ -99,6 +99,9 @@ const GameRoom = ({ location }) => {
 
             <Hand>
             </Hand>
+
+            <Score />
+
             {/* <Chat room={room} name={name}/> */}
 
         </div>

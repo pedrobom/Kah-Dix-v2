@@ -1,9 +1,25 @@
 .player-hand {
-    border: 3px solid black;
-    width: 100vw;
-    height: auto;
-    min-height: 400px;
-    display: flex;
-    flex-flow: row wrap;
-    justify-content: flex-start;
-  }
+  width: 70vw;
+  min-height: 400px;
+  height: auto;
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: center;
+  align-items: center;
+  border-radius: 5px;
+  margin-top: 40px;
+
+  background-image: linear-gradient(to right, #fa709a 0%, #fee140 100%);
+
+  -webkit-box-shadow: 8px 0px 0px 0px #DCD0C0, 
+        0px 8px 0px 0px #B1938B, 
+        -8px 0px 0px 0px #4E4E56, 
+        0px 0px 0px 8px #DA635D, 
+        2px 5px 15px 5px #000000; 
+
+    box-shadow: 8px 0px 0px 0px #DCD0C0, 
+        0px 8px 0px 0px #c02a2a, 
+        -8px 0px 0px 0px #4E4E56, 
+        0px 0px 0px 8px #DA635D, 
+        2px 5px 15px 5px #000000;
+}
