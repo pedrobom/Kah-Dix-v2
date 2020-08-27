@@ -16,7 +16,7 @@ const createRoom = ({ roomName, hostPlayer }) => {
   }
 
   if(!roomName) {
-    console.debug("Tentativa de criar uma sala sem nome");
+    console.debug("Tentativa de criar uma sala sem nome [retorna alerta de erro]");
     return { error: 'Para criar uma sala é preciso da nome!' };
   }
 
@@ -42,7 +42,7 @@ const createRoom = ({ roomName, hostPlayer }) => {
     };
 
   rooms.push(room);
-  console.info("Sala criada com nome [%s] e host player [%s]", roomName, hostPlayer.id)
+  console.info("Sala criada com nome [%s] e host player [%s]", roomName, hostPlayer.name)
 
   return { room };
 }
@@ -61,13 +61,13 @@ const getRoom = (roomName) => {
 
 const getRoomOfUser = (user) => {
     console.debug("Buscando a sala na qual o usuário [%s] está contido", user.id)
-    return rooms.find(room => room.players.findIndex(user) != -1)
+    return rooms.find(room => room.players.indexOf(user) != -1)
 }
 
 const addUserToRoom = ({room, user}) => {
     const isPlayerInRoom = !!getRoomOfUser(user)
 
-    console.debug("Tentando adicionar usuário [%s] na sala [%s]", user, room)
+    console.debug("Tentando adicionar usuário [%s] na sala [%s]", user.name, room.name)
     if (isPlayerInRoom){
         console.debug("Usuário [%s] já está em uma sala", user)
         return { error: "Você já está em uma sala em andamento." }
@@ -77,4 +77,4 @@ const addUserToRoom = ({room, user}) => {
     }
 }
 
-module.exports = { createRoom, removeRoom, getRoom, getRoomOfUser };
+module.exports = { createRoom, removeRoom, getRoom, getRoomOfUser, addUserToRoom };

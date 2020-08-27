@@ -9,7 +9,7 @@ const Join = () => {
     const [room, setRoom] = useState('');
 
     const CreateUser = () => {
-        socket.emit('join', { name, room }, (error) => {
+        socket.emit('join', { name, roomName: room }, (error) => {
             if(error) {
               alert(error);
             }
