@@ -6,6 +6,8 @@ import Chat from '../Chat/Chat'
 import StartButton from './StartButton/StartButton'
 import HandTable from "./HandTable/HandTable";
 import Card from './Card/Card'
+import Hand from './Hand/Hand'
+import Table from './Table/Table'
 
 import './GameRoom.css'
 
@@ -18,7 +20,8 @@ import allCards from "../allCards";
 
 const GameRoom = ({ location }) => { 
 
-    const { card1, card2, card3, cardback } = AllCards
+    const cardArray = AllCards
+
     const [name, setName] = useState('')
     const [room, setRoom] = useState('')
     const [users, setUsers] = useState([]);
@@ -33,6 +36,7 @@ const GameRoom = ({ location }) => {
         setRoom(room)
     }, [location.search])
 
+    // DRAG & DROP FUNCIONALITY
     useEffect(() => {
         const cardsElements = document.querySelectorAll('[dixit-drop-zone=drop] .card')
 
@@ -55,7 +59,6 @@ const GameRoom = ({ location }) => {
         })
     }, [])
 
-
     // DISABLE START BUTTON
     useEffect(()=> {
         socket.on('startButtonPressed', button => {
@@ -63,35 +66,27 @@ const GameRoom = ({ location }) => {
         })
     }, [])
 
-     const renderUsers = () => {
-        return users.map((user, index) => {
+    const renderCard = () => {
+        return cardArray.map(src => {
             return (
-                <h2>{user.name}</h2>
+                <Card src={src} alt={"COMPONENTE CARTA"}/>
             )
         })
     }
 
     return (
         <div className="dixit-table">
-            <div> 
-                <h1>Usuários Conectados:</h1>
-                {renderUsers()}
-            </div>
-            { startButton && <StartButton /> }
-            
-            <HandTable />
 
-            <div className="player-hand" dixit-drop-zone="drop">                
-                <Card src={card1} />
-                <Card src={card2} />
-                <Card src={card3} />
-                <Card src={cardback} />
-            </div>
+            <Table>
+                {renderCard()}
+            </Table>
 
-            <div className="dealer-table" dixit-drop-zone="drop">  
-            </div>            
+            <Hand>
 
-            <Chat room={room} name={name}/>
+            </Hand>
+
+            {/* <Chat room={room} name={name}/> */}
+
         </div>
     )
 }
