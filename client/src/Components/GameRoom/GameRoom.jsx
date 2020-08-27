@@ -25,7 +25,7 @@ const GameRoom = ({ location }) => {
     const [name, setName] = useState('')
     const [room, setRoom] = useState('')
     const [users, setUsers] = useState([]);
-    const [startButton, setStartButton] = useState(true)   
+    const [startButton, setStartButton] = useState(false)   
 
     useEffect(() => {
         socket.emit('userJoined')
