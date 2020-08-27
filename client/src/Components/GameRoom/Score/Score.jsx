@@ -1,20 +1,37 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import './Score.css'
 
 
 export default props =>
 {
+    // state de jogadores,
+    // atualizar pelas props!
     const [players, setPlayer] = useState([
-        {name: "Player 1", score: 20},
-        {name: "Player 2", score: 16},
-        {name: "Player 3", score: 2},
-        {name: "Player 4", score: 90},
-        {name: "Player 5", score: 40}
+        {name: "Lululu", score: 20},
+        {name: "Marchola", score: 16},
+        {name: "Snades", score: 2},
+        {name: "Maxu", score: 90},
+        {name: "Jonarios", score: 40},
+        {name: "Pim", score: 40}
     ])
+
+    useEffect(() => {
+     
+    }, [players])
+
+    const sortPlayerByHightesScore = (a, b) => {
+        if (a.score < b.score){
+            return 1
+        } else if (a.score > b.score){
+            return -1
+        } else {
+            return 0
+        }
+    }
     
     const renderTable = () =>{
         return(
-            <table className="table mt-4">
+            <table className="fl-table">
                 <thead>
                     <tr>
                         <th>Nome</th>
@@ -29,7 +46,8 @@ export default props =>
     }
 
     const renderRows = () =>{
-        return players.map((player, index) => {
+        const playersSorted = players.sort(sortPlayerByHightesScore)
+        return playersSorted.map((player, index) => {
             return(
                 <tr key={index}>
                     <td>{player.name}</td>

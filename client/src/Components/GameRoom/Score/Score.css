@@ -3,14 +3,44 @@
     width: 300px;
     height: 500px;
     left:0vw;
-    top:10vh;
+    top:50vh;
+}
+
+.fl-table {
     border-radius: 5px;
-    background-image: linear-gradient(to top, #0c3483 0%, #a2b6df 100%, #6b8cce 100%, #a2b6df 100%);
-    box-shadow:
-        0 2.8px 2.2px rgba(0, 0, 0, 0.034),
-        0 6.7px 5.3px rgba(0, 0, 0, 0.048),
-        0 12.5px 10px rgba(0, 0, 0, 0.06),
-        0 22.3px 17.9px rgba(0, 0, 0, 0.072),
-        0 41.8px 33.4px rgba(0, 0, 0, 0.086),
-        0 100px 80px rgba(0, 0, 0, 0.12)
+    font-size: 20px;
+    font-weight: normal;
+    border: none;
+    border-collapse: collapse;
+    width: 100%;
+    max-width: 100%;
+    white-space: nowrap;
+    color: rgb(99, 94, 94);
+    font-weight: 1000;
+    background-color: rgb(226, 205, 205);
+}
+
+.fl-table td, .fl-table th {
+    text-align: center;
+    padding: 8px;
+}
+
+.fl-table td {
+    border-right: 1px solid #f8f8f8;
+    font-size: 18px;
+}
+
+.fl-table thead th {
+    color: #ffffff;
+    background: #4a52bd;
+}
+
+
+.fl-table thead th:nth-child(odd) {
+    color: #ffffff;
+    background: #b3cfeb;
+}
+
+.fl-table tr:nth-child(odd) {
+    background: #8cb670;
 }
