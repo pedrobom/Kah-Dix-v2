@@ -1,8 +1,9 @@
 .dixit-table {  
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  align-items: center;
+  justify-content: flex-end;
+  align-items: flex-end;
   padding: 10px;
   height: auto;
+
 }

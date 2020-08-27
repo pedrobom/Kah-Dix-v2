@@ -8,6 +8,7 @@ import HandTable from "./HandTable/HandTable";
 import Card from './Card/Card'
 import Hand from './Hand/Hand'
 import Table from './Table/Table'
+import Score from './Score/Score'
 
 import './GameRoom.css'
 
@@ -93,6 +94,8 @@ const GameRoom = ({ location }) => {
 
             <Hand>
             </Hand>
+
+            <Score />
 
             {/* <Chat room={room} name={name}/> */}
 
