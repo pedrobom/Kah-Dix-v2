@@ -59,6 +59,7 @@ const getRoom = (roomName) => {
   return rooms.find((room) => room.name === roomName);
 }
 
+// Eu pedro mudei o conceito findIndex(user) para indexOf porque dava erro.
 const getRoomOfUser = (user) => {
     console.debug("Buscando a sala na qual o usuário [%s] está contido", user.id)
     return rooms.find(room => room.players.indexOf(user) != -1)
@@ -77,4 +78,4 @@ const addUserToRoom = ({room, user}) => {
     }
 }
 
-module.exports = { createRoom, removeRoom, getRoom, getRoomOfUser, addUserToRoom };
+module.exports = { rooms, createRoom, removeRoom, getRoom, getRoomOfUser, addUserToRoom };
