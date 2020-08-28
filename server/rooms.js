@@ -98,21 +98,26 @@ const dealInitCardsWithoutReposition = (room) => {
   console.debug("Começando a distribuir as cartas para os jogadores da sala [%s]", room.name)
   
   room.players.forEach( player => {
-    let randomMultiplier = 5
+
+    //Mudança pedro: let randomMultiplier = 5 (CODIGO ORIGINAL)
+
+    
     console.debug("Distribuindo cartas para o jogador [%s]", player.name)
     
-    while(randomMultiplier > 0){
-      let cardDealtIndex = Math.floor(randomMultiplier * Math.random())
-      let cardDealt = room.deck[cardDealtIndex]
+    // acho que aqui tem que ser um for
+    //while(randomMultiplier > 0){
+      for (var i = 0; i < 5; i++){    
+        let randomMultiplier = room.deck.length
+        let cardDealtIndex = Math.floor(randomMultiplier * Math.random())
+        let cardDealt = room.deck[cardDealtIndex]
 
-      player.hand.push(cardDealt)
-      if(cardDealtIndex > -1){
+        player.hand.push(cardDealt)
         room.deck.splice(cardDealtIndex, 1)
       }
-      randomMultiplier -= 1
+      //randomMultiplier -= 1
     }
 
-  })
+  )
   
   console.debug("Distribuição de cartas para os jogadores da sala [%s] concluída!", room.name)
 }
