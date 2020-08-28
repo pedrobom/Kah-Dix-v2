@@ -7,12 +7,12 @@ export default props =>
     // state de jogadores,
     // atualizar pelas props!
     const [players, setPlayer] = useState([
-        {name: "Lululu", score: 20},
-        {name: "Marchola", score: 16},
-        {name: "Snades", score: 2},
-        {name: "Maxu", score: 90},
-        {name: "Jonarios", score: 40},
-        {name: "Pim", score: 40}
+        {name: "Lululu", score: 0},
+        // {name: "Marchola", score: 16},
+        // {name: "Snades", score: 2},
+        // {name: "Maxu", score: 90},
+        // {name: "Jonarios", score: 40},
+        // {name: "Pim", score: 40}
     ])
 
     useEffect(() => {

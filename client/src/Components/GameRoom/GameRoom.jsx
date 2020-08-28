@@ -47,6 +47,10 @@ const GameRoom = ({ location }) => {
     }, [location.search])
 
     // DRAG & DROP FUNCIONALITY
+    /*
+    *   BUG: se arrastar rápido demais a gente leva para o dropzone,
+    *        um elemento sem ser node, o que faz quebrar o AppenChild!
+    */
     useEffect(() => {
         const cardsElements = document.querySelectorAll('[dixit-drop-zone=drop] .card')
 
