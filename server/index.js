@@ -12,6 +12,7 @@ const cardBack = ["cardBack.png", "cad1.png"]
 const router = require('./router');
 const users = require('./users');
 const { getRoomOfUser } = require('./rooms');
+const { getUsersInRoom } = require('./users');
 
 const app = express();
 const server = http.createServer(app);
@@ -19,6 +20,8 @@ const io = socketio(server);
 
 app.use(cors());
 app.use(router);
+
+
 
 io.on('connect', (socket) => {
 
@@ -60,7 +63,7 @@ io.on('connect', (socket) => {
     console.debug("Sala atual é: %s", room)
     console.info("Adicionando usuário [%s] para a sala [%s] no socket", user.id, room.name)
     socket.join(room.name);
-    socket.broadcast.to(room.name).emit('message', { user: 'Andrétnik', text: `${user.name} tá na área!` });
+    io.to(room.name).emit('message', { user: 'Andrétnik', text: `${user.name} tá na área!` });
         
     callback(null, {user, room});
   });
@@ -69,10 +72,10 @@ io.on('connect', (socket) => {
   // para renderizar lista de usuários na sala... nome da sala... etc
   socket.on('userJoined', () =>{
     userRoom = Rooms.getRoomOfUser(user)
-    console.log(userRoom)
-    console.log(userRoom.name)
-    socket.to(userRoom.name).emit('playerJoinedRoom', {user})
-    console.log("socket.to(userRoom.name).emit(playerJoinedRoom)")
+
+    io.to(userRoom.name).emit('getScore', userRoom.players)
+    console.log(userRoom.players)
+    console.log("socket.to(userRoom.name).emit(getScore), players in room")
 
   })
 

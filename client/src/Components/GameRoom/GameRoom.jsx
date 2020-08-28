@@ -35,15 +35,6 @@ const GameRoom = ({ location }) => {
 
     }, [location.search] )
 
-    useEffect(() => {
-        socket.on('playerJoinedRoom', (player) => {
-            console.log('socket.on("playerJoinedRoom") - setPlayers()')
-            setPlayers([...players, player])
-
-        })
-        console.log(players)
-    }, [players])
-
 
     useEffect(() => {
         console.log("rodando useEffect setName e setRoom")
