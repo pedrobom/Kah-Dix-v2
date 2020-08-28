@@ -18,22 +18,12 @@ import {socket} from "../socket.js"
 
 const GameRoom = ({ location }) => {   
 
-    const [name, setName] = useState('')
-    const [room, setRoom] = useState([])
-    const [users, setUsers] = useState([]);
     const [isGameStarted, setIsGameStarted] = useState(true)   
 
     useEffect(() => {
         socket.emit('userJoined')
         console.log('userJoined socket.emit')
     }, [location.search] )
-
-
-    useEffect(() => {
-        console.log("rodando useEffect setName e setRoom")
-        const {name} = queryString.parse(location.search)
-        setName(name)
-    }, [location.search])
 
 
     useEffect(() => {
@@ -71,7 +61,7 @@ const GameRoom = ({ location }) => {
             <Hand />
             <Score />
 
-            {/* <Chat room={room} name={name}/> */}
+            <Chat />
 
         </div>
     )

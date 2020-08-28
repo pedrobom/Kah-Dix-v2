@@ -60,6 +60,7 @@ io.on('connect', (socket) => {
         return callback(error)
       }
     }
+
     
     console.debug("Sala atual é: %s", room)
     console.info("Adicionando usuário [%s] para a sala [%s] no socket", user.id, room.name)
@@ -76,7 +77,11 @@ io.on('connect', (socket) => {
     userRoom = Rooms.getRoomOfUser(user)
 
     io.to(userRoom.name).emit('getScore', userRoom.players)
-    console.log("socket.to(userRoom.name).emit(getScore), players in room")
+    socket.emit('getPlayerName', user.name)
+    console.log('socket emited to Chat = getPlayerName')
+    socket.emit('getRoomName', userRoom.name)
+    console.log('socket emited to Chat = getRoomName')
+    console.log('jogador [%s] pediu para todos da sala [%s] atualizarem a sua lista de jogadores.', user.name, userRoom.name)
 
   })
 
@@ -94,8 +99,9 @@ io.on('connect', (socket) => {
   })
 
   socket.on('sendMessage', (message, callback) => {
-    const user = Users.getUser(socket.id);
-    io.to(user.room).emit('message', { user: user.name, text: message });
+    userRoom = Rooms.getRoomOfUser(user)
+    console.log('jogador [%s] está mandando mensagem na sala [$s]', user.name, userRoom.name)
+    io.to(userRoom.name).emit('message', { user: user.name, text: message });
 
     callback();
   });
