@@ -17,8 +17,8 @@ export default props =>
     
 
     useEffect(() => {
-        socket.on('getScore', (players) => {
-            console.log('socket.on("getScore") - Atualizando lista de jogadores e Score')
+        socket.on('getPlayersInfo', (players) => {
+            console.log('Score = socket.on("getScore") - Atualizando lista de jogadores e Score')
             console.log(players)
             setPlayer(players)
 

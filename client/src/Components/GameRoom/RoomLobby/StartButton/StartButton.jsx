@@ -19,7 +19,7 @@ function StartButton (){
                 <div class="dot"></div>
                 <div class="dot"></div>
             </div>  
-            <span onClick={e => startGame(e)}>Go!</span>
+            <span onClick={e => startGame(e)}>Vai!</span>
         </a>    
     )     
 }

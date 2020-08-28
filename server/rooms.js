@@ -76,7 +76,7 @@ const getRoom = (roomName) => {
 
 // Eu pedro mudei o conceito findIndex(user) para indexOf porque dava erro.
 const getRoomOfUser = (user) => {
-    console.debug("Buscando a sala na qual o usuário [%s] está contido", user.id)
+    console.debug("verificando nome da sala do jogador [%s]", user.name)
     return rooms.find(room => room.players.indexOf(user) != -1)
 }
 

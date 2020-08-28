@@ -11,12 +11,12 @@ const Chat = () => {
     const [message, setMessage] = useState('');
     const [messages, setMessages] = useState([]);
     const [playerName, setPlayer] = useState('');
-    const [playerRoom, setPlayerRoom] = useState('');
+    const [room, setPlayerRoom] = useState('');
 
     useEffect(() => {
         socket.on('message', (message) => {
             setMessages([...messages, message]);
-            
+
         });
     }, [messages]);
 
@@ -30,8 +30,9 @@ const Chat = () => {
 
     useEffect(() => {
         socket.on('getPlayerRoom', (playerRoom) => {
-            console.log('passando nome da sala para Chat.js')
+            
             setPlayerRoom(playerRoom)
+            console.log('passando nome da sala para Chat.js[%s]', )
         })
 
     }, [])
@@ -48,7 +49,7 @@ const Chat = () => {
         return (
             <div className="outerContainer">
               <div className="container">
-                  <InfoChatBar room={playerRoom} />
+                  <InfoChatBar room={room} />
                   <ChatMessages messages={messages} name={playerName} />
                   <ChatInput message={message} setMessage={setMessage} sendMessage={sendMessage} />
               </div>
