@@ -7,14 +7,23 @@ export default props =>
 {
     // state de jogadores,
     // atualizar pelas props!
+<<<<<<< HEAD
+    const [players, setPlayer] = useState([
+        {name: "Lululu", score: 0},
+=======
     const [players, setPlayer] = useState([])
         // {name: "Lululu", score: 20},
+>>>>>>> 3c38b60aea788bc03539f7d1b9929374c699af38
         // {name: "Marchola", score: 16},
         // {name: "Snades", score: 2},
         // {name: "Maxu", score: 90},
         // {name: "Jonarios", score: 40},
         // {name: "Pim", score: 40}
+<<<<<<< HEAD
+    ])
+=======
     
+>>>>>>> 3c38b60aea788bc03539f7d1b9929374c699af38
 
     useEffect(() => {
         socket.on('getScore', (players) => {
