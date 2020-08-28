@@ -76,7 +76,7 @@ const getRoom = (roomName) => {
 
 // Eu pedro mudei o conceito findIndex(user) para indexOf porque dava erro.
 const getRoomOfUser = (user) => {
-    console.debug("Buscando a sala na qual o usuário [%s] está contido", user.id)
+    console.debug("verificando nome da sala do jogador [%s]", user.name)
     return rooms.find(room => room.players.indexOf(user) != -1)
 }
 
@@ -93,28 +93,22 @@ const addUserToRoom = ({room, user}) => {
     }
 }
 
+
 // SÓ CHAMAR QUANDO O GAME STARTAR - socket.on("gameStart")
 const dealInitCardsWithoutReposition = (room) => {
   console.debug("Começando a distribuir as cartas para os jogadores da sala [%s]", room.name)
   
   room.players.forEach( player => {
+    console.debug("Distribuindo as cartas para o jogador [%s]", player.name)
+  
+      for (var i = 0; i < 5; i++){
+        shuffle(room.deck);    
+        randomCard = room.deck[0]
 
-    //Mudança pedro: let randomMultiplier = 5 (CODIGO ORIGINAL)
+        player.hand.push(randomCard)
 
-    
-    console.debug("Distribuindo cartas para o jogador [%s]", player.name)
-    
-    // acho que aqui tem que ser um for
-    //while(randomMultiplier > 0){
-      for (var i = 0; i < 5; i++){    
-        let randomMultiplier = room.deck.length
-        let cardDealtIndex = Math.floor(randomMultiplier * Math.random())
-        let cardDealt = room.deck[cardDealtIndex]
-
-        player.hand.push(cardDealt)
-        room.deck.splice(cardDealtIndex, 1)
+        room.deck.splice(0, 1)
       }
-      //randomMultiplier -= 1
     }
 
   )
@@ -132,3 +126,23 @@ module.exports =
   addUserToRoom,
   dealInitCardsWithoutReposition,
 };
+
+// Fisher-Yates Alghoritm aka Knuth Shuffle
+function shuffle(array) {
+  var currentIndex = array.length, temporaryValue, randomIndex;
+
+  // While there remain elements to shuffle...
+  while (0 !== currentIndex) {
+
+    // Pick a remaining element...
+    randomIndex = Math.floor(Math.random() * currentIndex);
+    currentIndex -= 1;
+
+    // And swap it with the current element.
+    temporaryValue = array[currentIndex];
+    array[currentIndex] = array[randomIndex];
+    array[randomIndex] = temporaryValue;
+  }
+
+  return array;
+}

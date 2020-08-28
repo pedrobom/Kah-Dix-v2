@@ -1,13 +1,17 @@
 
     import React from 'react';
     import './ChatInput.css';
+
+    
     
     const Input = ({message, setMessage, sendMessage}) => (
+
+
         <form className='form'>
             <input 
             className='input'
             type='text'
-            placeholder='mensagem de texto...'
+            placeholder='Diz aí...'
             value={message}
             onChange={(event) => setMessage(event.target.value)} 
             onKeyPress={event => event.key === 'Enter' ? sendMessage(event) : null} />

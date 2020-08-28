@@ -8,7 +8,7 @@ const InfoChatBar = ({ room }) => (
   <div className="infoBar">
     <div className="leftInnerContainer">
       <img className="onlineIcon" src={onlineIcon} alt="online icon" />
-      <h3>{room}</h3>
+      <h3>Bate-Papo Sala: {room} </h3>
     </div>
     <div className="rightInnerContainer">
     </div>

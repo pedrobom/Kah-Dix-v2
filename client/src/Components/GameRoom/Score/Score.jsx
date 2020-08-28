@@ -17,12 +17,13 @@ export default props =>
     
 
     useEffect(() => {
-        socket.on('getScore', (players) => {
-            console.log('socket.on("getScore") - Atualizando lista de jogadores e Score')
+        socket.on('getPlayersInfo', (players) => {
+            console.log('Score = socket.on("getScore") - Atualizando lista de jogadores e Score')
+            console.log(players)
             setPlayer(players)
 
         })
-        console.log(players)
+
     }, [])
 
 
@@ -56,7 +57,6 @@ export default props =>
         const playersSorted = players.sort(sortPlayerByHightesScore)
         return playersSorted.map((player, index) => {
            // console.log("playersSorted = ",playersSorted)
-            console.log(".map ((player))  player = ",player)
             return(
                 <tr key={index}>
                     <td>{player.name}</td>

@@ -5,28 +5,38 @@ import { socket } from '../../socket'
 import StartButton from './StartButton/StartButton'
 
 function RoomLobby (){
-    const [incomingPlayer, setIncomingPlayer] = useState(['player1(host)', 'player2'])
-    const [playerCount, setPlayerCount] = useState(5)
+    const [players, setPlayer] = useState([])
+    //const [playerCount, setPlayerCount] = useState(5)
     const [isStartButtonReady, setIsStartButtonReady] = useState(false)
 
     
     // FAZ APPEND DE UM JOGADOR QUE ENTROU NO LOBBY DA SALA,
     // QUANDO O CONTADOR OS 6 JOGADORES ENTRAREM, O BOTÃO DE START
     // FICA ATIVO!
-    useEffect(() => {
-        renderIncommingPlayer()
-        setPlayerCount(playerCount + 1)
 
-        if (playerCount >= 5){  
+    useEffect(() => {
+        socket.on('getPlayersInfo', (players) => {
+            console.log('RoomLobby = socket.on("gePlayersInfo") - Atualizando informação de jogadores')
+            console.log(players)
+            setPlayer(players)
+
+        })
+
+    }, [])
+    useEffect(() => {
+        // renderIncommingPlayer()
+        // setPlayerCount(playerCount + 1)
+
+        if (players.length >= 3){  
             setIsStartButtonReady(true)
         }
 
-    }, [incomingPlayer])
+    }, [players])
 
     function renderIncommingPlayer(){
-        return incomingPlayer.map((player, index) => {
+        return players.map((player, index) => {
             return(
-                <h2 key={index}>{player}</h2>
+                <h2 key={index}>{player.name}</h2>
             )
         })
     }
@@ -47,7 +57,7 @@ function RoomLobby (){
                     ? <h1>Esperando demais Jogadores:</h1> 
                     : <h1>Partida Pronta!</h1>
                 }
-                <h2>{`${playerCount}/6`}</h2>
+                {/* <h2>{`${playerCount}/6`}</h2> */}
                 {renderIncommingPlayer()}
                 
             </div>
