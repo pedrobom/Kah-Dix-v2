@@ -99,25 +99,16 @@ const dealInitCardsWithoutReposition = (room) => {
   console.debug("Começando a distribuir as cartas para os jogadores da sala [%s]", room.name)
   
   room.players.forEach( player => {
-    shuffle(room.deck);
-    console.log("embaralhando cartas para o jogador [%s]", player.name)
-    console.log("baralho embaralhado [%s]", room.deck)
-
-    //Mudança pedro: let randomMultiplier = 5 (CODIGO ORIGINAL)
-
-    console.debug("Distribuindo as 5 primeiras cartas para o jogador [%s]", player.name)
-    
-
-    //while(randomMultiplier > 0){
-    // acho que aqui tem que ser um for  
-      for (var i = 0; i < 5; i++){    
+    console.debug("Distribuindo as cartas para o jogador [%s]", player.name)
+  
+      for (var i = 0; i < 5; i++){
+        shuffle(room.deck);    
         randomCard = room.deck[0]
 
         player.hand.push(randomCard)
 
         room.deck.splice(0, 1)
       }
-      //randomMultiplier -= 1
     }
 
   )
