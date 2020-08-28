@@ -31,7 +31,7 @@ const GameRoom = ({ location }) => {
     useEffect(() => {
         socket.emit('userJoined')
         console.log('userJoined socket.emit')
-        console.log(AllCards)
+        console.log(cardArray)
 
     }, [location.search] )
 
