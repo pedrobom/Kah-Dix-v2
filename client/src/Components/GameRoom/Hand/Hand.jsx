@@ -24,21 +24,20 @@ export default props =>
         
         if(hand.length == 0) return
 
-        console.log("Array de objetos carta vindo do server:")
-        console.log(cardsArray)
-
         console.log("Array de cartas distribuídas para o jogador:")
         console.log(hand)
 
-        return hand.map((card, index) => {
-            for (let i = 0; i < cardsArray.length; i++){
-                if(card == cardsArray[i].cardTitle){
-                    return (
-                        <Card key={index} src={cardsArray[i].src} alt={cardsArray[i].cardTitle}/>
-                    )
-                }
-            } 
-            
+        const getCardInfo = cardInput => AllCards.find(card => card.cardTitle === cardInput)
+
+        return hand.map((card, index) => {            
+            let cardInfo = getCardInfo(card)
+            return (
+                <Card 
+                    key={index} 
+                    src={cardInfo.src} 
+                    alt={cardInfo.cardTitle}
+                    id={`draggable-card-${index}`}/>
+            )            
         })
     }
 

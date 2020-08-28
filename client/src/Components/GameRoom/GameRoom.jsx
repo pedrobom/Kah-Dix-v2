@@ -35,21 +35,8 @@ const GameRoom = ({ location }) => {
         setName(name)
     }, [location.search])
 
-    // DRAG & DROP FUNCIONALITY
-    /*
-    *   BUG: se arrastar rápido demais a gente leva para o dropzone,
-    *        um elemento sem ser node, o que faz quebrar o AppenChild!
-    */
+
     useEffect(() => {
-        const cardsElements = document.querySelectorAll('[dixit-drop-zone=drop] .card')
-
-        cardsElements.forEach( (card, index) => {
-            card.setAttribute('id', `draggable-card-${index}`)
-            card.ondragstart = e => {
-                e.dataTransfer.setData('card-id', e.target.id)
-            }
-        })
-
         const dropzones = document.querySelectorAll('[dixit-drop-zone=drop]')
 
         dropzones.forEach( dropzone => {
@@ -57,7 +44,11 @@ const GameRoom = ({ location }) => {
             dropzone.ondrop = function(e){
                 const id = e.dataTransfer.getData('card-id')
                 const card = document.getElementById(id)
-                dropzone.appendChild(card)
+                console.debug("Carta sendo dropada:")
+                console.debug(card)
+                card 
+                    ? dropzone.appendChild(card) 
+                    : console.debug("A carta parece não existir! Verifique se o event listener 'ondragstart' está captando as informações corretamente")
             }    
         })
     }, [])
@@ -77,9 +68,7 @@ const GameRoom = ({ location }) => {
 
             {isGameStarted && <RoomLobby />}
             <Table />
-
             <Hand />
-
             <Score />
 
             {/* <Chat room={room} name={name}/> */}

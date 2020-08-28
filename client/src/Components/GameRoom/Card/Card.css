@@ -13,5 +13,5 @@
 
 .card:hover {
     /* filter:grayscale(50%); */
-    transform:scale(1.4)
+    transform:scale(1.1)
 }
