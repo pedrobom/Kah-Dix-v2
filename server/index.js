@@ -90,6 +90,8 @@ io.on('connect', (socket) => {
     Rooms.dealInitCardsWithoutReposition(userRoom);
 
     io.to(userRoom.name).emit('startButtonPressed')
+    io.to(userRoom.name).emit('message', { user: 'Andrétnik', text: 'Tá valendo! A partida começou!' });
+
 
   })
 
