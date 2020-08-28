@@ -93,26 +93,29 @@ const addUserToRoom = ({room, user}) => {
     }
 }
 
+
 // SÓ CHAMAR QUANDO O GAME STARTAR - socket.on("gameStart")
 const dealInitCardsWithoutReposition = (room) => {
   console.debug("Começando a distribuir as cartas para os jogadores da sala [%s]", room.name)
   
   room.players.forEach( player => {
+    shuffle(room.deck);
+    console.log("embaralhando cartas para o jogador [%s]", player.name)
+    console.log("baralho embaralhado [%s]", room.deck)
 
     //Mudança pedro: let randomMultiplier = 5 (CODIGO ORIGINAL)
 
+    console.debug("Distribuindo as 5 primeiras cartas para o jogador [%s]", player.name)
     
-    console.debug("Distribuindo cartas para o jogador [%s]", player.name)
-    
-    // acho que aqui tem que ser um for
-    //while(randomMultiplier > 0){
-      for (var i = 0; i < 5; i++){    
-        let randomMultiplier = room.deck.length
-        let cardDealtIndex = Math.floor(randomMultiplier * Math.random())
-        let cardDealt = room.deck[cardDealtIndex]
 
-        player.hand.push(cardDealt)
-        room.deck.splice(cardDealtIndex, 1)
+    //while(randomMultiplier > 0){
+    // acho que aqui tem que ser um for  
+      for (var i = 0; i < 5; i++){    
+        randomCard = room.deck[0]
+
+        player.hand.push(randomCard)
+
+        room.deck.splice(0, 1)
       }
       //randomMultiplier -= 1
     }
@@ -132,3 +135,23 @@ module.exports =
   addUserToRoom,
   dealInitCardsWithoutReposition,
 };
+
+// Fisher-Yates Alghoritm aka Knuth Shuffle
+function shuffle(array) {
+  var currentIndex = array.length, temporaryValue, randomIndex;
+
+  // While there remain elements to shuffle...
+  while (0 !== currentIndex) {
+
+    // Pick a remaining element...
+    randomIndex = Math.floor(Math.random() * currentIndex);
+    currentIndex -= 1;
+
+    // And swap it with the current element.
+    temporaryValue = array[currentIndex];
+    array[currentIndex] = array[randomIndex];
+    array[randomIndex] = temporaryValue;
+  }
+
+  return array;
+}
