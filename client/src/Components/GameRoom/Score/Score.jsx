@@ -18,16 +18,13 @@ export default props =>
 
     useEffect(() => {
         socket.on('getScore', (players) => {
-            console.log('socket.on("getScore") - setPlayers()')
+            console.log('socket.on("getScore") - Atualizando lista de jogadores e Score')
             setPlayer(players)
 
         })
         console.log(players)
     }, [])
 
-    useEffect(() => {
-        //efeito a cada vez que "player" é atualizado
-    }, [players])
 
     const sortPlayerByHightesScore = (a, b) => {
         if (a.score < b.score){

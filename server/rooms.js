@@ -3,7 +3,7 @@
 const rooms = [];
 
 // Deck de tds as cartas hard coded - MUDAR DEPOIS!
-const deckOfRoom = [
+const RoomDeck = [
   "card1", 
   "card2", 
   "card3", 
@@ -53,7 +53,7 @@ const createRoom = ({ roomName, hostPlayer }) => {
       state: RoomStates.WAITING_FOR_PLAYERS, 
       players: [hostPlayer], 
       hostPlayer: hostPlayer,
-      deck: deckOfRoom 
+      deck: RoomDeck 
     };
 
   rooms.push(room);
@@ -93,7 +93,7 @@ const addUserToRoom = ({room, user}) => {
     }
 }
 
-// SÓ CHAMAR QUANDO O GAME STARTAR - socket.on("gameStarted")
+// SÓ CHAMAR QUANDO O GAME STARTAR - socket.on("gameStart")
 const dealInitCardsWithoutReposition = (room) => {
   console.debug("Começando a distribuir as cartas para os jogadores da sala [%s]", room.name)
   

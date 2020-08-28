@@ -7,7 +7,7 @@ const addUser = ({ id }) => {
   console.debug("Procurando outro usuário existente com socket.id [%s]: %s", id, existingUser == undefined ? "socket disponível" : "ID indisponível")
 
   if(existingUser) {
-    console.debug("Usuário tentando entrar com nome ID já existe [%s]", id);
+    console.debug("Usuário tentando entrar com socket ID já existe [%s]", id);
     return { error: 'Username ID is taken.' };
   }
 

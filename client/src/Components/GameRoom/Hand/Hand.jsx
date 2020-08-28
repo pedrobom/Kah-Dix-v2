@@ -16,10 +16,8 @@ export default props =>
         socket.on('newHand', (newHand) => {
             console.log('escutando socket newHand ')
             setHand(newHand)
-            console.log(hand)
-
-        }, [hand])
-    })
+        })
+    },[hand])
 
     //ENCONTRAR UMA FORMA MAIS EFICIÊNTE DE FAZER ISSO!
     const renderCards = () => {   

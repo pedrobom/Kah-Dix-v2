@@ -89,9 +89,8 @@ io.on('connect', (socket) => {
   })
 
   socket.on('dealCards', () =>{
-    console.log('socket.on DealCards')
     socket.emit('newHand', user.hand )
-    console.log('socket emit newHand')
+    console.log('renderizando cartas do jogador: [%s]', user.name)
   })
 
   socket.on('sendMessage', (message, callback) => {
