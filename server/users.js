@@ -1,20 +1,20 @@
 const users = [];
 
-const addUser = ({ id}) => {
+const addUser = ({ id }) => {
   console.debug("Tentando adicionar usuário com id [%s] ", id)
 
   const existingUser = users.find((user) => user.id === id);
-  console.debug("Procurando usuário existente com id [%s]: %s", id, existingUser == undefined ? "ID disponível" : "ID indisponível")
+  console.debug("Procurando outro usuário existente com socket.id [%s]: %s", id, existingUser == undefined ? "socket disponível" : "ID indisponível")
 
   if(existingUser) {
     console.debug("Usuário tentando entrar com nome ID já existe [%s]", id);
     return { error: 'Username ID is taken.' };
   }
 
-  const user = { id, name: "Mr. LIMBO" };
+  const user = { id, name: "Mr. LIMBO", score: 0 };
 
   users.push(user);
-  console.info("Usuário adicionado com ID [%s] adicionado, agora temos [%s] usuário(s)", user.id, users.length)
+  console.info("Usuário  com socket.id [%s] adicionado, agora temos [%s] usuário(s)", user.id, users.length)
 
   return { user };
 }
@@ -63,6 +63,8 @@ const getUsersInRoom = (room) => {
   console.debug("Buscando usuários da sala [%s]", room)
   return users.filter((user) => user.room === room);
 } 
+
+
 
 const changeUserName = (user, name) => {
   console.log(`Usuário [${user.id}] trocou o nome de [${user.name}] para [${name}]`)

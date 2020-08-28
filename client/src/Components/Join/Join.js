@@ -14,7 +14,7 @@ const Join = () => {
               alert(error);
             }
         });
-        console.log('createUser disparou')
+        console.log('createUser() disparou socket.emit("join")')
     }
 
     return (
