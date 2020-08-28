@@ -6,6 +6,7 @@ const cors = require('cors');
 const Users = require('./users');
 const Rooms = require('./rooms')
 const StateMachine = require('./stateMachine')
+StateMachine.dispatch('debug', )
 
 const cardBack = ["cardBack.png", "cad1.png"]
 
