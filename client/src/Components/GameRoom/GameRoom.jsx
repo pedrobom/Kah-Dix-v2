@@ -1,11 +1,8 @@
 import React, { useState, useEffect } from "react";
 import queryString from 'query-string';
 
-import AllCards from '../allCards'
 import Chat from '../Chat/Chat'
 import RoomLobby from './RoomLobby/RoomLobby'
-import HandTable from "./HandTable/HandTable";
-import Card from './Card/Card'
 import Hand from './Hand/Hand'
 import Table from './Table/Table'
 import Score from './Score/Score'
@@ -19,20 +16,16 @@ import {socket} from "../socket.js"
 // import io from 'socket.io-client'
 // let socket;
 
-const GameRoom = ({ location }) => { 
-
-    const cardArray = AllCards
+const GameRoom = ({ location }) => {   
 
     const [name, setName] = useState('')
     const [room, setRoom] = useState([])
     const [users, setUsers] = useState([]);
-    const [startButton, setStartButton] = useState(false)   
+    const [isGameStarted, setIsGameStarted] = useState(true)   
 
     useEffect(() => {
         socket.emit('userJoined')
         console.log('userJoined socket.emit')
-        console.log(cardArray)
-
     }, [location.search] )
 
 
@@ -71,29 +64,21 @@ const GameRoom = ({ location }) => {
 
     // DISABLE START BUTTON
     useEffect(()=> {
-        socket.on('startButtonPressed', button => {
-            setStartButton(false)
+        socket.on('startButtonPressed', () => {
+            setIsGameStarted(false)
+            socket.emit('dealCards')
         })
-    }, [])
+    }, [location.search])
 
-    const renderCard = () => {
-        return cardArray.map(src => {
-            return (
-                <Card src={src} alt={"COMPONENTE CARTA"}/>
-            )
-        })
-    }
+    
 
     return (
         <div className="dixit-table">
 
-            {startButton && <RoomLobby />}
-            <Table>
-            </Table>
+            {isGameStarted && <RoomLobby />}
+            <Table />
 
-            <Hand>
-                {renderCard()}
-            </Hand>
+            <Hand />
 
             <Score />
 

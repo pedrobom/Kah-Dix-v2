@@ -23,6 +23,10 @@ export default props =>
 
         })
         console.log(players)
+    }, [])
+
+    useEffect(() => {
+        //efeito a cada vez que "player" é atualizado
     }, [players])
 
     const sortPlayerByHightesScore = (a, b) => {

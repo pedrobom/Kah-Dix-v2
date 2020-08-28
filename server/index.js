@@ -72,12 +72,26 @@ io.on('connect', (socket) => {
   // Aqui eu quero passar as informações da sala para o client,
   // para renderizar lista de usuários na sala... nome da sala... etc
   socket.on('userJoined', () =>{
+    console.log("socket.on('userJoined')")
     userRoom = Rooms.getRoomOfUser(user)
 
     io.to(userRoom.name).emit('getScore', userRoom.players)
-    console.log(userRoom.players)
     console.log("socket.to(userRoom.name).emit(getScore), players in room")
 
+  })
+
+  socket.on('gameStart', () =>{
+    userRoom = Rooms.getRoomOfUser(user)
+    Rooms.dealInitCardsWithoutReposition(userRoom);
+
+    io.to(userRoom.name).emit('startButtonPressed')
+
+  })
+
+  socket.on('dealCards', () =>{
+    console.log('socket.on DealCards')
+    socket.emit('newHand', user.hand )
+    console.log('socket emit newHand')
   })
 
   socket.on('sendMessage', (message, callback) => {
@@ -88,17 +102,17 @@ io.on('connect', (socket) => {
   });
 
 
-  socket.on('gameStart', () => {
-    const user = Users.getUser(socket.id)
-    const cards = cardBack
+  // socket.on('gameStart', () => {
+  //   const user = Users.getUser(socket.id)
+  //   const cards = cardBack
 
-    socket.emit('startButtonPressed', false)
-    console.debug("Usuário [%s] apertou o botão no component StartButton", user.name)
-    io.to(user.room).emit('drawCards', cards)
+  //   socket.emit('startButtonPressed', false)
+  //   console.debug("Usuário [%s] apertou o botão no component StartButton", user.name)
+  //   io.to(user.room).emit('drawCards', cards)
 
-    console.log('Jogador 1 distribuiu as cartas')
+  //   console.log('Jogador 1 distribuiu as cartas')
     
-  });
+  // });
     
 
   socket.on('disconnect', () => {

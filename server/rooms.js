@@ -2,6 +2,20 @@
 // This will contain all currently existing rooms
 const rooms = [];
 
+// Deck de tds as cartas hard coded - MUDAR DEPOIS!
+const deckOfRoom = [
+  "card1", 
+  "card2", 
+  "card3", 
+  "card4", 
+  "card5", 
+  "card6", 
+  "card7", 
+  "card8",
+  "card9",
+  "card10"
+]
+
 // Isso define os possiveis estados de um jogo / sala
 const RoomStates = {
     WAITING_FOR_PLAYERS: "WAITING_FOR_PLAYERS",
@@ -38,7 +52,8 @@ const createRoom = ({ roomName, hostPlayer }) => {
       name: roomName, 
       state: RoomStates.WAITING_FOR_PLAYERS, 
       players: [hostPlayer], 
-      hostPlayer: hostPlayer  
+      hostPlayer: hostPlayer,
+      deck: deckOfRoom 
     };
 
   rooms.push(room);
@@ -78,4 +93,37 @@ const addUserToRoom = ({room, user}) => {
     }
 }
 
-module.exports = { rooms, createRoom, removeRoom, getRoom, getRoomOfUser, addUserToRoom };
+// SÓ CHAMAR QUANDO O GAME STARTAR - socket.on("gameStarted")
+const dealInitCardsWithoutReposition = (room) => {
+  console.debug("Começando a distribuir as cartas para os jogadores da sala [%s]", room.name)
+  
+  room.players.forEach( player => {
+    let randomMultiplier = 5
+    console.debug("Distribuindo cartas para o jogador [%s]", player.name)
+    
+    while(randomMultiplier > 0){
+      let cardDealtIndex = Math.floor(randomMultiplier * Math.random())
+      let cardDealt = room.deck[cardDealtIndex]
+
+      player.hand.push(cardDealt)
+      if(cardDealtIndex > -1){
+        room.deck.splice(cardDealtIndex, 1)
+      }
+      randomMultiplier -= 1
+    }
+
+  })
+  
+  console.debug("Distribuição de cartas para os jogadores da sala [%s] concluída!", room.name)
+}
+
+module.exports = 
+{  
+  rooms, 
+  createRoom, 
+  removeRoom, 
+  getRoom, 
+  getRoomOfUser, 
+  addUserToRoom,
+  dealInitCardsWithoutReposition,
+};
