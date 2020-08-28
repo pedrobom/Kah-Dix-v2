@@ -13,7 +13,6 @@ import Score from './Score/Score'
 import './GameRoom.css'
 
 import {socket} from "../socket.js"
-import allCards from "../allCards";
 
 
 
@@ -32,6 +31,7 @@ const GameRoom = ({ location }) => {
     useEffect(() => {
         socket.emit('userJoined')
         console.log('userJoined socket.emit')
+        console.log(AllCards)
 
     }, [location.search] )
 
@@ -85,10 +85,10 @@ const GameRoom = ({ location }) => {
 
             {startButton && <RoomLobby />}
             <Table>
-                {renderCard()}
             </Table>
 
             <Hand>
+                {renderCard()}
             </Hand>
 
             <Score />
