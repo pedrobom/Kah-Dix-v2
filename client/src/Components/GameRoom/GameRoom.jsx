@@ -46,7 +46,7 @@ const GameRoom = ({ location }) => {
                 const card = document.getElementById(id)
                 console.debug("Carta sendo dropada:")
                 console.debug(card)
-                card 
+                card
                     ? dropzone.appendChild(card) 
                     : console.debug("A carta parece não existir! Verifique se o event listener 'ondragstart' está captando as informações corretamente")
             }    
