@@ -6,6 +6,7 @@ import RoomLobby from './RoomLobby/RoomLobby'
 import Hand from './Hand/Hand'
 import Table from './Table/Table'
 import Score from './Score/Score'
+import InputPrompt from './InputPrompt/InputPrompt'
 
 import './GameRoom.css'
 
@@ -18,7 +19,8 @@ import {socket} from "../socket.js"
 
 const GameRoom = ({ location }) => {   
 
-    const [isGameStarted, setIsGameStarted] = useState(true)   
+    const [isGameStarted, setIsGameStarted] = useState(false)  
+    const [isPromptSubmited, setIsPromptSubmited] = useState(true)
 
     useEffect(() => {
         socket.emit('userJoined')
@@ -56,12 +58,15 @@ const GameRoom = ({ location }) => {
     return (
         <div className="dixit-table">
 
+            {/* ESPERANDOJOGADORES: */}
             {isGameStarted && <RoomLobby />}
+            
+            { isPromptSubmited && <InputPrompt /> }            
             <Table />
             <Hand />
             <Score />
 
-            <Chat />
+            {/* <Chat /> */}
 
         </div>
     )

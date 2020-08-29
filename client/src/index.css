@@ -1,3 +1,9 @@
+/* @import url('https://fonts.googleapis.com/css?family=Fjalla+One&display=swap'); */
+
+:root {
+    --bg-img:url("https://s3-us-west-2.amazonaws.com/s.cdpn.io/38816/image-from-rawpixel-id-2210775-jpeg.jpg");
+}
+
 * {
     margin: 0;
     padding: 0;
@@ -6,7 +12,12 @@
 
 body {
     /* background-color: #E6EEF6; */
-    background-color: #FFFFFF;
-    background-image: linear-gradient(180deg, #FFFFFF 0%, #6284FF 50%, #FF0000 100%);
+    /* background-color: #FFFFFF;
+    background-image: linear-gradient(180deg, #FFFFFF 0%, #6284FF 50%, #FF0000 100%); */
+    /* background: var(--bg-img) center center no-repeat;
+    background-size: cover; */
 
+    background-color: rgb(171, 230, 171);
+    width: 100vw;
+    height: 100vh;
 }
