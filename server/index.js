@@ -85,40 +85,20 @@ io.on('connect', (socket) => {
 
   })
 
-  /* 
-  * BEGGINING OF STATE MACHINE
-  * 
-  */ 
+
   socket.on('gameStart', () =>{
     userRoom = Rooms.getRoomOfUser(user)
     Rooms.dealInitCardsWithoutReposition(userRoom);
+
+    // faz a sala ficar em um estado que novas pessoas não podem mais entrar!
     Rooms.setOnGoingGameRoomState(userRoom)
     
+    // ainda não faz nada
     Rooms.setGameState(userRoom, 'GAME_START')
 
     io.to(userRoom.name).emit('startButtonPressed')
     io.to(userRoom.name).emit('message', { user: 'Andrétnik', text: 'Tá valendo! A partida começou!' });
   })
-
-  socket.on('playerTurn', () => {
-    userRoom = Rooms.getRoomOfUser(user)
-    Rooms.setGameState(userRoom, 'PLAYER_TURN')
-  })
-
-  socket.on('resultsUpdate', () => {
-    userRoom = Rooms.getRoomOfUser(user)
-    Rooms.setGameState(userRoom, 'RESULTS_UPDATE')
-  })
-
-  socket.on('gameOver', () => {
-    userRoom = Rooms.getRoomOfUser(user)
-    Rooms.setGameState(userRoom, 'GAME_OVER')
-  })
-  /* 
-  *
-  * END OF STATE MACHINE
-  */ 
-
 
   socket.on('dealCards', () =>{
     socket.emit('newHand', user.hand )

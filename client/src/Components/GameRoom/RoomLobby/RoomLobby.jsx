@@ -6,14 +6,9 @@ import StartButton from './StartButton/StartButton'
 
 function RoomLobby (){
     const [players, setPlayer] = useState([])
-    //const [playerCount, setPlayerCount] = useState(5)
     const [isStartButtonReady, setIsStartButtonReady] = useState(false)
     const [isHost, setIsHost] = useState(false)
-
     
-    // FAZ APPEND DE UM JOGADOR QUE ENTROU NO LOBBY DA SALA,
-    // QUANDO O CONTADOR OS 6 JOGADORES ENTRAREM, O BOTÃO DE START
-    // FICA ATIVO!
 
     useEffect(() => {
         socket.on('getPlayersInfo', (players) => {
