@@ -19,6 +19,7 @@ export default props =>
     useEffect(() => {
         socket.on('roomData', (roomData) => {
             console.log('Score = Recebendo atualização RoomData do server')
+            console.log("roomData = [%s]",roomData)
             console.log(roomData)
             setRoom(roomData)
         })

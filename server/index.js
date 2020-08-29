@@ -81,9 +81,6 @@ io.on('connect', (socket) => {
     console.log('socket emited to Chat = getPlayerName')
     socket.emit('getPlayerRoom', userRoom.name)
     console.log('socket emited to Chat = getRoomName')
-    socket.emit('isHost', user.isHost)
-    console.log('Jogador[%s] é o Host da partida? [%s]', user.name, user.isHost)
-
   })
 
   /* 

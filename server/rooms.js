@@ -54,7 +54,6 @@ const createRoom = ({ roomName, hostPlayer }) => {
   }
   createDeck();
   console.log(room.deck)
-  hostPlayer.isHost = true
   console.info("Sala criada com nome [%s] e host player [%s]", roomName, hostPlayer.name)
 
   return { room };

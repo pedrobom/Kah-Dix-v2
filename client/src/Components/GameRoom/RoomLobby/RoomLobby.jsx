@@ -8,7 +8,6 @@ function RoomLobby (){
     const [roomData, setRoom] = useState()
     //const [playerCount, setPlayerCount] = useState(5)
     const [isStartButtonReady, setIsStartButtonReady] = useState(false)
-    const [isHost, setIsHost] = useState(false)
 
     
     // FAZ APPEND DE UM JOGADOR QUE ENTROU NO LOBBY DA SALA,
@@ -23,14 +22,6 @@ function RoomLobby (){
             })
 
         }, [])
-
-        useEffect(() => {
-        socket.on('isHost', (isBoolean) => {
-            console.log('RoomLobby = socket.on("isHost") - Perguntando ao server se sou o Host')
-            setIsHost(isBoolean)
-        })
-
-    }, [])
     
     useEffect(() => {
         // renderIncommingPlayer()
@@ -41,7 +32,7 @@ function RoomLobby (){
             }                 
         }
        
-    }, [])
+    }, [roomData])
 
     function renderIncommingPlayer(){
         if(roomData)
@@ -59,8 +50,8 @@ function RoomLobby (){
     }
 
     function renderStartButton(){
-        if(isHost == true && isStartButtonReady == true){
-            console.log('Eu sou o Host? [%s]',isHost)
+        if(roomData)
+        if(socket.id == roomData.Host.id && isStartButtonReady == true){
                 return(
                 <StartButton /> 
                 )            
