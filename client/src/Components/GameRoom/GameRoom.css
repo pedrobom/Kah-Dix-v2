@@ -1,9 +1,30 @@
+@import url('https://fonts.googleapis.com/css?family=Fjalla+One&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Luckiest+Guy&display=swap');
+
 .dixit-table {  
   display: flex;
   flex-direction: column;
-  justify-content: flex-end;
-  align-items: flex-end;
-  padding: 10px;
+  justify-content: center;
+  align-items: center;
   height: auto;
+}
 
+/* .game-room-title {
+  font-family: 'Fjalla One';
+  color: rgb(241, 82, 82);
+  text-shadow: 4px 3px 2px rgb(201, 193, 193);
+  text-justify: center;
+  text-align: center;
+  margin-top: 40px;
+  font-size: 40px;
+} */
+
+.game-room-title{
+  font-size: 50px;
+  text-justify: center;
+  text-align: center;
+  margin-top: 30px;
+  font-family: 'Luckiest Guy';
+  color: rgb(230, 106, 106);
+  text-shadow: -4px 3px 2px rgb(0, 0, 0);
 }

@@ -1,24 +1,16 @@
 .dealer-table {
-    width: 80vw;
-    min-height: 400px;
+    width: 70vw;
+    min-height: 350px;
     height: auto;
     display: flex;
     flex-flow: row wrap;
     justify-content: center;
     align-items: center;
     border-radius: 5px;
+    margin-top: 60px;
 
-    background-image: linear-gradient(to top, #30cfd0 0%, #330867 100%);
+    background-color: rgb(243, 242, 235);
 
-    -webkit-box-shadow: 8px 0px 0px 0px #DCD0C0, 
-        0px 8px 0px 0px #B1938B, 
-        -8px 0px 0px 0px #4E4E56, 
-        0px 0px 0px 8px #DA635D, 
-        2px 5px 15px 5px #000000; 
-
-    box-shadow: 8px 0px 0px 0px #DCD0C0, 
-        0px 8px 0px 0px #B1938B, 
-        -8px 0px 0px 0px #4E4E56, 
-        0px 0px 0px 8px #DA635D, 
-        2px 5px 15px 5px #000000;
+    border: 2px solid rgba(0,0,0,1);
+    box-shadow: 15px 15px 1px #ffa580, 15px 15px 1px 2px rgba(0,0,0,1);
 }
