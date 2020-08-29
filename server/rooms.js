@@ -40,7 +40,7 @@ const createRoom = ({ roomName, hostPlayer }) => {
       state: RoomStates.WAITING_FOR_PLAYERS, 
       players: [hostPlayer], 
       Host: hostPlayer,
-      deck: RoomDeck, 
+      deck: [], 
       gameState: ''
     };
   

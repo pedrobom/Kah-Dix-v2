@@ -7,7 +7,7 @@ export default props =>
 {
     // state de jogadores,
     // atualizar pelas props!
-    const [players, setPlayer] = useState([])
+    const [roomData, setRoom] = useState()
         // {name: "Lululu", score: 20},
         // {name: "Marchola", score: 16},
         // {name: "Snades", score: 2},
@@ -17,11 +17,10 @@ export default props =>
     
 
     useEffect(() => {
-        socket.on('getPlayersInfo', (players) => {
-            console.log('Score = socket.on("getScore") - Atualizando lista de jogadores e Score')
-            console.log(players)
-            setPlayer(players)
-
+        socket.on('roomData', (roomData) => {
+            console.log('Score = Recebendo atualização RoomData do server')
+            console.log(roomData)
+            setRoom(roomData)
         })
 
     }, [])
@@ -54,16 +53,18 @@ export default props =>
     }
 
     const renderRows = () =>{
-        const playersSorted = players.sort(sortPlayerByHightesScore)
-        return playersSorted.map((player, index) => {
-           // console.log("playersSorted = ",playersSorted)
-            return(
-                <tr key={index}>
-                    <td>{player.name}</td>
-                    <td>{player.score}</td>
-                </tr>
-            )
-        })
+        if(roomData){
+            const playersSorted = roomData.players.sort(sortPlayerByHightesScore)
+            return playersSorted.map((player, index) => {
+            // console.log("playersSorted = ",playersSorted)
+                return(
+                    <tr key={index}>
+                        <td>{player.name}</td>
+                        <td>{player.score}</td>
+                    </tr>
+                )
+            })            
+        }
     }
 
     return(

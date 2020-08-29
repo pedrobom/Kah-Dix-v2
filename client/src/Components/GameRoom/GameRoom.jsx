@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import queryString from 'query-string';
 
 import Chat from '../Chat/Chat'
 import RoomLobby from './RoomLobby/RoomLobby'

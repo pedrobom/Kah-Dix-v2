@@ -5,7 +5,7 @@ import { socket } from '../../socket'
 import StartButton from './StartButton/StartButton'
 
 function RoomLobby (){
-    const [players, setPlayer] = useState([])
+    const [roomData, setRoom] = useState()
     //const [playerCount, setPlayerCount] = useState(5)
     const [isStartButtonReady, setIsStartButtonReady] = useState(false)
     const [isHost, setIsHost] = useState(false)
@@ -15,14 +15,14 @@ function RoomLobby (){
     // QUANDO O CONTADOR OS 6 JOGADORES ENTRAREM, O BOTÃO DE START
     // FICA ATIVO!
 
-    useEffect(() => {
-        socket.on('getPlayersInfo', (players) => {
-            console.log('RoomLobby = socket.on("gePlayersInfo") - Atualizando informação de jogadores')
-            console.log(players)
-            setPlayer(players)
-        })
+        useEffect(() => {
+            socket.on('roomData', (roomData) => {
+                console.log('RoomLobby = Recebendo atualização RoomData do server')
+                console.log("socket.on('roomData') = [%s]", roomData)
+                setRoom(roomData)
+            })
 
-    }, [])
+        }, [])
 
         useEffect(() => {
         socket.on('isHost', (isBoolean) => {
@@ -35,13 +35,17 @@ function RoomLobby (){
     useEffect(() => {
         // renderIncommingPlayer()
         // setPlayerCount(playerCount + 1)
-            if (players.length >= 2){  
+        if(roomData){
+            if (roomData.players.length >= 2){  
                 setIsStartButtonReady(true)
-            }            
-    }, [players])
+            }                 
+        }
+       
+    }, [])
 
     function renderIncommingPlayer(){
-        return players.map((player, index) => {
+        if(roomData)
+        return roomData.players.map((player, index) => {
             return(
                 <h2 key={index}>{player.name}</h2>
             )

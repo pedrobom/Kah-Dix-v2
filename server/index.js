@@ -74,7 +74,8 @@ io.on('connect', (socket) => {
     console.log("socket.on('userJoined')")
     userRoom = Rooms.getRoomOfUser(user)
 
-    io.to(userRoom.name).emit('getPlayersInfo', userRoom.players)
+    io.to(userRoom.name).emit('roomData', userRoom)
+    console.log(userRoom)
     console.log('jogador [%s] pediu para todos da sala [%s] atualizarem a sua lista de jogadores.', user.name, userRoom.name)
     socket.emit('getPlayerName', user.name)
     console.log('socket emited to Chat = getPlayerName')
