@@ -5,7 +5,7 @@ const rooms = [];
 // Isso define os possiveis estados de um jogo / sala
 const RoomStates = {
     WAITING_FOR_PLAYERS: "WAITING_FOR_PLAYERS",
-    ONGOING_GAME: "ONGOING_GAME"
+    ONGOING_GAME: "ONGOING_GAME",
 }
 
 const createRoom = ({ roomName, hostPlayer }) => {
@@ -40,12 +40,8 @@ const createRoom = ({ roomName, hostPlayer }) => {
       state: RoomStates.WAITING_FOR_PLAYERS, 
       players: [hostPlayer], 
       Host: hostPlayer,
-<<<<<<< HEAD
-      deck: RoomDeck,
-      state: '' 
-=======
-      deck: [] 
->>>>>>> e3ba741ac86d80bf6164481dd0dc98387cc67cc6
+      deck: RoomDeck, 
+      gameState: ''
     };
   
   rooms.push(room);
@@ -95,8 +91,12 @@ const addUserToRoom = ({room, user}) => {
     }
 }
 
-const setRoomState = (room, state) => {
-  room.state = state
+const setOnGoingGameRoomState = (room) => {
+  room.state = RoomStates.ONGOING_GAME
+}
+
+const setGameState = (room, gameState) => {
+  room.gameState = gameState
 }
 
 // SÓ CHAMAR QUANDO O GAME STARTAR - socket.on("gameStart")
@@ -130,7 +130,8 @@ module.exports =
   getRoomOfUser, 
   addUserToRoom,
   dealInitCardsWithoutReposition,
-  setRoomState
+  setOnGoingGameRoomState,
+  setGameState
 };
 
 // Fisher-Yates Alghoritm aka Knuth Shuffle
