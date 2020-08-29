@@ -15,6 +15,7 @@ import {socket} from "../socket.js"
 // let socket;
 
 const GameRoom = ({ location }) => {   
+    const [roomData, setRoom] = useState()
 
     const [isGameStarted, setIsGameStarted] = useState(false)  
     const [isPromptSubmited, setIsPromptSubmited] = useState(false)
@@ -50,6 +51,15 @@ const GameRoom = ({ location }) => {
         })
     }, [location.search])
 
+    useEffect(() => {
+        socket.on('roomData', (roomData) => {
+            console.log('GameLobby = Recebendo atualização RoomData do server')
+            console.log("socket.on('roomData') = [%x]", roomData)
+
+            setRoom(roomData)
+        })
+
+    }, [])
     
 
     return (
@@ -58,7 +68,7 @@ const GameRoom = ({ location }) => {
         <div className="dixit-table">
 
             {/* ESPERANDOJOGADORES: */}
-            {!isGameStarted && <RoomLobby />}
+            {!isGameStarted && <RoomLobby roomData={roomData} />}
             
             { isPromptSubmited && <InputPrompt /> }            
             <Table />
