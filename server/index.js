@@ -77,11 +77,13 @@ io.on('connect', (socket) => {
     userRoom = Rooms.getRoomOfUser(user)
 
     io.to(userRoom.name).emit('getPlayersInfo', userRoom.players)
+    console.log('jogador [%s] pediu para todos da sala [%s] atualizarem a sua lista de jogadores.', user.name, userRoom.name)
     socket.emit('getPlayerName', user.name)
     console.log('socket emited to Chat = getPlayerName')
     socket.emit('getPlayerRoom', userRoom.name)
     console.log('socket emited to Chat = getRoomName')
-    console.log('jogador [%s] pediu para todos da sala [%s] atualizarem a sua lista de jogadores.', user.name, userRoom.name)
+    socket.emit('isHost', user.isHost)
+    console.log('Jogador[%s] é o Host da partida? [%s]', user.name, user.isHost)
 
   })
 

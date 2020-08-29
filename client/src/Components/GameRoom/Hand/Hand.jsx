@@ -9,7 +9,7 @@ import AllCards from '../../allCards'
 
 export default props =>
 {
-    const cardsArray = AllCards
+    const cardsArray = AllCards()
     const [hand, setHand] = useState([])
 
     useEffect(() => {
@@ -27,7 +27,7 @@ export default props =>
         console.log("Array de cartas distribuídas para o jogador:")
         console.log(hand)
 
-        const getCardInfo = cardInput => AllCards.find(card => card.cardTitle === cardInput)
+        const getCardInfo = cardInput => cardsArray.find(card => card.cardTitle === cardInput)
 
         return hand.map((card, index) => {            
             let cardInfo = getCardInfo(card)
