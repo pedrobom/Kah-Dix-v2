@@ -9,7 +9,7 @@ import AllCards from '../../allCards'
 
 export default props =>
 {
-    const cardsArray = AllCards
+    const cardsArray = AllCards()
     const [hand, setHand] = useState([])
 
     useEffect(() => {
