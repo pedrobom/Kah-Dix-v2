@@ -2,19 +2,18 @@
 // This will contain all currently existing rooms
 const rooms = [];
 
+
 // Deck de tds as cartas hard coded - MUDAR DEPOIS!
 const RoomDeck = [
-  "card1", 
-  "card2", 
-  "card3", 
-  "card4", 
-  "card5", 
-  "card6", 
-  "card7", 
-  "card8",
-  "card9",
-  "card10"
 ]
+
+createDeck = () =>{
+  for (var i = 1; i < 98; i++){
+    let card = `card${i}`
+    RoomDeck.push(card)    
+  }
+
+}
 
 // Isso define os possiveis estados de um jogo / sala
 const RoomStates = {
@@ -34,7 +33,7 @@ const createRoom = ({ roomName, hostPlayer }) => {
     return { error: 'Para criar uma sala é preciso da nome!' };
   }
 
-  console.debug("Criando uma sala com nome [%s] para o jogador [%s]", roomName, hostPlayer.id)
+  console.debug("Criando uma sala com nome [%s] para o HostPlayer [%s]", roomName, hostPlayer.name)
   roomName = roomName.trim();
 
   const existingRoom = getRoom(roomName)
@@ -42,21 +41,25 @@ const createRoom = ({ roomName, hostPlayer }) => {
 
 
   if(existingRoom) {
-    console.debug("Usuário [%s] tentando criar uma sala com um nome já existente [%s]", hostPlayer.id, roomName);
+    console.debug("Usuário [%s] tentando criar uma sala com um nome já existente [%s]", hostPlayer.name, roomName);
     return { error: 'Uma sala com esse nome já existe!' };
   }
 
   // Isso é o que uma nova sala representa
+  
   const room = { 
       createdAt: new Date(),
       name: roomName, 
       state: RoomStates.WAITING_FOR_PLAYERS, 
       players: [hostPlayer], 
-      hostPlayer: hostPlayer,
+      Host: hostPlayer,
       deck: RoomDeck 
     };
-
+  
   rooms.push(room);
+  createDeck();
+  console.log(RoomDeck)
+  hostPlayer.isHost = true
   console.info("Sala criada com nome [%s] e host player [%s]", roomName, hostPlayer.name)
 
   return { room };

@@ -27,7 +27,7 @@ export default props =>
         console.log("Array de cartas distribuídas para o jogador:")
         console.log(hand)
 
-        const getCardInfo = cardInput => AllCards.find(card => card.cardTitle === cardInput)
+        const getCardInfo = cardInput => cardsArray.find(card => card.cardTitle === cardInput)
 
         return hand.map((card, index) => {            
             let cardInfo = getCardInfo(card)

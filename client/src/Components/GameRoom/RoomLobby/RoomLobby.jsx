@@ -8,6 +8,7 @@ function RoomLobby (){
     const [players, setPlayer] = useState([])
     //const [playerCount, setPlayerCount] = useState(5)
     const [isStartButtonReady, setIsStartButtonReady] = useState(false)
+    const [isHost, setIsHost] = useState(false)
 
     
     // FAZ APPEND DE UM JOGADOR QUE ENTROU NO LOBBY DA SALA,
@@ -19,18 +20,24 @@ function RoomLobby (){
             console.log('RoomLobby = socket.on("gePlayersInfo") - Atualizando informação de jogadores')
             console.log(players)
             setPlayer(players)
-
         })
 
     }, [])
+
+        useEffect(() => {
+        socket.on('isHost', (isBoolean) => {
+            console.log('RoomLobby = socket.on("isHost") - Perguntando ao server se sou o Host')
+            setIsHost(isBoolean)
+        })
+
+    }, [])
+    
     useEffect(() => {
         // renderIncommingPlayer()
         // setPlayerCount(playerCount + 1)
-
-        if (players.length >= 3){  
-            setIsStartButtonReady(true)
-        }
-
+            if (players.length >= 2){  
+                setIsStartButtonReady(true)
+            }            
     }, [players])
 
     function renderIncommingPlayer(){
@@ -47,14 +54,23 @@ function RoomLobby (){
         socket.emit('gameStart');       
     }
 
+    function renderStartButton(){
+        if(isHost == true && isStartButtonReady == true){
+            console.log('Eu sou o Host? [%s]',isHost)
+                return(
+                <StartButton /> 
+                )            
+        }
+
+    }
+
     return (
         <div id="background-start-button">
             <div id="wrapper">
                 
-                { isStartButtonReady && <StartButton /> }
-                
+                {renderStartButton()}                
                 { !isStartButtonReady 
-                    ? <h1>Esperando demais Jogadores:</h1> 
+                    ? <h1>Aguardando a galera...</h1> 
                     : <h1>Partida Pronta!</h1>
                 }
                 {/* <h2>{`${playerCount}/6`}</h2> */}
