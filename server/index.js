@@ -126,11 +126,14 @@ io.on('connect', (socket) => {
 
   socket.on('disconnect', () => {
     console.log("usuário saiu")
+    
     const user = Users.removeUser(socket.id);
-
-    if(user) {
-      io.to(user.room).emit('message', { user: 'Admin', text: `${user.name} meteu o pé.` });
-      io.to(user.room).emit('roomData', { room: user.room, users: Users.getUsersInRoom(user.room)});
+    // CORRIGIR !!! user não tem mais room 
+    userRoom = Rooms.getRoomOfUser(user)
+    if(user) { 
+      
+      io.to(userRoom.name).emit('message', { user: 'Andrétnik', text: `${user.name} meteu o pé.` });
+      io.to(userRoom.name).emit('getPlayersInfo', userRoom.players)
     }
   })
 });

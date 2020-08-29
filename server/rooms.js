@@ -2,19 +2,6 @@
 // This will contain all currently existing rooms
 const rooms = [];
 
-
-// Deck de tds as cartas hard coded - MUDAR DEPOIS!
-const RoomDeck = [
-]
-
-createDeck = () =>{
-  for (var i = 1; i < 98; i++){
-    let card = `card${i}`
-    RoomDeck.push(card)    
-  }
-
-}
-
 // Isso define os possiveis estados de um jogo / sala
 const RoomStates = {
     WAITING_FOR_PLAYERS: "WAITING_FOR_PLAYERS",
@@ -53,12 +40,19 @@ const createRoom = ({ roomName, hostPlayer }) => {
       state: RoomStates.WAITING_FOR_PLAYERS, 
       players: [hostPlayer], 
       Host: hostPlayer,
-      deck: RoomDeck 
+      deck: [] 
     };
   
   rooms.push(room);
+  createDeck = () =>{
+    for (var i = 1; i < 98; i++){
+      let card = `card${i}`
+      room.deck.push(card)    
+    }
+  
+  }
   createDeck();
-  console.log(RoomDeck)
+  console.log(room.deck)
   hostPlayer.isHost = true
   console.info("Sala criada com nome [%s] e host player [%s]", roomName, hostPlayer.name)
 
