@@ -40,7 +40,7 @@ const createRoom = ({ roomName, hostPlayer }) => {
       state: RoomStates.WAITING_FOR_PLAYERS, 
       players: [hostPlayer], 
       Host: hostPlayer,
-      deck: RoomDeck, 
+      deck: [], 
       gameState: ''
     };
   
@@ -54,7 +54,6 @@ const createRoom = ({ roomName, hostPlayer }) => {
   }
   createDeck();
   console.log(room.deck)
-  hostPlayer.isHost = true
   console.info("Sala criada com nome [%s] e host player [%s]", roomName, hostPlayer.name)
 
   return { room };

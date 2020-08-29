@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import queryString from 'query-string';
 
 import Chat from '../Chat/Chat'
 import RoomLobby from './RoomLobby/RoomLobby'
@@ -7,6 +6,7 @@ import Hand from './Hand/Hand'
 import Table from './Table/Table'
 import Score from './Score/Score'
 import InputPrompt from './InputPrompt/InputPrompt'
+import Menu from './Menu/Menu'
 
 import './GameRoom.css'
 
@@ -16,6 +16,7 @@ import {socket} from "../socket.js"
 // let socket;
 
 const GameRoom = ({ location }) => {   
+    const [roomData, setRoom] = useState()
 
     const [isGameStarted, setIsGameStarted] = useState(false)  
     const [isPromptSubmited, setIsPromptSubmited] = useState(false)
@@ -51,24 +52,37 @@ const GameRoom = ({ location }) => {
         })
     }, [location.search])
 
+    useEffect(() => {
+        socket.on('roomData', (roomData) => {
+            console.log('GameLobby = Recebendo atualização RoomData do server')
+            console.log("socket.on('roomData') = [%x]", roomData)
+
+            setRoom(roomData)
+        })
+
+    }, [])
     
 
     return (
         <React.Fragment>
-        <h1 class="game-room-title">FRASE DO OTÁRIO: EU SOU OTÁRIO</h1>
-        <div className="dixit-table">
-
-            {/* ESPERANDOJOGADORES: */}
-            {!isGameStarted && <RoomLobby />}
             
-            { isPromptSubmited && <InputPrompt /> }            
-            <Table />
-            <Hand />
-            <Score />
+            <Menu />
+            
+            <h1 class="game-room-title">FRASE DO OTÁRIO: EU SOU OTÁRIO</h1>
+            
+            <div className="dixit-table">
 
-            {/* <Chat /> */}
+                {/* ESPERANDOJOGADORES: */}
+                {!isGameStarted && <RoomLobby roomData={roomData} />}
+                
+                { isPromptSubmited && <InputPrompt /> }            
+                <Table />
+                <Hand />
+                <Score />
 
-        </div>
+                {/* <Chat /> */}
+
+            </div>
         </React.Fragment>
     )
 }

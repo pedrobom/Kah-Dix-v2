@@ -1,0 +1,7 @@
+.ingame-menu {
+    position: fixed;
+    background-color: red;
+    right: 0;
+    top: 0;
+    border: 5px solid black
+}

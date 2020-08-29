@@ -4,60 +4,47 @@ import { socket } from '../../socket'
 
 import StartButton from './StartButton/StartButton'
 
-function RoomLobby (){
-    const [players, setPlayer] = useState([])
+function RoomLobby (roomData){
+
     const [isStartButtonReady, setIsStartButtonReady] = useState(false)
-    const [isHost, setIsHost] = useState(false)
-    
 
-    useEffect(() => {
-        socket.on('getPlayersInfo', (players) => {
-            console.log('RoomLobby = socket.on("gePlayersInfo") - Atualizando informação de jogadores')
-            console.log(players)
-            setPlayer(players)
-        })
 
-    }, [])
-
-        useEffect(() => {
-        socket.on('isHost', (isBoolean) => {
-            console.log('RoomLobby = socket.on("isHost") - Perguntando ao server se sou o Host')
-            setIsHost(isBoolean)
-        })
-
-    }, [])
     
     useEffect(() => {
-        // renderIncommingPlayer()
-        // setPlayerCount(playerCount + 1)
-            if (players.length >= 2){  
+        if(roomData.roomData){
+            if (roomData.roomData.players.length >= 2){  
                 setIsStartButtonReady(true)
-            }            
-    }, [players])
+            }                 
+        }   
+    }, [roomData])
 
     function renderIncommingPlayer(){
-        return players.map((player, index) => {
-            return(
-                <h2 key={index}>{player.name}</h2>
-            )
-        })
+        console.log(roomData)
+        if(roomData.roomData){
+            return roomData.roomData.players.map((player, index) => {
+                return(
+                    <h2 key={index}>{player.name}</h2>
+                )
+            })             
+        }
     }
-
-    
+  
     function startGame(e) {
         e.preventDefault();
         socket.emit('gameStart');       
     }
 
     function renderStartButton(){
-        if(isHost == true && isStartButtonReady == true){
-            console.log('Eu sou o Host? [%s]',isHost)
-                return(
-                <StartButton /> 
-                )            
-        }
+        if(roomData && roomData.Host){
+            if(socket.id == roomData.Host.id && isStartButtonReady == true){
+                    return(
+                    <StartButton /> 
+                    )            
+            }
 
+        }            
     }
+
 
     return (
         <div id="background-start-button">
