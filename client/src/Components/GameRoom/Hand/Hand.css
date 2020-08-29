@@ -1,7 +1,7 @@
 .player-hand {
   width: 70vw;
-  min-height: 400px;
-  height: auto;
+  min-height: 350px;
+    height: auto;
   display: flex;
   flex-flow: row wrap;
   justify-content: center;

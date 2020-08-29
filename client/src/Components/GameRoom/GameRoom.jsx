@@ -20,7 +20,7 @@ import {socket} from "../socket.js"
 const GameRoom = ({ location }) => {   
 
     const [isGameStarted, setIsGameStarted] = useState(false)  
-    const [isPromptSubmited, setIsPromptSubmited] = useState(true)
+    const [isPromptSubmited, setIsPromptSubmited] = useState(false)
 
     useEffect(() => {
         socket.emit('userJoined')
@@ -48,7 +48,7 @@ const GameRoom = ({ location }) => {
     // DISABLE START BUTTON
     useEffect(()=> {
         socket.on('startButtonPressed', () => {
-            setIsGameStarted(false)
+            setIsGameStarted(true)
             socket.emit('dealCards')
         })
     }, [location.search])
@@ -56,10 +56,12 @@ const GameRoom = ({ location }) => {
     
 
     return (
+        <React.Fragment>
+        <h1 class="game-room-title">KAH DIXIT DOS MINA-MANOS</h1>
         <div className="dixit-table">
 
             {/* ESPERANDOJOGADORES: */}
-            {isGameStarted && <RoomLobby />}
+            {!isGameStarted && <RoomLobby />}
             
             { isPromptSubmited && <InputPrompt /> }            
             <Table />
@@ -69,6 +71,7 @@ const GameRoom = ({ location }) => {
             {/* <Chat /> */}
 
         </div>
+        </React.Fragment>
     )
 }
 
