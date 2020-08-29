@@ -5,8 +5,6 @@ const cors = require('cors');
 
 const Users = require('./users');
 const Rooms = require('./rooms')
-const StateMachine = require('./stateMachine')
-StateMachine.dispatch('debug', )
 
 const cardBack = ["cardBack.png", "cad1.png"]
 
@@ -90,6 +88,7 @@ io.on('connect', (socket) => {
   socket.on('gameStart', () =>{
     userRoom = Rooms.getRoomOfUser(user)
     Rooms.dealInitCardsWithoutReposition(userRoom);
+    Rooms.setRoomState('GAME_START')
 
     io.to(userRoom.name).emit('startButtonPressed')
     io.to(userRoom.name).emit('message', { user: 'Andrétnik', text: 'Tá valendo! A partida começou!' });

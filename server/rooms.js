@@ -53,7 +53,8 @@ const createRoom = ({ roomName, hostPlayer }) => {
       state: RoomStates.WAITING_FOR_PLAYERS, 
       players: [hostPlayer], 
       Host: hostPlayer,
-      deck: RoomDeck 
+      deck: RoomDeck,
+      state: '' 
     };
   
   rooms.push(room);
@@ -96,6 +97,9 @@ const addUserToRoom = ({room, user}) => {
     }
 }
 
+const setRoomState = (room, state) => {
+  room.state = state
+}
 
 // SÓ CHAMAR QUANDO O GAME STARTAR - socket.on("gameStart")
 const dealInitCardsWithoutReposition = (room) => {
@@ -128,6 +132,7 @@ module.exports =
   getRoomOfUser, 
   addUserToRoom,
   dealInitCardsWithoutReposition,
+  setRoomState
 };
 
 // Fisher-Yates Alghoritm aka Knuth Shuffle

@@ -12,8 +12,6 @@ import './GameRoom.css'
 
 import {socket} from "../socket.js"
 
-
-
 // import io from 'socket.io-client'
 // let socket;
 
@@ -57,7 +55,7 @@ const GameRoom = ({ location }) => {
 
     return (
         <React.Fragment>
-        <h1 class="game-room-title">KAH DIXIT DOS MINA-MANOS</h1>
+        <h1 class="game-room-title">FRASE DO OTÁRIO: EU SOU OTÁRIO</h1>
         <div className="dixit-table">
 
             {/* ESPERANDOJOGADORES: */}
