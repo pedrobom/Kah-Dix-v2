@@ -3,7 +3,7 @@ import './Score.css'
 import { socket } from '../../socket'
 
 
-export default function Score(roomData) {
+export default function Score({roomData}) {
 
     const sortPlayerByHightesScore = (a, b) => {
         if (a.score < b.score){
@@ -14,25 +14,9 @@ export default function Score(roomData) {
             return 0
         }
     }
-    
-    const renderTable = () =>{
-        return(
-            <table className="fl-table">
-                <thead>
-                    <tr>
-                        <th>Nome</th>
-                        <th>Pontos</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {renderRows()}
-                </tbody>
-            </table>
-        )
-    }
 
-    const renderRows = () =>{
-        if(roomData && roomData.players){
+    const renderRows = () =>{ 
+        if(roomData){
             const playersSorted = roomData.players.sort(sortPlayerByHightesScore)
             return playersSorted.map((player, index) => {
             // console.log("playersSorted = ",playersSorted)
@@ -48,7 +32,17 @@ export default function Score(roomData) {
 
     return(
         <aside className="players-nav-bar">
-            {renderTable()}
+            <table className="fl-table">
+                <thead>
+                    <tr>
+                        <th>Nome</th>
+                        <th>Pontos</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {renderRows()}
+                </tbody>
+            </table>
         </aside>
     )
 }

@@ -4,15 +4,15 @@ import { socket } from '../../socket'
 
 import StartButton from './StartButton/StartButton'
 
-function RoomLobby (roomData){
+function RoomLobby ({roomData}){
 
     const [isStartButtonReady, setIsStartButtonReady] = useState(false)
 
 
     
     useEffect(() => {
-        if(roomData.roomData){
-            if (roomData.roomData.players.length >= 2){  
+        if(roomData){
+            if (roomData.players.length >= 2){  
                 setIsStartButtonReady(true)
             }                 
         }   
@@ -20,8 +20,8 @@ function RoomLobby (roomData){
 
     function renderIncommingPlayer(){
         console.log(roomData)
-        if(roomData.roomData){
-            return roomData.roomData.players.map((player, index) => {
+        if(roomData){
+            return roomData.players.map((player, index) => {
                 return(
                     <h2 key={index}>{player.name}</h2>
                 )
@@ -35,7 +35,7 @@ function RoomLobby (roomData){
     }
 
     function renderStartButton(){
-        if(roomData && roomData.Host){
+        if(roomData){
             if(socket.id == roomData.Host.id && isStartButtonReady == true){
                     return(
                     <StartButton /> 

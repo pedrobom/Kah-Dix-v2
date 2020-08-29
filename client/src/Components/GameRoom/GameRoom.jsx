@@ -75,10 +75,11 @@ const GameRoom = ({ location }) => {
                 {/* ESPERANDOJOGADORES: */}
                 {!isGameStarted && <RoomLobby roomData={roomData} />}
                 
+           
                 { isPromptSubmited && <InputPrompt /> }            
                 <Table />
                 <Hand />
-                <Score />
+                <Score roomData={roomData} />
 
                 {/* <Chat /> */}
 
