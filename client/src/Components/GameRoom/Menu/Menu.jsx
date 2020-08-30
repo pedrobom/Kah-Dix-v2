@@ -1,6 +1,8 @@
 import React from 'react'
 import './Menu.css'
 
+import menuScr from '../../../assets/images/menuIconScr'
+
 export default props => 
 {
     
@@ -31,7 +33,7 @@ export default props =>
 
     return(
         <div className="ingame-menu" onClick={e => expandMenu(e)}>
-            <h1 className="ingame-menu-icon show">MENU</h1>
+            <img className="ingame-menu-icon show" src={menuScr}></img>
             <div className="ingame-menu-expanded hide">
                 <a href="#">OPÇÃO1</a>
                 <a href="#">OPÇÃO2</a>

@@ -23,7 +23,7 @@ io.on('connect', (socket) => {
 
   console.log("[io.on('connect') - Novo usuário conectado com socket [%s]", socket.id)
   // Assim que o usuário conecta, a gente cria um usuário para ele
-  const { error, user } = Users.addUser({ id: socket.id, socket: socket });
+  const { error, user } = Users.addUser({ id: socket.id });
 
   // Este metodo representa um usuário tentando entrar em uma sala
   socket.on('join', ({ name, roomName }, callback) => {
