@@ -11,7 +11,7 @@ const addUser = ({ id }) => {
     return { error: 'Username ID is taken.' };
   }
 
-  const user = { id, name: "Mr. LIMBO", score: 0, hand: [] };
+  const user = { id, name: "Usuário ainda sem nome" };
 
   users.push(user);
   console.info("Usuário  com socket.id [%s] adicionado, agora temos [%s] usuário(s)", user.id, users.length)
