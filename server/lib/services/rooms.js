@@ -94,8 +94,7 @@ module.exports = class Rooms {
   }
   
   static emitRoomDataForSockets = (room) => {
-    console.info("Emitindo roomData para os sockets conectados na sala [%s]", room.name)
-    
+    console.info("Emitindo roomData para os sockets conectados na sala [%s]", room.name) 
   }
   
   static setOnGoingGameRoomState = (room) => {

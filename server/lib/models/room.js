@@ -20,7 +20,7 @@ module.exports = class Room {
         this.state = Room.States.WAITING_FOR_PLAYERS 
         this.players = [new RoomPlayer({user: hostPlayer})]
         this.Host = hostPlayer
-        this.currentPlayer = 0
+        this.currentPlayerIndex = 0
         this.prompt = null
 
         // Populates the deck
@@ -97,7 +97,7 @@ module.exports = class Room {
 
     // Retorna o jogador atual
     getCurrentPlayer() {
-        return this.players[this.currentPlayer]
+        return this.players[this.currentPlayerIndex]
     }
 
 }
