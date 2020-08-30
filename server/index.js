@@ -64,7 +64,7 @@ io.on('connect', (socket) => {
     console.info("Adicionando usuário [%s] para a sala [%s] no socket", user.id, room.name)
     socket.join(room.name);
     io.to(room.name).emit('message', { user: 'Andrétnik', text: `${user.name} tá na área!` });
-        
+    io.to(room.name).emit('roomData', room)
     callback(null, {user, room});
   });
 
@@ -75,7 +75,6 @@ io.on('connect', (socket) => {
     userRoom = Rooms.getRoomOfUser(user)
 
     io.to(userRoom.name).emit('roomData', userRoom)
-    console.log(userRoom)
     console.log('jogador [%s] pediu para todos da sala [%s] atualizarem a sua lista de jogadores.', user.name, userRoom.name)
     socket.emit('getPlayerName', user.name)
     console.log('socket emited to Chat = getPlayerName')
@@ -86,22 +85,17 @@ io.on('connect', (socket) => {
 
   socket.on('gameStart', () =>{
     userRoom = Rooms.getRoomOfUser(user)
+
     Rooms.dealInitCardsWithoutReposition(userRoom);
 
-    // faz a sala ficar em um estado que novas pessoas não podem mais entrar!
-    Rooms.setOnGoingGameRoomState(userRoom)
-    
-    // ainda não faz nada
-    Rooms.setGameState(userRoom, 'GAME_START')
+    socket.emit('newHand', user.hand )
+    Rooms.setGameState(user, 'GAME_START')
+    io.to(userRoom.name).emit('roomData', userRoom)
+    console.log('jogador [%s] pediu para todos da sala [%s] atualizarem o roomData.', user.name, userRoom.name)
 
-    io.to(userRoom.name).emit('startButtonPressed')
     io.to(userRoom.name).emit('message', { user: 'Andrétnik', text: 'Tá valendo! A partida começou!' });
   })
 
-  socket.on('dealCards', () =>{
-    socket.emit('newHand', user.hand )
-    console.log('renderizando cartas do jogador: [%s]', user.name)
-  })
 
   socket.on('sendMessage', (message, callback) => {
     userRoom = Rooms.getRoomOfUser(user)

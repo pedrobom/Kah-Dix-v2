@@ -91,13 +91,15 @@ const addUserToRoom = ({room, user}) => {
 }
 
 const setOnGoingGameRoomState = (room) => {
-  room.state = RoomStates.ONGOING_GAME
+  rooms.find((room) => room.name === roomName)
+  rooms.room.state = RoomStates.ONGOING_GAME
 }
 
-const setGameState = (room, gameState) => {
-  room.gameState = gameState
+const setGameState = (user, gameState) => {
+  room = rooms.find(room => room.players.indexOf(user) != -1)
+  room.state.splice(0,1)
+  room.state.push(gameState)
 }
-
 // SÓ CHAMAR QUANDO O GAME STARTAR - socket.on("gameStart")
 const dealInitCardsWithoutReposition = (room) => {
   console.debug("Começando a distribuir as cartas para os jogadores da sala [%s]", room.name)
