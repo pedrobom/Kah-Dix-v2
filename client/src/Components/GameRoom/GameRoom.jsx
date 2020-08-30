@@ -73,7 +73,7 @@ const GameRoom = ({ location }) => {
             
                     { isPromptSubmited && <InputPrompt /> }            
                     <Table />
-                    <Hand />
+                    <Hand roomData={roomData} />
                     <Score roomData={roomData} />
 
                     {/* <Chat /> */}

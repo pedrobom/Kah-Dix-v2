@@ -96,10 +96,33 @@ module.exports = class Rooms {
   
   }
   
-  static emitRoomDataForSockets = (room) => {
-    console.info("Emitindo roomData para os sockets conectados na sala [%s]", room.name) 
+  static emitRoomDataForSockets = (room, io) => {
+    console.info("Emitindo roomData para os sockets conectados na sala [%s]", room.name)
+    room.players.forEach((player) => {
+      Rooms.emitRoomDataForUser(room, player, io)      
+    })
   }
-  
+  static emitRoomDataForUser = (room, player, io) => {
+    console.debug("emitindo RoomData para usuário [%s]", player.user.id)
+    var roomData = {
+      myUserName: player.user.name ,
+      myHand: player.hand,
+      name: room.name,
+      state: room.state,
+      currentPlayerIndex: room.currentPlayerIndex,
+      Host: room.Host,
+      Players: room.players.map((player) => {
+        return {
+          name: player.name,
+          score: player.score,
+          selectedCard: room.state.VOTING ? player.selectedCard : !!player.selectedCard,
+          votedCard: room.state.PICKING_PROMPT ? player.votedCard : !!player.votedCard
+
+        }
+      })
+    }
+    io.to(player.user.id).emit('roomData', roomData)
+  }
   static setOnGoingGameRoomState = (room) => {
     room.state = RoomStates.ONGOING_GAME
   }

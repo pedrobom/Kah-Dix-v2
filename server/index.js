@@ -170,24 +170,9 @@ io.on('connect', (socket) => {
 
     io.to(userRoom.name).emit('startButtonPressed')
     io.to(userRoom.name).emit('message', { user: 'Andrétnik', text: 'Tá valendo! A partida começou!' });
-    
-    //criando getPlayersCards...
-    Playerhand = Rooms.getPlayerCards();    
-    socket.emit('newHand', user.hand )
 
-    // emitRoom... não faz nada
-    Rooms.emitRoomDataForSockets(userRoom)
-
-    // Atual forma de emitir roomData
-    io.to(userRoom.name).emit('roomData', userRoom)
-
+    Rooms.emitRoomDataForSockets(userRoom, io)
   })
-
-
-
-    
-    console.log('renderizando cartas do jogador: [%s]', user.name)
-
 
   socket.on('sendMessage', (message, callback) => {
     userRoom = Rooms.getRoomOfUser(user)

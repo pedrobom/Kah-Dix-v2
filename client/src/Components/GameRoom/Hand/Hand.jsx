@@ -7,29 +7,19 @@ import Card from '../Card/Card'
 import AllCards from '../../allCards'
 
 
-export default props =>
-{
+export default function Hand ({roomData}) {
+    
     const cardsArray = AllCards()
-    const [hand, setHand] = useState([])
-
-    useEffect(() => {
-        socket.on('newHand', (newHand) => {
-            console.log('escutando socket newHand ')
-            setHand(newHand)
-        })
-    },[hand])
 
     //ENCONTRAR UMA FORMA MAIS EFICIÊNTE DE FAZER ISSO!
     const renderCards = () => {   
         
-        if(hand.length == 0) return
+        if(roomData.MyHand.length == 0) return
 
-        console.log("Array de cartas distribuídas para o jogador:")
-        console.log(hand)
 
         const getCardInfo = cardInput => cardsArray.find(card => card.cardTitle === cardInput)
 
-        return hand.map((card, index) => {            
+        return roomData.MyHand.map((card, index) => {            
             let cardInfo = getCardInfo(card)
             return (
                 <Card 
