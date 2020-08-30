@@ -23,7 +23,7 @@ io.on('connect', (socket) => {
 
   console.log("[io.on('connect') - Novo usuário conectado com socket [%s]", socket.id)
   // Assim que o usuário conecta, a gente cria um usuário para ele
-  const { error, user } = Users.addUser({ id: socket.id });
+  const { error, user } = Users.addUser({ id: socket.id, socket: socket });
 
   // Este metodo representa um usuário tentando entrar em uma sala
   socket.on('join', ({ name, roomName }, callback) => {
@@ -67,9 +67,13 @@ io.on('connect', (socket) => {
     console.debug("Sala atual é: %s", room)
     console.info("Adicionando usuário [%s] para a sala [%s] no socket", user.id, room.name)
     socket.join(room.name);
+
     io.to(room.name).emit('message', { user: 'Andrétnik', text: `${user.name} tá na área!` });
+
+    Rooms.emitRoomDataForSockets(room)
+
+    callback()
         
-    callback(null, {user, room});
   });
 
 
@@ -88,7 +92,7 @@ io.on('connect', (socket) => {
       return callback(error)
     }
 
-    io.to(userRoom.name).emit("gameStateChanged", Rooms.getRoomDataForUser({room, user}))
+    Rooms.emitRoomDataForSockets(room)
 
   })
 
@@ -109,7 +113,7 @@ io.on('connect', (socket) => {
       return callback(error)
     }
 
-    io.to(userRoom.name).emit("gameStateChanged", Rooms.getRoomDataForUser({room, user}))
+    Rooms.emitRoomDataForSockets(room)
 
   })
 
@@ -130,7 +134,7 @@ io.on('connect', (socket) => {
       return callback(error)
     }
 
-    io.to(userRoom.name).emit("gameStateChanged", Rooms.getRoomDataForUser({room, user}))
+    Rooms.emitRoomDataForSockets(room)
 
   })
 
@@ -149,19 +153,23 @@ io.on('connect', (socket) => {
     console.log('socket emited to Chat = getRoomName')
   })
 
-
+  // Isso é quando o jogador 
   socket.on('gameStart', () =>{
-    userRoom = Rooms.getRoomOfUser(user)
-    Rooms.dealInitCardsWithoutReposition(userRoom);
+    let userRoom = Rooms.getRoomOfUser(user)
+    if (!userRoom) {
+      console.warn("Usuário [%s] tentando começar o jogo [%s] sem estar em um jogo!", user.id, card)
+      return callback("Você precisa estar em um jogo para escolher uma carta!")
+    }
 
-    // faz a sala ficar em um estado que novas pessoas não podem mais entrar!
-    Rooms.setOnGoingGameRoomState(userRoom)
-    
-    // ainda não faz nada
-    Rooms.setGameState(userRoom, 'GAME_START')
+    const {error} = Rooms.startGame({user, room: userRoom})
+    if (error) {
+      console.log("Não foi possível começar o jogo: %s", error)
+      return callback(error)
+    }
 
     io.to(userRoom.name).emit('startButtonPressed')
     io.to(userRoom.name).emit('message', { user: 'Andrétnik', text: 'Tá valendo! A partida começou!' });
+    Rooms.emitRoomDataForSockets(room)
   })
 
   socket.on('dealCards', () =>{
