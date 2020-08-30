@@ -14,12 +14,9 @@ export default function Hand ({roomData}) {
     //ENCONTRAR UMA FORMA MAIS EFICIÊNTE DE FAZER ISSO!
     const renderCards = () => {   
         
-        if(roomData.MyHand.length == 0) return
-
-
         const getCardInfo = cardInput => cardsArray.find(card => card.cardTitle === cardInput)
 
-        return roomData.MyHand.map((card, index) => {            
+        return roomData.myHand.map((card, index) => {            
             let cardInfo = getCardInfo(card)
             return (
                 <Card 

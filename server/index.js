@@ -1,23 +1,16 @@
-const http = require('http');
+
+const {io, server} = require('./ioserver')
 const express = require('express');
-const socketio = require('socket.io');
+const app = express();
+
 const cors = require('cors');
+const router = require('./router');
 
 const Users = require('./lib/services/users');
 const Rooms = require('./lib/services/rooms')
 
-const cardBack = ["cardBack.png", "cad1.png"]
-
-const router = require('./router');
-
-const app = express();
-const server = http.createServer(app);
-const io = socketio(server);
-
 app.use(cors());
 app.use(router);
-
-
 
 io.on('connect', (socket) => {
 
@@ -70,7 +63,7 @@ io.on('connect', (socket) => {
 
     io.to(room.name).emit('message', { user: 'Andrétnik', text: `${user.name} tá na área!` });
 
-    Rooms.emitRoomDataForSockets(room)
+    Rooms.emitRoomDataForSockets(room, io)
 
     callback()
         
@@ -92,7 +85,7 @@ io.on('connect', (socket) => {
       return callback(error)
     }
 
-    Rooms.emitRoomDataForSockets(room)
+    Rooms.emitRoomDataForSockets(userRoom, io)
 
   })
 
@@ -113,7 +106,7 @@ io.on('connect', (socket) => {
       return callback(error)
     }
 
-    Rooms.emitRoomDataForSockets(room)
+    Rooms.emitRoomDataForSockets(userRoom, io)
 
   })
 
@@ -134,25 +127,25 @@ io.on('connect', (socket) => {
       return callback(error)
     }
 
-    Rooms.emitRoomDataForSockets(room)
+    Rooms.emitRoomDataForSockets(userRoom, io)
 
   })
 
   // Aqui eu quero passar as informações da sala para o client,
   // para renderizar lista de usuários na sala... nome da sala... etc
   
-  socket.on('userJoined', () =>{
-    console.log("socket.on('userJoined')")
-    userRoom = Rooms.getRoomOfUser(user)
+  // socket.on('userJoined', () =>{
+  //   console.log("socket.on('userJoined')")
+  //   userRoom = Rooms.getRoomOfUser(user)
 
-    io.to(userRoom.name).emit('roomData', userRoom)
-    console.log(userRoom)
-    console.log('jogador [%s] pediu para todos da sala [%s] atualizarem a sua lista de jogadores.', user.name, userRoom.name)
-    socket.emit('getPlayerName', user.name)
-    console.log('socket emited to Chat = getPlayerName')
-    socket.emit('getPlayerRoom', userRoom.name)
-    console.log('socket emited to Chat = getRoomName')
-  })
+  //   Rooms.emitRoomDataForSockets(userRoom, io)
+  //   console.log(userRoom)
+  //   console.log('jogador [%s] pediu para todos da sala [%s] atualizarem os dados da sala', user.name, userRoom.name)
+  //   socket.emit('getPlayerName', user.name)
+  //   console.log('socket emited to Chat = getPlayerName')
+  //   socket.emit('getPlayerRoom', userRoom.name)
+  //   console.log('socket emited to Chat = getRoomName')
+  // })
 
   // Isso é quando o jogador 
   socket.on('gameStart', () =>{
@@ -168,9 +161,7 @@ io.on('connect', (socket) => {
       return callback(error)
     }
 
-    io.to(userRoom.name).emit('startButtonPressed')
     io.to(userRoom.name).emit('message', { user: 'Andrétnik', text: 'Tá valendo! A partida começou!' });
-
     Rooms.emitRoomDataForSockets(userRoom, io)
   })
 

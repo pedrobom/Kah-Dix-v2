@@ -22,7 +22,7 @@ const GameRoom = ({ location }) => {
 
     useEffect(() => {
         socket.emit('userJoined')
-        console.log('userJoined socket.emit')
+        console.log('O usuário aentrou na sala e disparou socket.emit("userJoined")')
     }, [location.search] )
 
 

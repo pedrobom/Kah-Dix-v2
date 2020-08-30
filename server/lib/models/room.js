@@ -19,7 +19,7 @@ module.exports = class Room {
         // Uma sala nova sempre começa com WAITING_FOR_PLAYERS
         this.state = Room.States.WAITING_FOR_PLAYERS 
         this.players = [new RoomPlayer({user: hostPlayer})]
-        this.Host = hostPlayer
+        this.host = hostPlayer
         this.currentPlayerIndex = 0
         this.prompt = null
 
@@ -29,6 +29,14 @@ module.exports = class Room {
             let card = `card${i}`
             this.deck.push(card)    
        }
+    }
+
+    isUserWithNameInRoom(name){
+        return this.players.find((player) => {
+            if(player.user.name == name){
+                return player
+            }    
+        })
     }
 
     // Retorna o RoomPlayer relativo ao usuário

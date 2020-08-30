@@ -1,6 +1,6 @@
 const RoomPlayer = require("../models/room_player");
 const Room = require("../models/room");
-const { static } = require("express");
+
 
 
   // This will contain all currently existing rooms
@@ -22,7 +22,7 @@ module.exports = class Rooms {
       return { error: 'Para criar uma sala é preciso da nome!' };
     }
   
-    console.debug("Criando uma sala com nome [%s] para o HostPlayer [%s]", roomName, hostPlayer.name)
+    console.debug("Criando uma sala com nome [%s] para o hostPlayer [%s]", roomName, hostPlayer.name)
     roomName = roomName.trim();
   
     const existingRoom = Rooms.getRoom(roomName)
@@ -71,9 +71,13 @@ module.exports = class Rooms {
       if (isPlayerInRoom){
           console.debug("Usuário [%s] já está em uma sala", user)
           return { error: "Você já está em uma sala em andamento." }
-      } else {
+      } else if (room.isUserWithNameInRoom(user.name)){
+        console.debug("usuário [%s] tentando entrar na sala [%s] com nome já existente.", user.name, room.name )
+        return { error: "esse nome de usuário já existe na sala!"}
+      }
+      else {
           console.debug("Adicionando usuário [%s] à sala [%s]", user, room)
-          room.players.push(new RoomPlayer({user: user}))
+          room.players.push(new RoomPlayer({user: user}))        
       }
   
       return {}
@@ -81,8 +85,11 @@ module.exports = class Rooms {
   
   static startGame = ({user, room}) => {
     console.log("O jogador [%s] está iniciando o jogo na sala [%s]", user.id, room.name)
-  
-    if (room.Host.id != user.id) {
+    if(room.state != Room.States.WAITING_FOR_PLAYERS && room.state != Room.States.GAME_ENDED) {
+      console.log("usuário [%s] está tentando iniciar o jogo na sala [%s] e o estado atual é [%s]", user.id, room.name, room.state)
+      return {error: "O jogo ainda está rolando."}
+    }
+    if (room.host.id != user.id) {
       console.warn("Usuário [%s] está tentando começar o jogo na sala [%s] mas não é o host!", user.id, room.name)
       return {error: "Você não pode começar o jogo nessa sala, você não é o host!"}
     }  
@@ -110,10 +117,10 @@ module.exports = class Rooms {
       name: room.name,
       state: room.state,
       currentPlayerIndex: room.currentPlayerIndex,
-      Host: room.Host,
-      Players: room.players.map((player) => {
+      host: room.host,
+      players: room.players.map((player) => {
         return {
-          name: player.name,
+          name: player.user.name,
           score: player.score,
           selectedCard: room.state.VOTING ? player.selectedCard : !!player.selectedCard,
           votedCard: room.state.PICKING_PROMPT ? player.votedCard : !!player.votedCard
@@ -245,7 +252,7 @@ module.exports = class Rooms {
   static getRoomDataForUser = ({user, room}) => {
     return {
       name: room.name,
-      Host: room.Host,
+      host: room.host,
       state: room.state,
       players: room.players.map((player) => {
         return {

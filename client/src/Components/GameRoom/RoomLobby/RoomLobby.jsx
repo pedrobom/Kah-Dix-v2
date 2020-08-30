@@ -21,7 +21,7 @@ function RoomLobby ({roomData}){
         if(roomData){
             return roomData.players.map((player, index) => {
                 return(
-                    <h2 key={index}>{player.user.name}</h2>
+                    <h2 key={index}>{player.name}</h2>
                 )
             })             
         }
@@ -29,7 +29,7 @@ function RoomLobby ({roomData}){
 
     function renderStartButton(){
         if(roomData){
-            if(socket.id == roomData.Host.id && isStartButtonReady == true){
+            if(socket.id == roomData.host.id && isStartButtonReady == true){
                 return(
                 <StartButton /> 
                 )            

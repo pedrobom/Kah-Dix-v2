@@ -21,7 +21,7 @@ export default function Score({roomData}) {
             // console.log("playersSorted = ",playersSorted)
                 return(
                     <tr key={index}>
-                        <td>{player.user.name}</td>
+                        <td>{player.name}</td>
                         <td>{player.score}</td>
                     </tr>
                 )
