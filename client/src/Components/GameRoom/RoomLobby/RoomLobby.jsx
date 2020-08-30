@@ -8,8 +8,6 @@ function RoomLobby ({roomData}){
 
     const [isStartButtonReady, setIsStartButtonReady] = useState(false)
 
-
-    
     useEffect(() => {
         if(roomData){
             if (roomData.players.length >= 2){  
@@ -28,20 +26,14 @@ function RoomLobby ({roomData}){
             })             
         }
     }
-  
-    function startGame(e) {
-        e.preventDefault();
-        socket.emit('gameStart');       
-    }
 
     function renderStartButton(){
         if(roomData){
             if(socket.id == roomData.Host.id && isStartButtonReady == true){
-                    return(
-                    <StartButton /> 
-                    )            
+                return(
+                <StartButton /> 
+                )            
             }
-
         }            
     }
 
@@ -55,7 +47,6 @@ function RoomLobby ({roomData}){
                     ? <h1>Aguardando a galera...</h1> 
                     : <h1>Partida Pronta!</h1>
                 }
-                {/* <h2>{`${playerCount}/6`}</h2> */}
                 {renderIncommingPlayer()}
                 
             </div>

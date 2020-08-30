@@ -44,13 +44,6 @@ const GameRoom = ({ location }) => {
         })
     }, [])
 
-    // DISABLE START BUTTON
-    useEffect(()=> {
-        socket.on('startButtonPressed', () => {
-            setIsGameStarted(true)
-            socket.emit('dealCards')
-        })
-    }, [location.search])
 
     useEffect(() => {
         socket.on('roomData', (roomData) => {
@@ -60,32 +53,39 @@ const GameRoom = ({ location }) => {
             setRoom(roomData)
         })
 
-    }, [])
+    }, [roomData])
     
-
-    return (
-        <React.Fragment>
-            
-            <Menu />
-            
-            <h1 class="game-room-title">FRASE DO OTÁRIO: EU SOU OTÁRIO</h1>
-            
-            <div className="dixit-table">
-
-                {/* ESPERANDOJOGADORES: */}
-                {!isGameStarted && <RoomLobby roomData={roomData} />}
+    if(roomData){
+        return (
+            <React.Fragment>
                 
-           
-                { isPromptSubmited && <InputPrompt /> }            
-                <Table />
-                <Hand />
-                <Score roomData={roomData} />
+                <Menu />
+                
+                <h1 class="game-room-title">FRASE DO JONAS: PARABÉNS</h1>
+                
+                <div className="dixit-table">
 
-                {/* <Chat /> */}
+                    {/* LOBBY ATIVO NA TELA DE TODOS OS JOGADORES DA SALA*/}
+                    {roomData.state == "WAITING_FOR_PLAYERS" && <RoomLobby roomData={roomData} />}
+                    
+            
+                    { isPromptSubmited && <InputPrompt /> }            
+                    <Table />
+                    <Hand />
+                    <Score roomData={roomData} />
 
-            </div>
-        </React.Fragment>
-    )
+                    {/* <Chat /> */}
+
+                </div>
+            </React.Fragment>
+        )        
+    }
+    else{
+        return (
+            <h1>AGUARDE... CARREGANDO JOGO</h1>
+        )
+    }
+
 }
 
 export default GameRoom
