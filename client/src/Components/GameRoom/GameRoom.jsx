@@ -66,7 +66,8 @@ const GameRoom = ({ location }) => {
                 <div className="dixit-table">
 
                     {/* LOBBY ATIVO NA TELA DE TODOS OS JOGADORES DA SALA*/}
-                    {roomData.state == "WAITING_FOR_PLAYERS" && <RoomLobby roomData={roomData} />}
+                    {/* {roomData.state == "WAITING_FOR_PLAYERS" && <RoomLobby roomData={roomData} />} */}
+                    {false && <RoomLobby roomData={roomData} />}
                     
             
                     { isPromptSubmited && <InputPrompt /> }            
