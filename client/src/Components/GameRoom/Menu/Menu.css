@@ -1,35 +1,63 @@
 .ingame-menu {
     cursor: pointer;
     position: fixed;
-    background-color: red;
-    right: 0;
-    top: 0;
-    border: 5px solid black
+    /* background-color: rgb(46, 129, 64); */
+    right: 1%;
+    top: 1%;
 }
-.ingame-menu:hover {
-    background-color: black;
-    color: #fff
+.ingame-menu-icon:hover {
+    background-color: rgb(218, 174, 149);
+    border: 5px outset  rgb(218, 174, 149);
+    transform: scale(1.2);
+}
+
+.ingame-menu-icon{
+    height: 40px;
+    border: 5px outset rgb(197, 192, 192);
 }
 
 .ingame-menu-expanded {
-    width: 200px;
+    border: 25px solid #B88846;
+    border-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='75' height='75'%3E%3Cg fill='none' stroke='%23B88846' stroke-width='2'%3E%3Cpath d='M1 1h73v73H1z'/%3E%3Cpath d='M8 8h59v59H8z'/%3E%3Cpath d='M8 8h16v16H8zM51 8h16v16H51zM51 51h16v16H51zM8 51h16v16H8z'/%3E%3C/g%3E%3Cg fill='%23B88846'%3E%3Ccircle cx='16' cy='16' r='2'/%3E%3Ccircle cx='59' cy='16' r='2'/%3E%3Ccircle cx='59' cy='59' r='2'/%3E%3Ccircle cx='16' cy='59' r='2'/%3E%3C/g%3E%3C/svg%3E") 25;
+
+    width: 400px;
     height: 300px;
-    background-color: red;
-    border: 5px solid black
+    background-color: rgb(206, 230, 185);
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+    padding: 10px;
+
+    animation: menuShow 0.2s;
 }
 
-.ingame-menu-icon.show {
-    display: block;
+.ingame-menu-expanded ul {
+    list-style: none;
+
 }
 
-.ingame-menu-icon.hide {
+.ingame-menu-expanded ul li {
+    margin: 10px 0px 0px 0px;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+}
+
+.ingame-menu-expanded ul li span{
+    margin: 0px 10px;
+}
+
+.hide {
     display: none;
 }
 
-.ingame-menu-expanded.hide {
-    display: none;
-} 
+.show {
+    display: flex;
+}
 
-.ingame-menu-expanded.show {
-    display: block;
+@keyframes menuShow {
+    from { transform: scale(0.1); opacity: 0;}
+    to { transform: scale(1); opacity: 1;}
 }

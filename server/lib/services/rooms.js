@@ -37,7 +37,7 @@ module.exports = class Rooms {
     // Isso é o que uma nova sala representa
     
     const room = new Room({name: roomName, hostPlayer})
-    
+
     rooms.push(room);
     console.log(room.deck)
     console.info("Sala criada com nome [%s] e host player [%s]", roomName, hostPlayer.name)
@@ -217,7 +217,7 @@ module.exports = class Rooms {
     }
   
   }
-  
+
   // Retorna detalhes da sala compatíveis com aquilo que o usuário deve ver a nada mais
   // TODO : talvez tenhamos que talhar isso de acordo com o estado.. OK
   static getRoomDataForUser = ({user, room}) => {

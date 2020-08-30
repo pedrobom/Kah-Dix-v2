@@ -1,6 +1,6 @@
 const users = [];
 
-const addUser = ({ id , socket }) => {
+const addUser = ({ id }) => {
   console.debug("Tentando adicionar usuário com id [%s] ", id)
 
   const existingUser = users.find((user) => user.id === id);
