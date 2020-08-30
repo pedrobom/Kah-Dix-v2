@@ -1,7 +1,35 @@
 .ingame-menu {
+    cursor: pointer;
     position: fixed;
     background-color: red;
     right: 0;
     top: 0;
     border: 5px solid black
+}
+.ingame-menu:hover {
+    background-color: black;
+    color: #fff
+}
+
+.ingame-menu-expanded {
+    width: 200px;
+    height: 300px;
+    background-color: red;
+    border: 5px solid black
+}
+
+.ingame-menu-icon.show {
+    display: block;
+}
+
+.ingame-menu-icon.hide {
+    display: none;
+}
+
+.ingame-menu-expanded.hide {
+    display: none;
+} 
+
+.ingame-menu-expanded.show {
+    display: block;
 }

@@ -18,7 +18,7 @@ import {socket} from "../socket.js"
 const GameRoom = ({ location }) => {   
     const [roomData, setRoom] = useState()
 
-    const [isGameStarted, setIsGameStarted] = useState(false)  
+    const [isGameStarted, setIsGameStarted] = useState(true)  
     const [isPromptSubmited, setIsPromptSubmited] = useState(false)
 
     useEffect(() => {
