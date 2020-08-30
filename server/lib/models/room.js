@@ -42,7 +42,8 @@ module.exports = class Room {
 
     // O usuário dado está na sala?
     isUserInRoom(user) {
-        return !!this.getPlayerForUser(user)
+        if(this.getPlayerForUser(user))
+        return Room
     }
 
     // Retorna a carta seleciona para o usuário 

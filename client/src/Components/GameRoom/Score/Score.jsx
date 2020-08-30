@@ -16,18 +16,16 @@ export default function Score({roomData}) {
     }
 
     const renderRows = () =>{ 
-        if(roomData){
             const playersSorted = roomData.players.sort(sortPlayerByHightesScore)
             return playersSorted.map((player, index) => {
             // console.log("playersSorted = ",playersSorted)
                 return(
                     <tr key={index}>
-                        <td>{player.name}</td>
+                        <td>{player.user.name}</td>
                         <td>{player.score}</td>
                     </tr>
                 )
             })            
-        }
     }
 
     return(

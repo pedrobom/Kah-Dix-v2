@@ -23,7 +23,7 @@ io.on('connect', (socket) => {
 
   console.log("[io.on('connect') - Novo usuário conectado com socket [%s]", socket.id)
   // Assim que o usuário conecta, a gente cria um usuário para ele
-  const { error, user } = Users.addUser({ id: socket.id, socket: socket });
+  const { error, user } = Users.addUser({ id: socket.id });
 
   // Este metodo representa um usuário tentando entrar em uma sala
   socket.on('join', ({ name, roomName }, callback) => {
@@ -140,6 +140,7 @@ io.on('connect', (socket) => {
 
   // Aqui eu quero passar as informações da sala para o client,
   // para renderizar lista de usuários na sala... nome da sala... etc
+  
   socket.on('userJoined', () =>{
     console.log("socket.on('userJoined')")
     userRoom = Rooms.getRoomOfUser(user)
@@ -161,7 +162,7 @@ io.on('connect', (socket) => {
       return callback("Você precisa estar em um jogo para escolher uma carta!")
     }
 
-    const {error} = Rooms.startGame({user, room: userRoom})
+    const {error} = Rooms.startGame({user, userRoom})
     if (error) {
       console.log("Não foi possível começar o jogo: %s", error)
       return callback(error)

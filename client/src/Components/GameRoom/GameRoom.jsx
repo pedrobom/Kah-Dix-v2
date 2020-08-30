@@ -18,7 +18,6 @@ import {socket} from "../socket.js"
 const GameRoom = ({ location }) => {   
     const [roomData, setRoom] = useState()
 
-    const [isGameStarted, setIsGameStarted] = useState(true)  
     const [isPromptSubmited, setIsPromptSubmited] = useState(false)
 
     useEffect(() => {
@@ -53,7 +52,7 @@ const GameRoom = ({ location }) => {
             setRoom(roomData)
         })
 
-    }, [roomData])
+    }, [])
     
     if(roomData){
         return (
@@ -66,7 +65,7 @@ const GameRoom = ({ location }) => {
                 <div className="dixit-table">
 
                     {/* LOBBY ATIVO NA TELA DE TODOS OS JOGADORES DA SALA*/}
-                    {roomData.state == "WAITING_FOR_PLAYERS" && <RoomLobby roomData={roomData} />}
+                    {roomData.state === "WAITING_FOR_PLAYERS" && <RoomLobby roomData={roomData} />}
                     
             
                     { isPromptSubmited && <InputPrompt /> }            

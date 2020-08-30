@@ -21,7 +21,7 @@ function RoomLobby ({roomData}){
         if(roomData){
             return roomData.players.map((player, index) => {
                 return(
-                    <h2 key={index}>{player.name}</h2>
+                    <h2 key={index}>{player.user.name}</h2>
                 )
             })             
         }

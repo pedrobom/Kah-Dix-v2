@@ -2,10 +2,13 @@ const RoomPlayer = require("../models/room_player");
 const Room = require("../models/room");
 const { static } = require("express");
 
-// This will contain all currently existing rooms
+
+  // This will contain all currently existing rooms
 const rooms = [];
 
 module.exports = class Rooms {
+
+
 
   static createRoom = ({ roomName, hostPlayer }) => {
 
@@ -39,7 +42,7 @@ module.exports = class Rooms {
     console.log(room.deck)
     console.info("Sala criada com nome [%s] e host player [%s]", roomName, hostPlayer.name)
   
-    return { room };
+    return { room };  
 
   }
 
@@ -111,11 +114,11 @@ module.exports = class Rooms {
     console.debug("Começando a distribuir as cartas para os jogadores da sala [%s]", room.name)
     
     room.players.forEach( player => {
-      console.debug("Distribuindo as cartas para o jogador [%s]", player.name)
+      console.debug("Distribuindo as cartas para o jogador [%s]", player.user.name)
     
         for (var i = 0; i < 5; i++){
           shuffle(room.deck);    
-          randomCard = room.deck[0]
+          var randomCard = room.deck[0]
   
           player.hand.push(randomCard)
   
