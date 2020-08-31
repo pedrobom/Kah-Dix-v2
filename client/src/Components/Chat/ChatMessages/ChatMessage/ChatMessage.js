@@ -1,13 +1,14 @@
-import React from 'react';
-
+import React, { useContext } from 'react';
+import { RoomContext } from '../../../GameRoom/GameRoom'
 import './ChatMessage.css';
 
 import ReactEmoji from 'react-emoji';
 
-const ChatMessage = ({ message: { text, user }, name }) => {
+const ChatMessage = ({ message: { text, user }}) => {
+  const roomData = useContext(RoomContext)
   let isSentByCurrentUser = false;
 
-  const trimmedName = name.trim().toLowerCase();
+  const trimmedName = roomData.myUserName.trim();
 
   if(user === trimmedName) {
     isSentByCurrentUser = true;
