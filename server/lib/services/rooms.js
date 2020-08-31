@@ -125,6 +125,7 @@ module.exports = class Rooms {
       state: room.state,
       currentPlayerIndex: room.currentPlayerIndex,
       host: room.host,
+      prompt: room.prompt,
       players: room.players.map((player) => {
         return {
           name: player.user.name,
@@ -174,12 +175,13 @@ module.exports = class Rooms {
   // Selecionar o prompt para um usuário da sala
   static setPromptForUser = ({user, prompt, room}) => {
     console.log("Usuário [%s] escolhendo o prompt [%s] na mesa [%s]", user.id, prompt, room.name)
-  
-    if (!room.isCurrentPlayer(user)) {
-      let currentPlayerUser = room.getCurrentPlayer().user
-      console.warn("Usuário [%s] tentando escolher o prompt [%s] na mesa [%s] sem ser o jogador atual [%s]!", user.id, prompt, room.name, currentPlayerUser.id)
-      return callback("Você precisa estar em um jogo para escolher o prompt!")
-    }
+    
+    // ATUALIZAR!!! Não foi implementado
+    // if (room.players[room.currentPlayerIndex].name !== user.name) {
+    //   //let currentPlayerUser = room.getCurrentPlayer().user
+    //   console.warn("Usuário [] tentando escolher o prompt [%s] na mesa [] sem ser o jogador atual []!", /*user.id, prompt, room.name*/)
+    //   return "Você precisa estar em um jogo para escolher o prompt!"
+    // }
   
     room.prompt = prompt
     console.log("Usuário [%s] escolheu o prompt [%s] na mesa [%s], passando para o próximo estado!", user.id, prompt, room.name)

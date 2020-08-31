@@ -69,9 +69,27 @@ io.on('connect', (socket) => {
         
   });
 
+  socket.on('gameStart', (callback) =>{
+    let userRoom = Rooms.getRoomOfUser(user)
+    if (!userRoom) {
+      console.warn("Usuário [%s] tentando começar o jogo [%s] sem estar em um jogo!", user.id, card)
+      return callback("Você precisa estar em um jogo para escolher uma carta!")
+    }
+
+    const {error} = Rooms.startGame({user, room: userRoom})
+    if (error) {
+      console.log("Não foi possível começar o jogo: %s", error)
+      return callback(error)
+    }
+
+    io.to(userRoom.name).emit('message', { user: 'Andrétnik', text: 'Tá valendo! A partida começou!' });
+    Rooms.emitRoomDataForAll(userRoom, io)
+    io.to(userRoom.name).emit('message', { user: 'Andrétnik', text: `é a vez do ${userRoom.players[userRoom.currentPlayerIndex].user.name}` });
+    //callback(null, Rooms.getRoomDataForUser({user, room: userRoom}))
+  })
 
   // Quando o jogador escolhe a prompt em PICKING_PROMPT, é isso que acontece :)
-  socket.on('pickPrompt', ({prompt}, callback) => {
+  socket.on('pickPrompt', (prompt, callback) => {
     // O jogador está em um jogo?
     let userRoom = Rooms.getRoomOfUser(user)
     if (!userRoom) {
@@ -79,14 +97,16 @@ io.on('connect', (socket) => {
       return callback("Você precisa estar em um jogo para escolher o prompt!")
     }
 
-    const {error} = Rooms.setPromptForUser({user, room: userRoom, prompt})
-    if (error) {
-      console.error("Não foi possivel escolher a carta [%s] do usuário [%s] na sala [%s]: [%s]", card, user.id,  userRoom.name, error)
-      return callback(error)
-    }
+    Rooms.setPromptForUser({user, room: userRoom, prompt})
+    // if (error) {
+    //   console.error("Não foi possivel escolher a carta [%s] do usuário [%s] na sala [%s]: [%s]", card, user.id,  userRoom.name, error)
+    //   return callback(error)
+    // }
 
     Rooms.emitRoomDataForAll(userRoom, io)
-    callback(null, Rooms.getRoomDataForUser({user, room: userRoom}))
+    console.log('JOGADOR EMITIU O PROMPT:', userRoom.prompt )
+    //CALLBACK COM PROBLEMA
+    //callback(null, Rooms.getRoomDataForUser({user, room: userRoom}))
   })
 
   // Quando o jogador seleciona uma carta na fase SELECTING_CARDS, é isso que acontece :)
@@ -149,26 +169,7 @@ io.on('connect', (socket) => {
   // })
 
   // Isso é quando o jogador 
-  socket.on('gameStart', (callback) =>{
-    let userRoom = Rooms.getRoomOfUser(user)
-    if (!userRoom) {
-      console.warn("Usuário [%s] tentando começar o jogo [%s] sem estar em um jogo!", user.id, card)
-      return callback("Você precisa estar em um jogo para escolher uma carta!")
-    }
 
-    const {error} = Rooms.startGame({user, room: userRoom})
-    if (error) {
-      console.log("Não foi possível começar o jogo: %s", error)
-      return callback(error)
-    }
-
-    io.to(userRoom.name).emit('message', { user: 'Andrétnik', text: 'Tá valendo! A partida começou!' });
-    Rooms.emitRoomDataForAll(userRoom, io)
-    io.to(userRoom.name).emit('dispararInputPOPUP')
-    io.to(userRoom.name).emit('message', { user: 'Andrétnik', text: `é a vez do ${userRoom.players[userRoom.currentPlayerIndex].user.name}` });
-    console.log('dispararInputPOPUP')
-    //callback(null, Rooms.getRoomDataForUser({user, room: userRoom}))
-  })
 
   socket.on('sendMessage', (message, callback) => {
     userRoom = Rooms.getRoomOfUser(user)

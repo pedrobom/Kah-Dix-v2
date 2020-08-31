@@ -7,21 +7,12 @@ export default function InputPrompt() {
 
     const roomData = useContext(RoomContext)
     const [input, setInput] = useState('')
-    // const [trigger, setTrigger] = useState(false)
-
-    // useEffect(() =>{
-    //     socket.on('dispararInputPOPUP',() =>{
-    //         setTrigger(true)
-    //         console.log('dispararInputPOPUP if isCurrentPlayer')
-    //     })
-    // },[trigger])
     
-    // ENVIAR UM SOCKET.EMIT PARA SER TRATADO NO SERVER!
     function submitPrompt(e){
         e.preventDefault()
         console.log(input)
         if(input !== ""){
-            socket.emit("input", input)
+            socket.emit("pickPrompt", input)
         }
         else {
             alert("POR FAVOR, DIGITE UM PROMPT!")

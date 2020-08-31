@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 
+import Prompt from './Prompt'
 import Chat from '../Chat/Chat'
 import RoomLobby from './RoomLobby/RoomLobby'
 import Hand from './Hand/Hand'
@@ -59,7 +60,10 @@ const GameRoom = ({ location }) => {
             <React.Fragment>
                 <RoomContext.Provider value={roomData}>
                     <Menu />
-                    <h1 class="game-room-title">FRASE DO JONAS: PARABÉNS</h1>
+                    {roomData.prompt !== null
+                        ? <Prompt prompt={`Frase de ${roomData.players[roomData.currentPlayerIndex].name}: ${roomData.prompt}`} />
+                        : <Prompt prompt={`Esperando ${roomData.players[roomData.currentPlayerIndex].name}, o famoso lingua solta`} 
+                    />}
                     <div className="dixit-table">
                         {/* LOBBY ATIVO NA TELA DE TODOS OS JOGADORES DA SALA*/}
                         { roomData.state === "WAITING_FOR_PLAYERS" && <RoomLobby />}
