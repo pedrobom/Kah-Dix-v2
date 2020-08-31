@@ -18,6 +18,42 @@
   margin-top: 40px;
   font-size: 40px;
 }
+
+.inside-room-loading-cointainer {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  margin: 0;
+}
+
+.inside-room-loading-cointainer h1 {
+  color: rgb(59, 59, 56);
+  font-size: 50px;
+}
+
+#loading-game-image {
+  height: 60vmin;
+  pointer-events: none;  
+  justify-items: center;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  #loading-game-image {
+    animation: Loading-img-spin infinite 4s linear;
+  }
+}
+
+@keyframes Loading-img-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
 /* 
 .game-room-title{
   font-size: 50px;

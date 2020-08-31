@@ -8,6 +8,7 @@ import Table from './Table/Table'
 import Score from './Score/Score'
 import InputPrompt from './InputPrompt/InputPrompt'
 import Menu from './Menu/Menu'
+import LoadingImg from '../../assets/images/loadingImg'
 
 import './GameRoom.css'
 
@@ -57,13 +58,14 @@ const GameRoom = ({ location }) => {
     
     if(roomData){
         return (
-            <React.Fragment>
                 <RoomContext.Provider value={roomData}>
                     <Menu />
+
                     {roomData.prompt !== null
                         ? <Prompt prompt={`Frase de ${roomData.players[roomData.currentPlayerIndex].name}: ${roomData.prompt}`} />
                         : <Prompt prompt={`Esperando ${roomData.players[roomData.currentPlayerIndex].name}, o famoso lingua solta`} 
                     />}
+
                     <div className="dixit-table">
                         {/* LOBBY ATIVO NA TELA DE TODOS OS JOGADORES DA SALA*/}
                         { roomData.state === "WAITING_FOR_PLAYERS" && <RoomLobby />}
@@ -74,12 +76,14 @@ const GameRoom = ({ location }) => {
                         <Chat />
                     </div>     
                 </RoomContext.Provider>
-            </React.Fragment>    
         )        
     }
     else{
         return (
-            <h1>AGUARDE... CARREGANDO JOGO</h1>
+            <div className="inside-room-loading-cointainer">
+                <img id="loading-game-image" src={LoadingImg} />
+                <h1>Aguarde o Carregamento do Jogo</h1>
+            </div>
         )
     }
 
