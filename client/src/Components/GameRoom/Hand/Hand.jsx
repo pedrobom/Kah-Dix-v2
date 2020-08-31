@@ -5,10 +5,12 @@ import { socket } from '../../socket'
 
 import Card from '../Card/Card'
 import AllCards from '../../allCards'
+import { useContext } from 'react'
+import{ RoomContext } from '../GameRoom'
 
 
-export default function Hand ({roomData}) {
-    
+export default function Hand () {
+    const roomData = useContext(RoomContext)
     const cardsArray = AllCards()
 
     //ENCONTRAR UMA FORMA MAIS EFICIÊNTE DE FAZER ISSO!

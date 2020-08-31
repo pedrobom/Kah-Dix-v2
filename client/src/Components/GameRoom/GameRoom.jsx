@@ -15,6 +15,8 @@ import {socket} from "../socket.js"
 // import io from 'socket.io-client'
 // let socket;
 
+export const RoomContext = React.createContext()
+
 const GameRoom = ({ location }) => {   
     const [roomData, setRoomData] = useState()
     const [isPromptSubmited, setIsPromptSubmited] = useState(false)
@@ -55,19 +57,19 @@ const GameRoom = ({ location }) => {
     if(roomData){
         return (
             <React.Fragment>
-                <ThemeContext.Provider value={roomData}>
+                <RoomContext.Provider value={roomData}>
                     <Menu />
                     <h1 class="game-room-title">FRASE DO JONAS: PARABÉNS</h1>
                     <div className="dixit-table">
                         {/* LOBBY ATIVO NA TELA DE TODOS OS JOGADORES DA SALA*/}
-                        { roomData.state === "WAITING_FOR_PLAYERS" && <RoomLobby roomData={roomData} />}
-                        { roomData.state === "PICKING_PROMPT" && <InputPrompt roomData={roomData} /> }            
+                        { roomData.state === "WAITING_FOR_PLAYERS" && <RoomLobby />}
+                        { roomData.state === "PICKING_PROMPT" && <InputPrompt /> }            
                         <Table />
-                        <Hand roomData={roomData} />
-                        <Score roomData={roomData} />
-                        {/* <Chat /> */}
+                        <Hand />
+                        <Score />
+                        <Chat />
                     </div>     
-                </ThemeContext.Provider>
+                </RoomContext.Provider>
             </React.Fragment>    
         )        
     }

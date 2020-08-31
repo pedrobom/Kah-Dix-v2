@@ -1,11 +1,12 @@
-import React, {useState, useEffect } from 'react'
+import React, {useState, useEffect, useContext } from 'react'
 import './RoomLobby.css'
 import { socket } from '../../socket'
+import { RoomContext } from '../GameRoom'
 
 import StartButton from './StartButton/StartButton'
 
-function RoomLobby ({roomData}){
-
+function RoomLobby (){
+    const roomData = useContext(RoomContext)
     const [isStartButtonReady, setIsStartButtonReady] = useState(false)
 
     useEffect(() => {
@@ -29,7 +30,7 @@ function RoomLobby ({roomData}){
 
     function renderStartButton(){
         if(roomData){
-            if(socket.id == roomData.host.id && isStartButtonReady == true){
+            if(socket.id === roomData.host.id && isStartButtonReady === true){
                 return(
                 <StartButton /> 
                 )            

@@ -1,9 +1,9 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useContext } from 'react'
 import './Score.css'
 import { socket } from '../../socket'
-
-
-export default function Score({roomData}) {
+import { RoomContext } from '../GameRoom'
+export default function Score() {
+    const roomData = useContext(RoomContext)
 
     const sortPlayerByHightesScore = (a, b) => {
         if (a.score < b.score){
