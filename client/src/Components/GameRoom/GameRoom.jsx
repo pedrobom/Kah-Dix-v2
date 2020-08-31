@@ -16,8 +16,7 @@ import {socket} from "../socket.js"
 // let socket;
 
 const GameRoom = ({ location }) => {   
-    const [roomData, setRoom] = useState()
-
+    const [roomData, setRoomData] = useState()
     const [isPromptSubmited, setIsPromptSubmited] = useState(false)
 
     useEffect(() => {
@@ -48,8 +47,7 @@ const GameRoom = ({ location }) => {
         socket.on('roomData', (roomData) => {
             console.log('GameLobby = Recebendo atualização RoomData do server')
             console.log("socket.on('roomData') = [%x]", roomData)
-
-            setRoom(roomData)
+            setRoomData(roomData)
         })
 
     }, [])
@@ -57,29 +55,20 @@ const GameRoom = ({ location }) => {
     if(roomData){
         return (
             <React.Fragment>
-                
-                <Menu />
-                
-                <h1 class="game-room-title">FRASE DO JONAS: PARABÉNS</h1>
-                
-                <div className="dixit-table">
-
-                    {/* LOBBY ATIVO NA TELA DE TODOS OS JOGADORES DA SALA*/}
-                    {roomData.state === "WAITING_FOR_PLAYERS" && <RoomLobby roomData={roomData} />}
-                    
-                    {/* PARA DESENVOLVER APENAS O ESTILO DO JOGO! */}
-                    {/* {false && <RoomLobby roomData={roomData} />} */}
-                    
-            
-                    { isPromptSubmited && <InputPrompt /> }            
-                    <Table />
-                    <Hand roomData={roomData} />
-                    <Score roomData={roomData} />
-
-                    {/* <Chat /> */}
-
-                </div>
-            </React.Fragment>
+                <ThemeContext.Provider value={roomData}>
+                    <Menu />
+                    <h1 class="game-room-title">FRASE DO JONAS: PARABÉNS</h1>
+                    <div className="dixit-table">
+                        {/* LOBBY ATIVO NA TELA DE TODOS OS JOGADORES DA SALA*/}
+                        { roomData.state === "WAITING_FOR_PLAYERS" && <RoomLobby roomData={roomData} />}
+                        { roomData.state === "PICKING_PROMPT" && <InputPrompt roomData={roomData} /> }            
+                        <Table />
+                        <Hand roomData={roomData} />
+                        <Score roomData={roomData} />
+                        {/* <Chat /> */}
+                    </div>     
+                </ThemeContext.Provider>
+            </React.Fragment>    
         )        
     }
     else{

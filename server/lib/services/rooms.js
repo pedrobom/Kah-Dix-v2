@@ -95,7 +95,9 @@ module.exports = class Rooms {
     }  
   
     Rooms.dealInitCardsWithoutReposition(room);
+    room.players = shuffle(room.players)
     room.state = Room.States.PICKING_PROMPT
+    
   
     console.log("A sala [%s] está agora no estado PICKING_PROMPT");
 
@@ -103,15 +105,20 @@ module.exports = class Rooms {
   
   }
   
-  static emitRoomDataForSockets = (room, io) => {
+  static emitRoomDataForAll = (room, io) => {
     console.info("Emitindo roomData para os sockets conectados na sala [%s]", room.name)
     room.players.forEach((player) => {
-      Rooms.emitRoomDataForUser(room, player, io)      
+      Rooms.emitRoomDataForPlayer(room, player, io)      
     })
   }
-  static emitRoomDataForUser = (room, player, io) => {
-    console.debug("emitindo RoomData para usuário [%s]", player.user.id)
-    var roomData = {
+
+  static getRoomDataForUser = ({ room , user }) => {
+    let player = room.getPlayerForUser(user)
+    return  Rooms.getRoomDataForPlayer(room , player)
+  }
+
+  static getRoomDataForPlayer = ( room , player) => {
+    return  {
       myUserName: player.user.name ,
       myHand: player.hand,
       name: room.name,
@@ -124,10 +131,14 @@ module.exports = class Rooms {
           score: player.score,
           selectedCard: room.state.VOTING ? player.selectedCard : !!player.selectedCard,
           votedCard: room.state.PICKING_PROMPT ? player.votedCard : !!player.votedCard
-
         }
       })
     }
+  }
+
+  static emitRoomDataForPlayer = (room, player, io) => {
+    console.debug("emitindo RoomData para usuário [%s]", player.user.id)
+    var roomData = Rooms.getRoomDataForPlayer(room, player)
     io.to(player.user.id).emit('roomData', roomData)
   }
   static setOnGoingGameRoomState = (room) => {
@@ -243,24 +254,6 @@ module.exports = class Rooms {
       // Agora também precisamos distribuir mais cartas :)
   
       room.state = Room.States.PICKING_PROMPT
-    }
-  
-  }
-
-  // Retorna detalhes da sala compatíveis com aquilo que o usuário deve ver a nada mais
-  // TODO : talvez tenhamos que talhar isso de acordo com o estado.. OK
-  static getRoomDataForUser = ({user, room}) => {
-    return {
-      name: room.name,
-      host: room.host,
-      state: room.state,
-      players: room.players.map((player) => {
-        return {
-          user: player.user,
-          selectedCard: !!player.selectedCard,
-          votedCard: !!player.votedCard,
-        }
-      })
     }
   
   }

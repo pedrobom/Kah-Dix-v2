@@ -63,15 +63,15 @@ io.on('connect', (socket) => {
 
     io.to(room.name).emit('message', { user: 'Andrétnik', text: `${user.name} tá na área!` });
 
-    Rooms.emitRoomDataForSockets(room, io)
+    Rooms.emitRoomDataForAll(room, io)
 
-    callback()
+    callback(null, Rooms.getRoomDataForUser({user, room}))
         
   });
 
 
   // Quando o jogador escolhe a prompt em PICKING_PROMPT, é isso que acontece :)
-  socket.on('pickPrompt', ({prompt}) => {
+  socket.on('pickPrompt', ({prompt}, callback) => {
     // O jogador está em um jogo?
     let userRoom = Rooms.getRoomOfUser(user)
     if (!userRoom) {
@@ -85,12 +85,12 @@ io.on('connect', (socket) => {
       return callback(error)
     }
 
-    Rooms.emitRoomDataForSockets(userRoom, io)
-
+    Rooms.emitRoomDataForAll(userRoom, io)
+    callback(null, Rooms.getRoomDataForUser({user, room: userRoom}))
   })
 
   // Quando o jogador seleciona uma carta na fase SELECTING_CARDS, é isso que acontece :)
-  socket.on('selectCard', ({card}) => {
+  socket.on('selectCard', ({card}, callback) => {
     // O jogador está em um jogo?
     let userRoom = Rooms.getRoomOfUser(user)
     if (!userRoom) {
@@ -106,12 +106,13 @@ io.on('connect', (socket) => {
       return callback(error)
     }
 
-    Rooms.emitRoomDataForSockets(userRoom, io)
+    Rooms.emitRoomDataForAll(userRoom, io)
+    callback(null, Rooms.getRoomDataForUser({user, room: userRoom}))
 
   })
 
   // Quando o jogador escolhe a carta em qual está votando
-  socket.on('voteCard', ({card}) => {
+  socket.on('voteCard', ({card}, callback) => {
     // O jogador está em um jogo?
     let userRoom = Rooms.getRoomOfUser(user)
     if (!userRoom) {
@@ -127,8 +128,8 @@ io.on('connect', (socket) => {
       return callback(error)
     }
 
-    Rooms.emitRoomDataForSockets(userRoom, io)
-
+    Rooms.emitRoomDataForAll(userRoom, io)
+    callback(null, Rooms.getRoomDataForUser({user, room: userRoom}))
   })
 
   // Aqui eu quero passar as informações da sala para o client,
@@ -138,7 +139,7 @@ io.on('connect', (socket) => {
   //   console.log("socket.on('userJoined')")
   //   userRoom = Rooms.getRoomOfUser(user)
 
-  //   Rooms.emitRoomDataForSockets(userRoom, io)
+  //   Rooms.emitRoomDataForAll(userRoom, io)
   //   console.log(userRoom)
   //   console.log('jogador [%s] pediu para todos da sala [%s] atualizarem os dados da sala', user.name, userRoom.name)
   //   socket.emit('getPlayerName', user.name)
@@ -148,7 +149,7 @@ io.on('connect', (socket) => {
   // })
 
   // Isso é quando o jogador 
-  socket.on('gameStart', () =>{
+  socket.on('gameStart', (callback) =>{
     let userRoom = Rooms.getRoomOfUser(user)
     if (!userRoom) {
       console.warn("Usuário [%s] tentando começar o jogo [%s] sem estar em um jogo!", user.id, card)
@@ -162,7 +163,10 @@ io.on('connect', (socket) => {
     }
 
     io.to(userRoom.name).emit('message', { user: 'Andrétnik', text: 'Tá valendo! A partida começou!' });
-    Rooms.emitRoomDataForSockets(userRoom, io)
+    Rooms.emitRoomDataForAll(userRoom, io)
+    io.to(userRoom.name).emit('dispararInputPOPUP')
+    console.log('dispararInputPOPUP')
+    //callback(null, Rooms.getRoomDataForUser({user, room: userRoom}))
   })
 
   socket.on('sendMessage', (message, callback) => {
