@@ -44,11 +44,11 @@ export default props =>
             <div className="ingame-menu-expanded hide">
                 <ul>
                     <li>
-                        <span>OPÇÃO1</span>
+                        <span>Sobre os artistas</span>
                         <span>(ação da opção1)</span>
                     </li>
                     <li>
-                        <span>OPÇÃO2</span>
+                        <span>Tutorial</span>
                         <span>(ação da opção2)</span>
                     </li>
                     <li>

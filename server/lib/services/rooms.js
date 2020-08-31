@@ -1,5 +1,6 @@
 const RoomPlayer = require("../models/room_player");
 const Room = require("../models/room");
+const io = require('../../ioserver')
 
 
 
@@ -259,7 +260,19 @@ module.exports = class Rooms {
     }
   
   }
+  static removePlayerFromRoom = (userRoom, user) => {
+    const player = userRoom.getPlayerForUser(user)
+    const userIndex = userRoom.players.indexOf(player, 0)
+    console.log(userIndex)
+    userRoom.players.splice(userIndex, 1)
+    if (player == userRoom.host){
+      delete userRoom.host
+    }
+     
+  }
 }
+
+
 
 // Fisher-Yates Alghoritm aka Knuth Shuffle
 function shuffle(array) {

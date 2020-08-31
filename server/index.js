@@ -178,31 +178,22 @@ io.on('connect', (socket) => {
 
     callback();
   });
-
-
-  // socket.on('gameStart', () => {
-  //   const user = Users.getUser(socket.id)
-  //   const cards = cardBack
-
-  //   socket.emit('startButtonPressed', false)
-  //   console.debug("Usuário [%s] apertou o botão no component StartButton", user.name)
-  //   io.to(user.room).emit('drawCards', cards)
-
-  //   console.log('Jogador 1 distribuiu as cartas')
-    
-  // });
     
 
   socket.on('disconnect', () => {
     console.log("Usuário [%s] saiu", socket.id)
-    
     const user = Users.removeUser(socket.id);
-    // CORRIGIR !!! user não tem mais room 
+
+    
     userRoom = Rooms.getRoomOfUser(user)
-    if(user && userRoom) { 
-      io.to(userRoom.name).emit('message', { user: 'Andrétnik', text: `${user.name} meteu o pé.` });
-      io.to(userRoom.name).emit('getPlayersInfo', userRoom.players)
-    }
+    //io.to(userRoom.name).emit('message', { user: 'Andrétnik', text: `${user.name} meteu o pé.` });    
+    Rooms.removePlayerFromRoom(userRoom, user, io)
+    Rooms.emitRoomDataForAll(userRoom, io)
+    io.to(userRoom.name).emit('message', { user: 'Andrétnik', text: `O ${userRoom.players[0].user.name} é o novo anfitrião da partida!` });
+
+    
+
+
   })
 });
 

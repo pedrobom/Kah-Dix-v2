@@ -60,7 +60,7 @@ const GameRoom = ({ location }) => {
         return (
                 <RoomContext.Provider value={roomData}>
                     <Menu />
-
+                    <Chat />
                     {roomData.prompt !== null
                         ? <Prompt prompt={`Frase de ${roomData.players[roomData.currentPlayerIndex].name}: ${roomData.prompt}`} />
                         : <Prompt prompt={`Esperando ${roomData.players[roomData.currentPlayerIndex].name}, o famoso lingua solta`} 
@@ -73,7 +73,7 @@ const GameRoom = ({ location }) => {
                         <Table />
                         <Hand />
                         <Score />
-                        <Chat />
+                        
                     </div>     
                 </RoomContext.Provider>
         )        
@@ -81,8 +81,8 @@ const GameRoom = ({ location }) => {
     else{
         return (
             <div className="inside-room-loading-cointainer">
+                <h1>Carregando Partida</h1>
                 <img id="loading-game-image" src={LoadingImg} />
-                <h1>Aguarde o Carregamento do Jogo</h1>
             </div>
         )
     }
