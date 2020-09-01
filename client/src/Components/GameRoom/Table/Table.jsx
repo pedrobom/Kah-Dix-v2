@@ -54,7 +54,17 @@ export default function Table() {
             })
 
         }            
-        }
+    }
+
+    const voteCard = (card) => {
+        socket.emit('voteCard', card, (error) =>{
+            console.log('Jogador votou na carta: ', card)
+            if(error){
+               alert(error)
+            }
+            
+        })
+    }
 
     const renderVotingCards = () => {
         const getCardInfo = cardInput => cardsArray.find(card => card.cardTitle === cardInput)
@@ -68,6 +78,7 @@ export default function Table() {
                     id={cardInfo.cardTitle}
                     src={cardInfo.src} 
                     alt={`Imagem da carta: ${cardInfo.cardTitle}`}
+                    onClick={voteCard()}
                 />
                 )
             })                

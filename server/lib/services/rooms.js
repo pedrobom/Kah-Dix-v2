@@ -196,7 +196,7 @@ module.exports = class Rooms {
   }
   
   // Selecionar uma carta para um determinado usuário em uma sala
-  static setSelectedCardForUser = (user, room, card, callback) => {
+  static setSelectedCardForUser = (user, room, card, callback, io) => {
     console.debug("Selecionar a carta [%s] para o usuário [%s] na sala [%s]", card, user.name, room.name)
   
     // Estado inválido para selecionar cartas!
@@ -212,7 +212,8 @@ module.exports = class Rooms {
     }
   
     room.setSelectedCardForUser(user, card)
-      
+    io.to(room.name).emit('message', { user: 'Andrétnik', text: `O ${user.name} colocou uma carta na mesa!` });
+
     let totalSelectedCards = room.getNumberOfSelectedCards()
     console.debug("Carta [%s] escolhida para o jogador [%s] na sala [%s], agora temos um total de [%s] carta(s) e [%s] jogador(es)", card, user.id, room.name, totalSelectedCards, room.players.length)
     //
