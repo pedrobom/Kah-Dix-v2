@@ -22,21 +22,11 @@ export default props =>
             card.addEventListener("drop", () => {
                 card.classList.remove("onMouseDown")
             })
-    
-        })
-
-    }, [])
-
-    useEffect(() => {
-        const cards = document.querySelectorAll('.card')
-
-        cards.forEach( card => {
             card.ondragstart = e => {
-                console.debug("Carta sendo arrastada")
+                console.log("Carta sendo arrastada")
                 e.dataTransfer.setData('card-id', e.target.id)
             }
-        })
-        
+        })   
     }, [])
 
     return(      

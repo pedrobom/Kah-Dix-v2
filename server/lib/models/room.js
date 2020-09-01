@@ -66,6 +66,7 @@ module.exports = class Room {
         let player = this.getPlayerForUser(user)
         if (player) {
             player.selectedCard = card
+            console.log('setSelectedCardforUser = card', card)
         }
     }
 

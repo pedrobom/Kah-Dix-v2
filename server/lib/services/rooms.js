@@ -128,11 +128,15 @@ module.exports = class Rooms {
       host: room.host,
       prompt: room.prompt,
       selectedCardCount: room.selectedCardCount,
+      votingCardsTurn: room.state == Room.States.VOTING ? room.players.map((player) => {
+        return player.selectedCard
+      }) : null,
       players: room.players.map((player) => {
         return {
           name: player.user.name,
           score: player.score,
-          selectedCard: room.state.VOTING ? player.selectedCard : !!player.selectedCard,
+          droppedCard: player.droppedCard,
+          selectedCard: room.state == Room.States.PICKING_PROMPT ? player.selectedCard : !!player.selectedCard,
           votedCard: room.state.PICKING_PROMPT ? player.votedCard : !!player.votedCard
         }
       })
@@ -193,7 +197,7 @@ module.exports = class Rooms {
   
   // Selecionar uma carta para um determinado usuário em uma sala
   static setSelectedCardForUser = (user, room, card, callback) => {
-    console.debug("Selecionar a carta [%s] para o usuário [%s] na sala [%s]", card, user.id, room.name)
+    console.debug("Selecionar a carta [%s] para o usuário [%s] na sala [%s]", card, user.name, room.name)
   
     // Estado inválido para selecionar cartas!
     if (room.state != Room.States.SELECTING_CARDS) {
@@ -214,7 +218,7 @@ module.exports = class Rooms {
     //
     // Todas as cartas já foram escolhidas? Então devemos passar de estado para VOTING :)
     if (totalSelectedCards >= room.players.length) {
-      console.info("Cartas suficientes escolhidas na sala [%s], vamos passar de estado!", room.name)
+      console.info("Cartas suficientes escolhidas na sala [%s], vamos passar de estado [%s]!", room.name, room.state)
       room.selectedCardCount = totalSelectedCards
       room.state = Room.States.VOTING
     } else {

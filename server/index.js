@@ -125,7 +125,7 @@ io.on('connect', (socket) => {
 
     console.log("Usuário [%s] escolhendo a carta [%s] na mesa [%s]", user.id, card, userRoom)
 
-    const error = Rooms.setSelectedCardForUser(user, userRoom, card)
+    const error = Rooms.setSelectedCardForUser(user, userRoom, card, callback)
     if (error) {
       console.error("Não foi possivel escolher a carta [%s] do usuário [%s] na sala [%s]: [%s]", card, user.id,  userRoom.name, error)
       return callback(error)
