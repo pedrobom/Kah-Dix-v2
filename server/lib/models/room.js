@@ -22,6 +22,7 @@ module.exports = class Room {
         this.host = hostPlayer
         this.currentPlayerIndex = 0
         this.prompt = null
+        this.selectedCardCount = 0
 
         // Populates the deck
         this.deck = []

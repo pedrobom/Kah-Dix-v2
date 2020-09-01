@@ -40,7 +40,7 @@ export default props =>
     }, [])
 
     return(      
-        <img className="card" draggable={true}
+        <img className="card" draggable="true"
             src={props.src} 
             alt={props.alt} 
             id={props.id}

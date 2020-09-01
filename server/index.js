@@ -96,6 +96,11 @@ io.on('connect', (socket) => {
       console.warn("Usuário [%s] tentando escolher o prompt [%s] sem estar em um jogo!", user.id, prompt)
       return callback("Você precisa estar em um jogo para escolher o prompt!")
     }
+    //
+    else if(userRoom.players[userRoom.currentPlayerIndex].user != user){
+      console.warn("Usuário [%s] tentando escolher o prompt [%s] mas não é a vez dele!", user.name, prompt)
+      return callback("Não é a sua vez de escolher uma frase!")
+    }
 
     Rooms.setPromptForUser({user, room: userRoom, prompt})
     // if (error) {
@@ -104,30 +109,30 @@ io.on('connect', (socket) => {
     // }
 
     Rooms.emitRoomDataForAll(userRoom, io)
-    console.log('JOGADOR EMITIU O PROMPT:', userRoom.prompt )
+    console.log('Novo estado de Jogo : [%s]', userRoom.state)
     //CALLBACK COM PROBLEMA
     //callback(null, Rooms.getRoomDataForUser({user, room: userRoom}))
   })
 
   // Quando o jogador seleciona uma carta na fase SELECTING_CARDS, é isso que acontece :)
-  socket.on('selectCard', ({card}, callback) => {
+  socket.on('selectCard', (card, callback) => {
     // O jogador está em um jogo?
     let userRoom = Rooms.getRoomOfUser(user)
     if (!userRoom) {
       console.warn("Usuário [%s] tentando selecionar uma carta [%s] sem estar em um jogo!", user.id, card)
-      return callback("Você precisa estar em um jogo para escolher uma carta!")
+      return callback("Você precisa estar em um jogo para escolher uma carta!") 
     }
 
     console.log("Usuário [%s] escolhendo a carta [%s] na mesa [%s]", user.id, card, userRoom)
 
-    const {error} = Rooms.setSelectedCardForUser({user, room: userRoom, card})
+    const error = Rooms.setSelectedCardForUser(user, userRoom, card)
     if (error) {
       console.error("Não foi possivel escolher a carta [%s] do usuário [%s] na sala [%s]: [%s]", card, user.id,  userRoom.name, error)
       return callback(error)
     }
 
     Rooms.emitRoomDataForAll(userRoom, io)
-    callback(null, Rooms.getRoomDataForUser({user, room: userRoom}))
+    //callback(null, Rooms.getRoomDataForUser({user, room: userRoom}))
 
   })
 
@@ -181,19 +186,27 @@ io.on('connect', (socket) => {
     
 
   socket.on('disconnect', () => {
-    console.log("Usuário [%s] saiu", socket.id)
+    console.log("Usuário [%s] desconectou do servidor", socket.id)
+    // DESCOBRIR SE É POSSÍVEL RECONECTAR
     const user = Users.removeUser(socket.id);
-
-    
     userRoom = Rooms.getRoomOfUser(user)
-    //io.to(userRoom.name).emit('message', { user: 'Andrétnik', text: `${user.name} meteu o pé.` });    
-    Rooms.removePlayerFromRoom(userRoom, user, io)
-    Rooms.emitRoomDataForAll(userRoom, io)
-    io.to(userRoom.name).emit('message', { user: 'Andrétnik', text: `O ${userRoom.players[0].user.name} é o novo anfitrião da partida!` });
-
-    
-
-
+    if(userRoom){
+      io.to(userRoom.name).emit('message', { user: 'Andrétnik', text: `${user.name} meteu o pé.` });  
+      if(userRoom.state == "WAITING_FOR_PLAYERS") {
+        if(user = userRoom.host){
+          Rooms.removePlayerFromRoom(userRoom, user, io)
+          io.to(userRoom.name).emit('message', { user: 'Andrétnik', text: `O ${userRoom.host.name} é o novo anfitrião da partida!` });
+          console.log(' Host [%s] saiu do RoomLobby, removendo jogador da sala e definindo o novo Host para [%s]', user.name, userRoom.host.name)
+        }
+      else{
+        Rooms.removePlayerFromRoom(userRoom, user, io)
+        console.log('removendo jogador [%s] da sala porque ele saiu do RoomLobby', user.name)
+      }
+    }
+    Rooms.emitRoomDataForAll(userRoom, io)      
+    }
+    else(!userRoom)
+    console.log('usuário saiu sem estar em uma sala.')
   })
 });
 

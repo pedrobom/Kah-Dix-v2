@@ -127,6 +127,7 @@ module.exports = class Rooms {
       currentPlayerIndex: room.currentPlayerIndex,
       host: room.host,
       prompt: room.prompt,
+      selectedCardCount: room.selectedCardCount,
       players: room.players.map((player) => {
         return {
           name: player.user.name,
@@ -191,13 +192,13 @@ module.exports = class Rooms {
   }
   
   // Selecionar uma carta para um determinado usuário em uma sala
-  static setSelectedCardForUser = ({user, card, room}) => {
+  static setSelectedCardForUser = (user, room, card, callback) => {
     console.debug("Selecionar a carta [%s] para o usuário [%s] na sala [%s]", card, user.id, room.name)
   
     // Estado inválido para selecionar cartas!
     if (room.state != Room.States.SELECTING_CARDS) {
       console.warn("Usuário [%s] tentando escolher cartas quando o jogo está no estado [%s], na sala [%s]", user.id, room.state, room.name)
-      return callback("Você não pode fazer isso!")
+      return callback("Você não pode colocar uma carta agora!")
     }
   
     
@@ -214,7 +215,11 @@ module.exports = class Rooms {
     // Todas as cartas já foram escolhidas? Então devemos passar de estado para VOTING :)
     if (totalSelectedCards >= room.players.length) {
       console.info("Cartas suficientes escolhidas na sala [%s], vamos passar de estado!", room.name)
+      room.selectedCardCount = totalSelectedCards
       room.state = Room.States.VOTING
+    } else {
+      room.selectedCardCount = totalSelectedCards
+      console.log('selectedCardCount :', room.selectedCardCount)
     }
   
   }
@@ -265,8 +270,9 @@ module.exports = class Rooms {
     const userIndex = userRoom.players.indexOf(player, 0)
     console.log(userIndex)
     userRoom.players.splice(userIndex, 1)
-    if (player == userRoom.host){
-      delete userRoom.host
+    if (player.user == userRoom.host){
+      userRoom.host = userRoom.players[0].user
+      console.log('new host is : [%s]', userRoom.host)
     }
      
   }

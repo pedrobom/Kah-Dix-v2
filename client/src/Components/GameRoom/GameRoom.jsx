@@ -30,24 +30,6 @@ const GameRoom = ({ location }) => {
 
 
     useEffect(() => {
-        const dropzones = document.querySelectorAll('[dixit-drop-zone=drop]')
-
-        dropzones.forEach( dropzone => {
-            dropzone.ondragover = e => e.preventDefault()
-            dropzone.ondrop = function(e){
-                const id = e.dataTransfer.getData('card-id')
-                const card = document.getElementById(id)
-                console.debug("Carta sendo dropada:")
-                console.debug(card)
-                card
-                    ? dropzone.appendChild(card) 
-                    : console.debug("A carta parece não existir! Verifique se o event listener 'ondragstart' está captando as informações corretamente")
-            }    
-        })
-    }, [])
-
-
-    useEffect(() => {
         socket.on('roomData', (roomData) => {
             console.log('GameLobby = Recebendo atualização RoomData do server')
             console.log("socket.on('roomData') = [%x]", roomData)
@@ -70,7 +52,7 @@ const GameRoom = ({ location }) => {
                         {/* LOBBY ATIVO NA TELA DE TODOS OS JOGADORES DA SALA*/}
                         { roomData.state === "WAITING_FOR_PLAYERS" && <RoomLobby />}
                         { roomData.state === "PICKING_PROMPT" && <InputPrompt /> }            
-                        <Table />
+                        <Table canDrop={"true"}/>
                         <Hand />
                         <Score />
                         
