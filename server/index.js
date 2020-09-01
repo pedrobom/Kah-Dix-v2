@@ -127,7 +127,7 @@ io.on('connect', (socket) => {
 
     const error = Rooms.setSelectedCardForUser(user, userRoom, card, callback)
     if (error) {
-      console.error("Não foi possivel escolher a carta [%s] do usuário [%s] na sala [%s]: [%s]", card, user.id,  userRoom.name, error)
+      console.error("Não foi possivel escolher a carta [%s] do usuário [%s] na sala [%s]: [%s]", card, user.name,  userRoom.name, error)
       return callback(error)
     }
 
@@ -157,25 +157,6 @@ io.on('connect', (socket) => {
     callback(null, Rooms.getRoomDataForUser({user, room: userRoom}))
   })
 
-  // Aqui eu quero passar as informações da sala para o client,
-  // para renderizar lista de usuários na sala... nome da sala... etc
-  
-  // socket.on('userJoined', () =>{
-  //   console.log("socket.on('userJoined')")
-  //   userRoom = Rooms.getRoomOfUser(user)
-
-  //   Rooms.emitRoomDataForAll(userRoom, io)
-  //   console.log(userRoom)
-  //   console.log('jogador [%s] pediu para todos da sala [%s] atualizarem os dados da sala', user.name, userRoom.name)
-  //   socket.emit('getPlayerName', user.name)
-  //   console.log('socket emited to Chat = getPlayerName')
-  //   socket.emit('getPlayerRoom', userRoom.name)
-  //   console.log('socket emited to Chat = getRoomName')
-  // })
-
-  // Isso é quando o jogador 
-
-
   socket.on('sendMessage', (message, callback) => {
     userRoom = Rooms.getRoomOfUser(user)
     console.log('jogador [%s] está mandando mensagem na sala [$s]', user.name, userRoom.name)
@@ -200,7 +181,7 @@ io.on('connect', (socket) => {
         }
       else{
         Rooms.removePlayerFromRoom(userRoom, user, io)
-        console.log('removendo jogador [%s] da sala porque ele saiu do RoomLobby', user.name)
+        console.log('removendo jogador [%s] da sala [%s] porque ele saiu do RoomLobby', user.name, userRoom.name)
       }
     }
     Rooms.emitRoomDataForAll(userRoom, io)      

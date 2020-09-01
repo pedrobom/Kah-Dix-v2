@@ -88,11 +88,11 @@ module.exports = class Rooms {
     console.log("O jogador [%s] está iniciando o jogo na sala [%s]", user.id, room.name)
     if(room.state != Room.States.WAITING_FOR_PLAYERS && room.state != Room.States.GAME_ENDED) {
       console.log("usuário [%s] está tentando iniciar o jogo na sala [%s] e o estado atual é [%s]", user.id, room.name, room.state)
-      return {error: "O jogo ainda está rolando."}
+      return {error: "Esse jogo ainda está rolando."}
     }
     if (room.host.id != user.id) {
       console.warn("Usuário [%s] está tentando começar o jogo na sala [%s] mas não é o host!", user.id, room.name)
-      return {error: "Você não pode começar o jogo nessa sala, você não é o host!"}
+      return {error: "Você não pode começar o jogo nessa sala, você não é o anfitrião!"}
     }  
   
     Rooms.dealInitCardsWithoutReposition(room);

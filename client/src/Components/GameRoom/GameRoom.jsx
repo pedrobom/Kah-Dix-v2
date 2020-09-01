@@ -21,13 +21,6 @@ export const RoomContext = React.createContext()
 
 const GameRoom = ({ location }) => {   
     const [roomData, setRoomData] = useState()
-    const [isPromptSubmited, setIsPromptSubmited] = useState(false)
-
-    useEffect(() => {
-        socket.emit('userJoined')
-        console.log('O usuário aentrou na sala e disparou socket.emit("userJoined")')
-    }, [location.search] )
-
 
     useEffect(() => {
         socket.on('roomData', (roomData) => {
@@ -63,7 +56,7 @@ const GameRoom = ({ location }) => {
     else{
         return (
             <div className="inside-room-loading-cointainer">
-                <h1>Carregando Partida</h1>
+                <h1 className="game-room-title">Carregando Partida</h1>
                 <img id="loading-game-image" src={LoadingImg} />
             </div>
         )

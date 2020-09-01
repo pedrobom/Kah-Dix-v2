@@ -7,7 +7,11 @@ function StartButton (){
     
     function startGame(e) {
         e.preventDefault();
-        socket.emit('gameStart');      
+        socket.emit('gameStart', (error) =>{
+            if(error){
+                alert(error)
+            }
+        });      
         console.log('socket emit gameStart') 
     }
 

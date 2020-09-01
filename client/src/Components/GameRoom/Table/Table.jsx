@@ -31,13 +31,9 @@ export default function Table() {
     
     function playerSelectedACard(cardElement){
         socket.emit('selectCard', cardElement.id, (error) => {
-        if(error) {
-            alert(error);
+            if(error) {
+                alert(error);
             }
-        else {
-            cardElement.remove()
-            console.log("Elemento 'card' foi removido com sucesso!")
-        }
         });
     }
 
@@ -61,24 +57,22 @@ export default function Table() {
         }
 
     const renderVotingCards = () => {
-            const getCardInfo = cardInput => cardsArray.find(card => card.cardTitle === cardInput)
+        const getCardInfo = cardInput => cardsArray.find(card => card.cardTitle === cardInput)
 
-            if(roomData.state == "VOTING"){
-                return roomData.votingCardsTurn.map((card, index) => {
-                    let cardInfo = getCardInfo(card)
-                    return(
-                        <Card 
-                        key={index} 
-                        id={cardInfo.cardTitle}
-                        src={cardInfo.src} 
-                        alt={`Imagem da carta: ${cardInfo.cardTitle}`}
-                    />
-                    )
-                })                
-            }
-
-
-        }            
+        if(roomData.state == "VOTING"){
+            return roomData.votingCardsTurn.map((card, index) => {
+                let cardInfo = getCardInfo(card)
+                return(
+                    <Card 
+                    key={index} 
+                    id={cardInfo.cardTitle}
+                    src={cardInfo.src} 
+                    alt={`Imagem da carta: ${cardInfo.cardTitle}`}
+                />
+                )
+            })                
+        }
+    }            
 
     return(
         <div className="dealer-table" dixit-drop-zone="drop">
