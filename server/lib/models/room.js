@@ -66,6 +66,7 @@ module.exports = class Room {
         let player = this.getPlayerForUser(user)
         if (player) {
             player.selectedCard = card
+            player.hand.splice(player.hand.indexOf(card), 1)
             console.log('setSelectedCardforUser = card', card)
         }
     }
