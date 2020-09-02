@@ -7,7 +7,7 @@ module.exports = class RoomPlayer {
         this.user = user
         this.score = 0
         this.hand = []
-        this.droppedCard = false
+        this.mySelectedCard = null
         this.selectedCard = null
         this.votedCard = null
     }

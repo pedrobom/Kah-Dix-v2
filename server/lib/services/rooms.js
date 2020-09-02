@@ -122,6 +122,7 @@ module.exports = class Rooms {
     return  {
       myUserName: player.user.name ,
       myHand: player.hand,
+      mySelectedCard: player.mySelectedCard,
       name: room.name,
       state: room.state,
       currentPlayerIndex: room.currentPlayerIndex,
@@ -135,7 +136,6 @@ module.exports = class Rooms {
         return {
           name: player.user.name,
           score: player.score,
-          droppedCard: player.droppedCard,
           selectedCard: room.state == Room.States.PICKING_PROMPT ? player.selectedCard : !!player.selectedCard,
           votedCard: room.state.PICKING_PROMPT ? player.votedCard : !!player.votedCard
         }
@@ -251,7 +251,7 @@ module.exports = class Rooms {
     //
     // Todas as cartas já foram votadas? Então devemos passar de estado para PICKING_PROMPT :)
     // Com isso devemos também garantir que todos os usuários tem 5 cartas e que temos cartas suficientes, ou acabar o jogo :)
-    if (totalVotedCards >= room.players.length) {
+    if (totalVotedCards >= room.players.length - 1) {
       console.info("Cartas suficientes votadas na sala [%s], vamos passar de estado!", room.name)
   
       // Temos cartas suficientes?

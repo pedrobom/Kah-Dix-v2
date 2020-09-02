@@ -25,11 +25,13 @@ export default function Table() {
                 console.debug(card)
                 card
                     ? playerSelectedACard(card)
-                    : console.debug("A carta parece não existir! Verifique se o event listener 'ondragstart' está captando as informações corretamente")                
+                    : console.log("A carta parece não existir! Verifique se o event listener 'ondragstart' está captando as informações corretamente")                
             }
     }, [roomData])
+
     
     function playerSelectedACard(cardElement){
+        console.log('playerSelectedACard', cardElement.id)
         socket.emit('selectCard', cardElement.id, (error) => {
             if(error) {
                 alert(error);
@@ -56,16 +58,7 @@ export default function Table() {
         }            
     }
 
-    const voteCard = (card) => {
-        socket.emit('voteCard', card, (error) =>{
-            console.log('Jogador votou na carta: ', card)
-            if(error){
-               alert(error)
-            }
-            
-        })
-    }
-
+ 
     const renderVotingCards = () => {
         const getCardInfo = cardInput => cardsArray.find(card => card.cardTitle === cardInput)
 
@@ -74,11 +67,11 @@ export default function Table() {
                 let cardInfo = getCardInfo(card)
                 return(
                     <Card 
-                    key={index} 
-                    id={cardInfo.cardTitle}
-                    src={cardInfo.src} 
-                    alt={`Imagem da carta: ${cardInfo.cardTitle}`}
-                    onClick={voteCard()}
+                        key={index} 
+                        classExtra={'votingCards'}
+                        id={cardInfo.cardTitle}
+                        src={cardInfo.src} 
+                        alt={`Imagem da carta: ${cardInfo.cardTitle}`}
                 />
                 )
             })                

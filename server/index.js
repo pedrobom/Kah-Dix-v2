@@ -139,12 +139,17 @@ io.on('connect', (socket) => {
   })
 
   // Quando o jogador escolhe a carta em qual está votando
-  socket.on('voteCard', ({card}, callback) => {
+  socket.on('voteCard', (card, callback) => {
     // O jogador está em um jogo?
     let userRoom = Rooms.getRoomOfUser(user)
     if (!userRoom) {
       console.warn("Usuário [%s] tentando votar em uma carta [%s] sem estar em um jogo!", user.id, card)
       return callback("Você precisa estar em um jogo para escolher uma carta!")
+    }
+
+    else if (userRoom.players[userRoom.currentPlayerIndex].user == user) {
+      console.warn("Jogador [%s] tentando votar na carta [%s] no turno de Prompt dele!", user.name, card)
+      return callback("Nesse turno você não vota!")    
     }
 
     console.log("Usuário [%s] votando na carta [%s] na mesa [%s]", user.name, card, userRoom)
