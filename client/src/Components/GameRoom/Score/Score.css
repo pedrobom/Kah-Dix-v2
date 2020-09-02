@@ -2,6 +2,7 @@
     position: fixed;
     min-height: 500px;
     width: 300px;
+    min-height: 500px;
     height: 500px;
     left:0vw;
     top:50vh;
