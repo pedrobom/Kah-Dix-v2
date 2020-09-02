@@ -1,7 +1,7 @@
 import React, { useContext } from 'react';
 import { RoomContext } from '../../GameRoom/GameRoom'
 
-import onlineIcon from '../../../icons/onlineIcon.png';
+import onlineIcon from '../../../assets/icons/onlineIcon.png';
 
 import './InfoChatBar.css';
 
@@ -11,11 +11,13 @@ const InfoChatBar = () => {
   return (
     <div className="infoBar">
       <div className="leftInnerContainer">
-      <img className="onlineIcon" src={onlineIcon} alt="online icon" />
-      <h3>Bate-Papo Sala: {roomData.name} </h3>
+        <img className="onlineIcon" src={onlineIcon} alt="online icon" />
+        <h3>Bate-Papo Sala: {roomData.name} </h3>        
       </div>
-    <div className="rightInnerContainer">
-    </div>
+      <div className="rightInnerContainer">
+        div.arrow-
+        <img className="arrow-down-icon" src={onlineIcon} alt="online icon" />
+      </div>
   </div>
   )
 

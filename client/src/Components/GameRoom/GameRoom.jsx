@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import reactUuid from 'react-uuid'
 
 import Prompt from './Prompt'
 import Chat from '../Chat/Chat'

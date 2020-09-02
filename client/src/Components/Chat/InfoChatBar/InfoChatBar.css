@@ -15,7 +15,7 @@
     margin-left: 5%;
     color: white;
   }
-  
+
   .rightInnerContainer {
     display: flex;
     flex: 0.5;
@@ -25,4 +25,12 @@
   
   .onlineIcon {
     margin-right: 5%;
+  }
+
+  .arrow-down-icon{
+    width: 15px;
+  }
+
+  .arrow-up-icon{
+    width: 15px;
   }
