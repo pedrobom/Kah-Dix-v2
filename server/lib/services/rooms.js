@@ -237,12 +237,12 @@ module.exports = class Rooms {
     // Estado inválido para votar em cartas!
     if (room.state != Room.States.VOTING) {
       console.warn("Usuário [%s] tentando votar em cartas quando o jogo está no estado [%s], na sala [%s]", user.id, room.state, room.name)
-      return callback("Você não pode fazer isso!")
+      return ("Você não pode fazer isso!")
     }
   
     if (room.getVotedCardForUser(user)) {
       console.warn("Usuário [%s] tentando votar uma carta [%s] após já ter votado uma carta!", user, card)
-      return callback("Você já votou em uma carta!")
+      return ("Você já votou em uma carta!")
     }
   
     room.setVotedCardForUser(user, card)
@@ -253,7 +253,7 @@ module.exports = class Rooms {
     // Todas as cartas já foram votadas? Então devemos passar de estado para PICKING_PROMPT :)
     // Com isso devemos também garantir que todos os usuários tem 5 cartas e que temos cartas suficientes, ou acabar o jogo :)
     if (totalVotedCards >= room.players.length - 1) {
-      console.info("Cartas suficientes votadas na sala [%s], vamos passar de estado!", room.name)
+    console.info("Cartas suficientes votadas na sala [%s], vamos passar de estado!", room.name)
   
       // Temos cartas suficientes?
       if (room.deck.lenght < room.players.length) {
@@ -267,30 +267,32 @@ module.exports = class Rooms {
       const currentPlayer = room.getCurrentPlayer()
       let numberOfCurrentPlayerCardVoted = 0
       room.players.forEach(player => {
-        if(player.votedCard == currentPlayer.selectedCard) numberOfCurrentPlayerCardVoted++
+        if(player.votedCard == currentPlayer.selectedCard){
+          numberOfCurrentPlayerCardVoted++ 
+        } 
       })
-
       room.players.forEach(player => {
         if(player !== currentPlayer) {
-
           room.players.forEach(otherPlayer => {
             if(otherPlayer.votedCard == player.selectedCard) player.score++
           })
-        
-        }
-        else {
-          if( (numberOfCurrentPlayerCardVoted < room.players.length) && (numberOfCurrentPlayerCardVoted > 0) ){
-            currentPlayer.score += 3  
-          } else {
-            room.players.forEach(player => {
-              if(player !== currentPlayer){
-                player.score = + 2
-              }
-            })       
-          }
         }
       })
-
+      if( (numberOfCurrentPlayerCardVoted < room.players.length -1) && (numberOfCurrentPlayerCardVoted > 0) ){
+        currentPlayer.score += 3
+        room.players.forEach(player => {
+          if(player.votedCard == currentPlayer.selectedCard){
+            player.score += 3 
+          }
+        })         
+      }
+      else {
+        room.players.forEach(player => {
+          if(player.votedCard == currentPlayer.selectedCard){
+            player.score += 2 
+          }         
+        })        
+      }
       // Agora também precisamos distribuir mais cartas :)
       room.players.forEach( player => {
         console.debug("Distribuindo uma nova carta para o jogador [%s]", player.user.name)
@@ -300,11 +302,17 @@ module.exports = class Rooms {
         room.deck.splice(0, 1)
       })
 
-      // LIMPANDO AS VARIÁVEIS PARA O PRÓXIMO TURNO
+      // LIMPANDO AS VARIÁVEIS PARA O PRÓXIMO TURNO 
+
+      // ACHO QUE SÓ ESTAMOS LIMPANDO 
       room.selectedCardCount = 0
+      console.log('limpando contador de cartas selecionadas na sala para room.selectedCardCount ',room.selectedCardCount)
       room.mySelectedCard = null
+      console.log('limpando informação da carta selecionada do jogador room.mySelectedCard ', room.mySelectedCard)
       room.players.forEach(player => player.selectedCard = null)
-      
+      console.log('limpando informação de cartas selecionadas da array room.players ')
+      room.players.forEach(player => player.votedCard = null)
+      console.log('limpando informação de cartas votadas da array room.players ')
       // RODANDO O JOGADOR DA RODADA (currentPlayerIndex + 1)
       if (room.currentPlayerIndex < room.players.length - 1){
         room.currentPlayerIndex += 1
@@ -312,7 +320,7 @@ module.exports = class Rooms {
       else{
         room.currentPlayerIndex = 0
       }
-  
+      console.log('Passando a rodada de Picking Prompt para o jogador [%s]', room.players[room.currentPlayerIndex].user.name)
       room.state = Room.States.PICKING_PROMPT
     }
   

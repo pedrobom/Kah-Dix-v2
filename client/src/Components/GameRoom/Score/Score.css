@@ -1,6 +1,7 @@
 .players-nav-bar{
     position: fixed;
     width: 300px;
+    min-height: 500px;
     height: 500px;
     left:0vw;
     top:50vh;

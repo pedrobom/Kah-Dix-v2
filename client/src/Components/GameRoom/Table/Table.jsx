@@ -16,17 +16,21 @@ export default function Table() {
     useEffect(() => {
         const dropzone = document.querySelector('[dixit-drop-zone=drop]')
         
-        dropzone.ondragover = e => e.preventDefault()
-        dropzone.ondrop = function(e){
-            console.log('soltando card')
-                const id = e.dataTransfer.getData('card-id')
-                const card = document.getElementById(id)
-                console.debug("Carta sendo dropada:")
-                console.debug(card)
-                card
-                    ? playerSelectedACard(card)
-                    : console.log("A carta parece não existir! Verifique se o event listener 'ondragstart' está captando as informações corretamente")                
-            }
+        if (roomData.state === "SELECTING_CARDS"){
+            
+            dropzone.ondragover = e => e.preventDefault()
+            dropzone.ondrop = function(e){
+                console.log('soltando card')
+                    const id = e.dataTransfer.getData('card-id')
+                    const card = document.getElementById(id)
+                    console.debug("Carta sendo dropada:")
+                    console.debug(card)
+                    card
+                        ? playerSelectedACard(card)
+                        : console.log("A carta parece não existir! Verifique se o event listener 'ondragstart' está captando as informações corretamente")                
+                }
+        }
+
     }, [roomData])
 
     
@@ -49,9 +53,13 @@ export default function Table() {
                 console.log("cardsBackArray", cardsBackArray)
             }
 
-            return cardsBackArray.map(cardBack => {
+            return cardsBackArray.map( (cardBack, index) => {
                 return(
-                    <Card src={cardBack}/>
+                    <Card
+                        key={index}
+                        class={""} 
+                        src={cardBack}
+                    />
                 )
             })
 
@@ -68,7 +76,7 @@ export default function Table() {
                 return(
                     <Card 
                         key={index} 
-                        classExtra={'votingCards'}
+                        class={'votingCards'}
                         id={cardInfo.cardTitle}
                         src={cardInfo.src} 
                         alt={`Imagem da carta: ${cardInfo.cardTitle}`}
