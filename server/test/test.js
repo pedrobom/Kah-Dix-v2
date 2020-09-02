@@ -49,6 +49,7 @@ async function pipelineTest(){
     await emitSocketB('join', {name: "Socket B", roomName: "Sala"})
     await emitSocketC('join', {name: "Socket C", roomName: "Sala"})
     await emitSocketA('gameStart')
+    await emitSocketA('pickPrompt', )
     
 }
 

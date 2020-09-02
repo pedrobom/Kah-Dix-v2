@@ -42,6 +42,9 @@
 @media (prefers-reduced-motion: no-preference) {
   #loading-game-image {
     animation: Loading-img-spin infinite 4s linear;
+    margin: 50px;
+    width: 25%;
+    height: 25%;
   }
 }
 

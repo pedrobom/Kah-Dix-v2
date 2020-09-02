@@ -1,5 +1,6 @@
 const RoomPlayer = require("../models/room_player");
 const Room = require("../models/room");
+const io = require('../../ioserver')
 
 
 
@@ -87,11 +88,11 @@ module.exports = class Rooms {
     console.log("O jogador [%s] está iniciando o jogo na sala [%s]", user.id, room.name)
     if(room.state != Room.States.WAITING_FOR_PLAYERS && room.state != Room.States.GAME_ENDED) {
       console.log("usuário [%s] está tentando iniciar o jogo na sala [%s] e o estado atual é [%s]", user.id, room.name, room.state)
-      return {error: "O jogo ainda está rolando."}
+      return {error: "Esse jogo ainda está rolando."}
     }
     if (room.host.id != user.id) {
       console.warn("Usuário [%s] está tentando começar o jogo na sala [%s] mas não é o host!", user.id, room.name)
-      return {error: "Você não pode começar o jogo nessa sala, você não é o host!"}
+      return {error: "Você não pode começar o jogo nessa sala, você não é o anfitrião!"}
     }  
   
     Rooms.dealInitCardsWithoutReposition(room);
@@ -121,16 +122,22 @@ module.exports = class Rooms {
     return  {
       myUserName: player.user.name ,
       myHand: player.hand,
+      mySelectedCard: player.mySelectedCard,
       name: room.name,
       state: room.state,
       currentPlayerIndex: room.currentPlayerIndex,
       host: room.host,
       prompt: room.prompt,
+      selectedCardCount: room.selectedCardCount,
+      // turnResults: 
+      votingCardsTurn: room.state == Room.States.VOTING ? room.players.map((player) => {
+        return player.selectedCard
+      }) : null,
       players: room.players.map((player) => {
         return {
           name: player.user.name,
           score: player.score,
-          selectedCard: room.state.VOTING ? player.selectedCard : !!player.selectedCard,
+          selectedCard: room.state == Room.States.PICKING_PROMPT ? player.selectedCard : !!player.selectedCard,
           votedCard: room.state.PICKING_PROMPT ? player.votedCard : !!player.votedCard
         }
       })
@@ -190,13 +197,13 @@ module.exports = class Rooms {
   }
   
   // Selecionar uma carta para um determinado usuário em uma sala
-  static setSelectedCardForUser = ({user, card, room}) => {
-    console.debug("Selecionar a carta [%s] para o usuário [%s] na sala [%s]", card, user.id, room.name)
+  static setSelectedCardForUser = (user, room, card, callback, io) => {
+    console.debug("Selecionar a carta [%s] para o usuário [%s] na sala [%s]", card, user.name, room.name)
   
     // Estado inválido para selecionar cartas!
     if (room.state != Room.States.SELECTING_CARDS) {
       console.warn("Usuário [%s] tentando escolher cartas quando o jogo está no estado [%s], na sala [%s]", user.id, room.state, room.name)
-      return callback("Você não pode fazer isso!")
+      return callback("Você não pode colocar uma carta agora!")
     }
   
     
@@ -206,14 +213,19 @@ module.exports = class Rooms {
     }
   
     room.setSelectedCardForUser(user, card)
-      
+    io.to(room.name).emit('message', { user: 'Andrétnik', text: `O ${user.name} colocou uma carta na mesa!` });
+
     let totalSelectedCards = room.getNumberOfSelectedCards()
     console.debug("Carta [%s] escolhida para o jogador [%s] na sala [%s], agora temos um total de [%s] carta(s) e [%s] jogador(es)", card, user.id, room.name, totalSelectedCards, room.players.length)
     //
     // Todas as cartas já foram escolhidas? Então devemos passar de estado para VOTING :)
     if (totalSelectedCards >= room.players.length) {
-      console.info("Cartas suficientes escolhidas na sala [%s], vamos passar de estado!", room.name)
+      console.info("Cartas suficientes escolhidas na sala [%s], vamos passar de estado [%s]!", room.name, room.state)
+      room.selectedCardCount = totalSelectedCards
       room.state = Room.States.VOTING
+    } else {
+      room.selectedCardCount = totalSelectedCards
+      console.log('selectedCardCount :', room.selectedCardCount)
     }
   
   }
@@ -240,7 +252,7 @@ module.exports = class Rooms {
     //
     // Todas as cartas já foram votadas? Então devemos passar de estado para PICKING_PROMPT :)
     // Com isso devemos também garantir que todos os usuários tem 5 cartas e que temos cartas suficientes, ou acabar o jogo :)
-    if (totalVotedCards >= room.players.length) {
+    if (totalVotedCards >= room.players.length - 1) {
       console.info("Cartas suficientes votadas na sala [%s], vamos passar de estado!", room.name)
   
       // Temos cartas suficientes?
@@ -249,17 +261,76 @@ module.exports = class Rooms {
         room.state = Room.States.GAME_ENDED
         return
       }
-  
+      
+      
       // Temos cartas suficientes então.. então hora de pontuar :)
-      // TODO - Pontuacao!!!
-  
+      const currentPlayer = room.getCurrentPlayer()
+      let numberOfCurrentPlayerCardVoted = 0
+      room.players.forEach(player => {
+        if(player.votedCard == currentPlayer.selectedCard) numberOfCurrentPlayerCardVoted++
+      })
+
+      room.players.forEach(player => {
+        if(player !== currentPlayer) {
+
+          room.players.forEach(otherPlayer => {
+            if(otherPlayer.votedCard == player.selectedCard) player.score++
+          })
+        
+        }
+        else {
+          if( (numberOfCurrentPlayerCardVoted < room.players.length) && (numberOfCurrentPlayerCardVoted > 0) ){
+            currentPlayer.score += 3  
+          } else {
+            room.players.forEach(player => {
+              if(player !== currentPlayer){
+                player.score = + 2
+              }
+            })       
+          }
+        }
+      })
+
       // Agora também precisamos distribuir mais cartas :)
+      room.players.forEach( player => {
+        console.debug("Distribuindo uma nova carta para o jogador [%s]", player.user.name)
+        
+        let randomCard = room.deck[0]
+        player.hand.push(randomCard)
+        room.deck.splice(0, 1)
+      })
+
+      // LIMPANDO AS VARIÁVEIS PARA O PRÓXIMO TURNO
+      room.selectedCardCount = 0
+      room.mySelectedCard = null
+      room.players.forEach(player => player.selectedCard = null)
+      
+      // RODANDO O JOGADOR DA RODADA (currentPlayerIndex + 1)
+      if (room.currentPlayerIndex < room.players.length - 1){
+        room.currentPlayerIndex += 1
+      }
+      else{
+        room.currentPlayerIndex = 0
+      }
   
       room.state = Room.States.PICKING_PROMPT
     }
   
   }
+  static removePlayerFromRoom = (userRoom, user) => {
+    const player = userRoom.getPlayerForUser(user)
+    const userIndex = userRoom.players.indexOf(player, 0)
+    console.log(userIndex)
+    userRoom.players.splice(userIndex, 1)
+    if (player.user == userRoom.host){
+      userRoom.host = userRoom.players[0].user
+      console.log('new host is : [%s]', userRoom.host)
+    }
+     
+  }
 }
+
+
 
 // Fisher-Yates Alghoritm aka Knuth Shuffle
 function shuffle(array) {

@@ -23,16 +23,17 @@ export default function Hand () {
             return (
                 <Card 
                     key={index} 
+                    id={cardInfo.cardTitle}
                     src={cardInfo.src} 
-                    alt={cardInfo.cardTitle}
-                    id={`draggable-card-${index}`}/>
+                    alt={`Imagem da carta: ${cardInfo.cardTitle}`}
+                />
             )            
         })
     }
 
     
     return(
-        <div className="player-hand" dixit-drop-zone="drop">
+        <div className="player-hand">
             {renderCards()}
         </div>
     )

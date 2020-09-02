@@ -13,7 +13,10 @@ function RoomLobby (){
         if(roomData){
             if (roomData.players.length >= 2){  
                 setIsStartButtonReady(true)
-            }                 
+            }  
+            else if (roomData.players.length < 2) {
+                setIsStartButtonReady(false)
+            }               
         }   
     }, [roomData])
 

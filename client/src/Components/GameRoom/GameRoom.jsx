@@ -22,31 +22,6 @@ export const RoomContext = React.createContext()
 
 const GameRoom = ({ location }) => {   
     const [roomData, setRoomData] = useState()
-    const [isPromptSubmited, setIsPromptSubmited] = useState(false)
-
-    useEffect(() => {
-        socket.emit('userJoined')
-        console.log('O usuário aentrou na sala e disparou socket.emit("userJoined")')
-    }, [location.search] )
-
-
-    useEffect(() => {
-        const dropzones = document.querySelectorAll('[dixit-drop-zone=drop]')
-
-        dropzones.forEach( dropzone => {
-            dropzone.ondragover = e => e.preventDefault()
-            dropzone.ondrop = function(e){
-                const id = e.dataTransfer.getData('card-id')
-                const card = document.getElementById(id)
-                console.debug("Carta sendo dropada:")
-                console.debug(card)
-                card
-                    ? dropzone.appendChild(card) 
-                    : console.debug("A carta parece não existir! Verifique se o event listener 'ondragstart' está captando as informações corretamente")
-            }    
-        })
-    }, [])
-
 
     useEffect(() => {
         socket.on('roomData', (roomData) => {
@@ -61,7 +36,7 @@ const GameRoom = ({ location }) => {
         return (
                 <RoomContext.Provider value={roomData}>
                     <Menu />
-
+                    <Chat />
                     {roomData.prompt !== null
                         ? <Prompt prompt={`Frase de ${roomData.players[roomData.currentPlayerIndex].name}: ${roomData.prompt}`} />
                         : <Prompt prompt={`Esperando ${roomData.players[roomData.currentPlayerIndex].name}, o famoso lingua solta`} 
@@ -71,10 +46,10 @@ const GameRoom = ({ location }) => {
                         {/* LOBBY ATIVO NA TELA DE TODOS OS JOGADORES DA SALA*/}
                         { roomData.state === "WAITING_FOR_PLAYERS" && <RoomLobby />}
                         { roomData.state === "PICKING_PROMPT" && <InputPrompt /> }            
-                        <Table />
+                        <Table canDrop={"true"}/>
                         <Hand />
                         <Score />
-                        <Chat />
+                        
                     </div>     
                 </RoomContext.Provider>
         )        
@@ -82,8 +57,8 @@ const GameRoom = ({ location }) => {
     else{
         return (
             <div className="inside-room-loading-cointainer">
+                <h1 className="game-room-title">Carregando Partida</h1>
                 <img id="loading-game-image" src={LoadingImg} />
-                <h1>Aguarde o Carregamento do Jogo</h1>
             </div>
         )
     }

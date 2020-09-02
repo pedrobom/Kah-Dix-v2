@@ -22,6 +22,7 @@ module.exports = class Room {
         this.host = hostPlayer
         this.currentPlayerIndex = 0
         this.prompt = null
+        this.selectedCardCount = 0
 
         // Populates the deck
         this.deck = []
@@ -65,6 +66,9 @@ module.exports = class Room {
         let player = this.getPlayerForUser(user)
         if (player) {
             player.selectedCard = card
+            player.mySelectedCard = card
+            player.hand.splice(player.hand.indexOf(card), 1)
+            console.log('setSelectedCardforUser = card', card)
         }
     }
 

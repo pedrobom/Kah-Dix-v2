@@ -12,7 +12,11 @@ export default function InputPrompt() {
         e.preventDefault()
         console.log(input)
         if(input !== ""){
-            socket.emit("pickPrompt", input)
+            socket.emit("pickPrompt", input, (error) =>{
+                if(error){
+                    alert(error)
+                } 
+            })
         }
         else {
             alert("POR FAVOR, DIGITE UM PROMPT!")
