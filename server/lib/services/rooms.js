@@ -129,6 +129,7 @@ module.exports = class Rooms {
       host: room.host,
       prompt: room.prompt,
       selectedCardCount: room.selectedCardCount,
+      // turnResults: 
       votingCardsTurn: room.state == Room.States.VOTING ? room.players.map((player) => {
         return player.selectedCard
       }) : null,
@@ -260,11 +261,57 @@ module.exports = class Rooms {
         room.state = Room.States.GAME_ENDED
         return
       }
-  
+      
+      
       // Temos cartas suficientes então.. então hora de pontuar :)
-      // TODO - Pontuacao!!!
-  
+      const currentPlayer = room.getCurrentPlayer()
+      let numberOfCurrentPlayerCardVoted = 0
+      room.players.forEach(player => {
+        if(player.votedCard == currentPlayer.selectedCard) numberOfCurrentPlayerCardVoted++
+      })
+
+      room.players.forEach(player => {
+        if(player !== currentPlayer) {
+
+          room.players.forEach(otherPlayer => {
+            if(otherPlayer.votedCard == player.selectedCard) player.score++
+          })
+        
+        }
+        else {
+          if( (numberOfCurrentPlayerCardVoted < room.players.length) && (numberOfCurrentPlayerCardVoted > 0) ){
+            currentPlayer.score += 3  
+          } else {
+            room.players.forEach(player => {
+              if(player !== currentPlayer){
+                player.score = + 2
+              }
+            })       
+          }
+        }
+      })
+
       // Agora também precisamos distribuir mais cartas :)
+      room.players.forEach( player => {
+        console.debug("Distribuindo uma nova carta para o jogador [%s]", player.user.name)
+        
+        let randomCard = room.deck[0]
+        player.hand.push(randomCard)
+        room.deck.splice(0, 1)
+      })
+
+      // LIMPANDO AS VARIÁVEIS PARA O PRÓXIMO TURNO
+      room.selectedCardCount = 0
+      room.mySelectedCard = null
+      room.players.forEach(player => player.selectedCard = null)
+      
+      // RODANDO O JOGADOR DA RODADA (currentPlayerIndex + 1)
+      if (room.currentPlayerIndex < room.players.length - 1){
+        room.currentPlayerIndex += 1
+      }
+      else{
+        room.currentPlayerIndex = 0
+      }
   
       room.state = Room.States.PICKING_PROMPT
     }
