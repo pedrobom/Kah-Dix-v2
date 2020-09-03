@@ -303,8 +303,6 @@ module.exports = class Rooms {
       })
 
       // LIMPANDO AS VARIÁVEIS PARA O PRÓXIMO TURNO 
-
-      // ACHO QUE SÓ ESTAMOS LIMPANDO 
       room.selectedCardCount = 0
       console.log('limpando contador de cartas selecionadas na sala para room.selectedCardCount ',room.selectedCardCount)
       room.mySelectedCard = null
@@ -313,13 +311,16 @@ module.exports = class Rooms {
       console.log('limpando informação de cartas selecionadas da array room.players ')
       room.players.forEach(player => player.votedCard = null)
       console.log('limpando informação de cartas votadas da array room.players ')
+
       // RODANDO O JOGADOR DA RODADA (currentPlayerIndex + 1)
       if (room.currentPlayerIndex < room.players.length - 1){
         room.currentPlayerIndex += 1
+        
       }
       else{
         room.currentPlayerIndex = 0
       }
+      room.prompt = null
       console.log('Passando a rodada de Picking Prompt para o jogador [%s]', room.players[room.currentPlayerIndex].user.name)
       room.state = Room.States.PICKING_PROMPT
     }
@@ -332,9 +333,14 @@ module.exports = class Rooms {
     userRoom.players.splice(userIndex, 1)
     if (player.user == userRoom.host){
       userRoom.host = userRoom.players[0].user
-      console.log('new host is : [%s]', userRoom.host)
+      console.log('new host is: [%s]', userRoom.host)
     }
      
+  }
+
+  static removeRoom = (userRoom) => {
+    delete rooms.userRoom
+    console.log('Sala [%s] removida, lista atual de salas é',userRoom.name , rooms)
   }
 }
 

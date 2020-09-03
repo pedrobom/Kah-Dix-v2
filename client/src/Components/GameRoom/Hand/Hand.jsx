@@ -9,14 +9,15 @@ import { useContext } from 'react'
 import{ RoomContext } from '../GameRoom'
 
 
-export default function Hand () {
+function Hand () {
+    console.log('renderizando Componente Hand')
+
     const roomData = useContext(RoomContext)
     const cardsArray = AllCards()
 
 
     useEffect(() => {
         const cards = document.querySelectorAll('.card.hand')        
-        console.log("Cards from document.querySelectorAll('.card.hand')", cards)
         
         if (roomData.state === "SELECTING_CARDS")
         {
@@ -73,7 +74,7 @@ export default function Hand () {
             })
         }
 
-    }, [roomData])
+    })
 
 
     //ENCONTRAR UMA FORMA MAIS EFICIÊNTE DE FAZER ISSO!
@@ -102,3 +103,5 @@ export default function Hand () {
         </div>
     )
 }
+
+export default React.memo(Hand)

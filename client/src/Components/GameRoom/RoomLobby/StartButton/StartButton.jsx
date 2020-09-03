@@ -16,16 +16,16 @@ function StartButton (){
     }
 
     return (                 
-        <a href="#" class="my-super-cool-btn">
+        <a href="#" className="my-super-cool-btn">
             <div class="dots-container">
-                <div class="dot"></div>
-                <div class="dot"></div>
-                <div class="dot"></div>
-                <div class="dot"></div>
+                <div className="dot"></div>
+                <div className="dot"></div>
+                <div className="dot"></div>
+                <div className="dot"></div>
             </div>  
             <span onClick={e => startGame(e)}>Vai!</span>
         </a>    
     )     
 }
 
-export default StartButton
+export default React.memo(StartButton)

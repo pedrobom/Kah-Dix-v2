@@ -183,17 +183,22 @@ io.on('connect', (socket) => {
     if(userRoom){
       io.to(userRoom.name).emit('message', { user: 'Andrétnik', text: `${user.name} meteu o pé.` });  
       if(userRoom.state == "WAITING_FOR_PLAYERS") {
-        if(user == userRoom.host){
-          Rooms.removePlayerFromRoom(userRoom, user, io)
+        if(user == userRoom.host && userRoom.players.length >= 2){
+          Rooms.removePlayerFromRoom(userRoom, user)
           io.to(userRoom.name).emit('message', { user: 'Andrétnik', text: `O ${userRoom.host.name} é o novo anfitrião da partida!` });
           console.log(' Host [%s] saiu do RoomLobby, removendo jogador da sala e definindo o novo Host para [%s]', user.name, userRoom.host.name)
+          Rooms.emitRoomDataForAll(userRoom, io)    
         }
-      else{
-        Rooms.removePlayerFromRoom(userRoom, user, io)
+        else if(userRoom.players.length > 1){
+        Rooms.removePlayerFromRoom(userRoom, user)
+        Rooms.emitRoomDataForAll(userRoom, io)    
         console.log('removendo jogador [%s] da sala [%s] porque ele saiu do RoomLobby', user.name, userRoom.name)
+        }
+        else {
+        console.log('não existe mais ninguem na sala, sala será deletada.')
+        Rooms.removeRoom(userRoom)
       }
-    }
-    Rooms.emitRoomDataForAll(userRoom, io)      
+    } 
     }
     else(!userRoom)
     console.log('usuário saiu sem estar em uma sala.')

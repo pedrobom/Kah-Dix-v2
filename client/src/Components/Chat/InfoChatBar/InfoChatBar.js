@@ -35,4 +35,4 @@ const InfoChatBar = () => {
 
 };
 
-export default InfoChatBar;
+export default React.memo(InfoChatBar);

@@ -1,8 +1,7 @@
-import React, { useState, useEffect, useContext } from 'react'
+import React, {  useContext } from 'react'
 import './Score.css'
-import { socket } from '../../socket'
 import { RoomContext } from '../GameRoom'
-export default function Score() {
+function Score() {
     const roomData = useContext(RoomContext)
 
     const sortPlayerByHightesScore = (a, b) => {
@@ -16,6 +15,7 @@ export default function Score() {
     }
 
     const renderRows = () =>{ 
+            // SCORE ESTÁ ALTERANDO A ORDEM DOS JOGADORES
             const playersSorted = roomData.players.sort(sortPlayerByHightesScore)
             return playersSorted.map((player, index) => {
             // console.log("playersSorted = ",playersSorted)
@@ -44,3 +44,5 @@ export default function Score() {
         </aside>
     )
 }
+
+export default React.memo(Score)

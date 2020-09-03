@@ -3,8 +3,7 @@ import{ RoomContext } from '../GameRoom'
 import './Card.css'
 import { socket } from '../../socket'
 
-export default props =>
-{
+function Card (props) {
     const roomData = useContext(RoomContext)
 
     return(      
@@ -45,3 +44,5 @@ export default props =>
         />       
     )
 }
+
+export default React.memo(Card)

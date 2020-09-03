@@ -6,6 +6,7 @@ import { RoomContext } from '../GameRoom'
 import StartButton from './StartButton/StartButton'
 
 function RoomLobby (){
+    console.log('renderizando Componente RoomLobby')
     const roomData = useContext(RoomContext)
     const [isStartButtonReady, setIsStartButtonReady] = useState(false)
 
@@ -21,7 +22,6 @@ function RoomLobby (){
     }, [roomData])
 
     function renderIncommingPlayer(){
-        console.log(roomData)
         if(roomData){
             return roomData.players.map((player, index) => {
                 return(
@@ -58,4 +58,4 @@ function RoomLobby (){
     )     
 }
 
-export default RoomLobby
+export default React.memo(RoomLobby)

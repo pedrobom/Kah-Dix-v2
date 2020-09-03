@@ -23,13 +23,13 @@ const GameRoom = ({ location }) => {
     const [roomData, setRoomData] = useState()
 
     useEffect(() => {
-        socket.on('roomData', (roomData) => {
+        socket.once('roomData', (roomData) => {
             console.log('GameLobby = Recebendo atualização RoomData do server')
             console.log("socket.on('roomData') = [%x]", roomData)
             setRoomData(roomData)
         })
 
-    }, [])
+    }, [roomData])
     
     if(roomData){
         return (
@@ -37,8 +37,8 @@ const GameRoom = ({ location }) => {
                     <Menu />
                     <Chat />
                     {roomData.prompt !== null
-                        ? <Prompt prompt={`Frase de ${roomData.players[roomData.currentPlayerIndex].name}: ${roomData.prompt}`} />
-                        : <Prompt prompt={`Esperando ${roomData.players[roomData.currentPlayerIndex].name}, o famoso lingua solta`} 
+                        ? <Prompt prompt={`${roomData.players[roomData.currentPlayerIndex].name} diz: ${roomData.prompt}`} />
+                        : <Prompt prompt={`Esperando ${roomData.players[roomData.currentPlayerIndex].name} soltar aquela frase marota`} 
                     />}
 
                     <div className="dixit-table">
