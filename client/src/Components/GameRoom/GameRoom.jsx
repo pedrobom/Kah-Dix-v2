@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 
-import Prompt from './Prompt'
+import Prompt from './Prompt/Prompt'
 import Chat from '../Chat/Chat'
 import RoomLobby from './RoomLobby/RoomLobby'
 import Hand from './Hand/Hand'
@@ -35,7 +35,7 @@ const GameRoom = ({ location }) => {
         return (
                 <RoomContext.Provider value={roomData}>
                     <Menu />
-                    {/* <Chat /> */}
+                    <Chat />
                     {roomData.prompt !== null
                         ? <Prompt prompt={`Frase de ${roomData.players[roomData.currentPlayerIndex].name}: ${roomData.prompt}`} />
                         : <Prompt prompt={`Esperando ${roomData.players[roomData.currentPlayerIndex].name}, o famoso lingua solta`} 

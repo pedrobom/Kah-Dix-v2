@@ -17,6 +17,9 @@
 .votingCards {
     cursor: pointer;
 }
+.votingCards:active {
+    transform: scale(0.8);
+}
 
 .card:hover {
     /* filter:grayscale(50%); */

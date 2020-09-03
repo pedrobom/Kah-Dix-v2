@@ -30,11 +30,13 @@ const Chat = () => {
         }
     }
 
-        return (            
-            <div className="container">
+        return (  
+            <div className="outer-container">
                 <InfoChatBar />
-                <ChatMessages messages={messages} />
-                <ChatInput message={message} setMessage={setMessage} sendMessage={sendMessage} />
+                <div className="container">
+                    <ChatMessages messages={messages} />
+                    <ChatInput message={message} setMessage={setMessage} sendMessage={sendMessage} />
+                </div>
             </div>
           );
     }

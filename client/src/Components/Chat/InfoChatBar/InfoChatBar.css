@@ -28,9 +28,18 @@
   }
 
   .arrow-down-icon{
-    width: 15px;
+    width: 25px;
+    cursor: pointer;
   }
 
   .arrow-up-icon{
-    width: 15px;
+    height: 40px;
+  }
+
+  .infoBar.chat-hide{
+    position: fixed;
+    top: calc(100% - 60px);
+    right: 0%;
+    height: 60px;
+    width: 400px;
   }

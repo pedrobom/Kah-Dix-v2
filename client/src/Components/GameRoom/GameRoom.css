@@ -9,16 +9,6 @@
   height: auto;
 }
 
-.game-room-title {
-  font-family: 'Fjalla One';
-  color: rgb(241, 82, 82);
-  text-shadow: 4px 3px 2px rgb(201, 193, 193);
-  text-justify: center;
-  text-align: center;
-  margin-top: 40px;
-  font-size: 40px;
-}
-
 .inside-room-loading-cointainer {
   display: flex;
   flex-direction: column;
