@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 
+import Header from './Header/Header'
 import Prompt from './Prompt/Prompt'
 import Chat from '../Chat/Chat'
 import RoomLobby from './RoomLobby/RoomLobby'
@@ -9,10 +10,10 @@ import Score from './Score/Score'
 import InputPrompt from './InputPrompt/InputPrompt'
 import Menu from './Menu/Menu'
 import LoadingImg from '../../assets/images/loadingImg'
-
 import './GameRoom.css'
 
 import {socket} from "../socket.js"
+import TurnResults from "./TurnResults/TurnResults";
 
 // import io from 'socket.io-client'
 // let socket;
@@ -34,11 +35,13 @@ const GameRoom = ({ location }) => {
     if(roomData){
         return (
                 <RoomContext.Provider value={roomData}>
+                    <Header />
                     <Menu />
                     <Chat />
+                                        
                     {roomData.prompt !== null
                         ? <Prompt prompt={`${roomData.players[roomData.currentPlayerIndex].name} diz: ${roomData.prompt}`} />
-                        : <Prompt prompt={`Esperando ${roomData.players[roomData.currentPlayerIndex].name} soltar aquela frase marota`} 
+                        : <Prompt prompt={`Esperando ${roomData.players[roomData.currentPlayerIndex].name} mandar aquela frase marota`} 
                     />}
 
                     <div className="dixit-table">
@@ -48,6 +51,8 @@ const GameRoom = ({ location }) => {
                         <Table canDrop={"true"}/>
                         <Hand />
                         <Score />
+                        {(roomData.state === "PICKING_PROMPT" && roomData.turn > 1) && <TurnResults />}
+
                         
                     </div>     
                 </RoomContext.Provider>

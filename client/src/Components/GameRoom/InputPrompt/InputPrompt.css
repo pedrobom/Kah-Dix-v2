@@ -8,9 +8,9 @@
     --font-size: 30px;
     --font-face: 'Fjalla One';
     --font-color: #2A293E;
-
     --form-width: 800px;
     --form-height:250px;
+    z-index: 10;
 }
 
 .background-shadow-form {

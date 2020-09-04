@@ -20,9 +20,11 @@ module.exports = class Room {
         this.state = Room.States.WAITING_FOR_PLAYERS 
         this.players = [new RoomPlayer({user: hostPlayer})]
         this.host = hostPlayer
+        this.turn = 1
         this.currentPlayerIndex = 0
         this.prompt = null
         this.selectedCardCount = 0
+        this.results = []
 
         // Populates the deck
         this.deck = []

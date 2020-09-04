@@ -84,7 +84,7 @@ io.on('connect', (socket) => {
 
     io.to(userRoom.name).emit('message', { user: 'Andrétnik', text: 'Tá valendo! A partida começou!' });
     Rooms.emitRoomDataForAll(userRoom, io)
-    io.to(userRoom.name).emit('message', { user: 'Andrétnik', text: `É a vez do ${userRoom.players[userRoom.currentPlayerIndex].user.name} escolher uma frase!` });
+    io.to(userRoom.name).emit('message', { user: 'Andrétnik', text: `É a vez de ${userRoom.players[userRoom.currentPlayerIndex].user.name} mandar uma frase!` });
     //callback(null, Rooms.getRoomDataForUser({user, room: userRoom}))
   })
 

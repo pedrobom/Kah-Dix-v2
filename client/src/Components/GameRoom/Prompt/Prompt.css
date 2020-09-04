@@ -5,7 +5,12 @@
     text-justify: center;
     text-align: center;
     font-size: 40px;
-
-    padding: 20px;
+    width: 50vw;
+    height: 10vh;
+    justify-items: center;
+    justify-content: center;
+    background: #F3F3F3;
+    border-radius: 20px;
+    padding: 10px;
 }
   

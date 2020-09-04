@@ -84,6 +84,7 @@ function Hand () {
 
         return roomData.myHand.map((card, index) => {            
             let cardInfo = getCardInfo(card)
+            console.log('hand card', card)
             return (
                 <Card 
                     key={index} 

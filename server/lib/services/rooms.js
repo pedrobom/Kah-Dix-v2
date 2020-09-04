@@ -1,5 +1,6 @@
 const RoomPlayer = require("../models/room_player");
 const Room = require("../models/room");
+const Results = require("../models/results")
 const io = require('../../ioserver')
 
 
@@ -125,11 +126,12 @@ module.exports = class Rooms {
       mySelectedCard: player.mySelectedCard,
       name: room.name,
       state: room.state,
+      turn: room.turn,
       currentPlayerIndex: room.currentPlayerIndex,
       host: room.host,
       prompt: room.prompt,
       selectedCardCount: room.selectedCardCount,
-      // turnResults: 
+      results: room.results,
       votingCardsTurn: room.state == Room.States.VOTING ? room.players.map((player) => {
         return player.selectedCard
       }) : null,
@@ -302,6 +304,15 @@ module.exports = class Rooms {
         room.deck.splice(0, 1)
       })
 
+      // SALVANDO OS RESULTADOS DO TURNO
+      room.results.push(
+        new Results ({
+        turn: room.turn,
+        turnPlayer: room.players[room.currentPlayerIndex].user.name,
+        turnPrompt: room.prompt,
+        turnPlayerCard: room.players[room.currentPlayerIndex].selectedCard,
+        players: room.players.map((player) => { return {name: player.user.name, votedCard: player.votedCard, selectedCard: player.selectedCard}})}))
+
       // LIMPANDO AS VARIÁVEIS PARA O PRÓXIMO TURNO 
       room.selectedCardCount = 0
       console.log('limpando contador de cartas selecionadas na sala para room.selectedCardCount ',room.selectedCardCount)
@@ -320,6 +331,8 @@ module.exports = class Rooms {
       else{
         room.currentPlayerIndex = 0
       }
+      room.turn++
+      console.log('avançando para o próximo turno [%s]', room.turn)
       room.prompt = null
       console.log('Passando a rodada de Picking Prompt para o jogador [%s]', room.players[room.currentPlayerIndex].user.name)
       room.state = Room.States.PICKING_PROMPT
