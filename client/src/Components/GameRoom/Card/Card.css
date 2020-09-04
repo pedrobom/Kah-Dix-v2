@@ -1,9 +1,10 @@
 .card {
     transition: 1s;
     margin: 10px;
-    width: 230px;
-    height: 300px;
-    object-fit: cover;
+    /* width: 230px;
+    height: 300px; */
+    height: 32vh;
+    /* object-fit: cover; */
 }
 
 .selectingCards{

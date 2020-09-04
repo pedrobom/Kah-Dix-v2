@@ -7,19 +7,25 @@
   width: 100vw;
   gap: 20px;
   grid-template: 
-  "he he he he he he he he he" 40px
-  ". . p p p p p . m" 10vh
-  ". s s d d d d d d" 1fr
-  ". s s d d d d d d" 1fr
-  ". ha ha ha ha ha ha . ." 1fr 
-  ". ha ha ha ha ha ha . ." 1fr
-  / 2vw 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
+  "he he he he he he he he he he" 40px
+  ". . p p p p p p m ." 10vh
+  ". d d d d d d d d ." 1fr
+  ". d d d d d d d d ." 1fr
+  ". s s ha ha ha ha c c c" 1fr 
+  ". s s ha ha ha ha c c c" 1fr
+  / 2vw 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 2vw;
 
   /* flex-direction: column;
   justify-content: center;
   align-items: center; */
 }
 
+#carinha-image{
+  grid-area: c;
+  justify-self: center;
+  align-self: center;
+  transform: scale(0.5);
+}
 
 .inside-room-loading-cointainer {
   display: flex;

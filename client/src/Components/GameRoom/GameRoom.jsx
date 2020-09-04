@@ -10,6 +10,7 @@ import Score from './Score/Score'
 import InputPrompt from './InputPrompt/InputPrompt'
 import Menu from './Menu/Menu'
 import LoadingImg from '../../assets/images/loadingImg'
+import carinha from '../../assets/images/carinha'
 import './GameRoom.css'
 
 import {socket} from "../socket.js"
@@ -38,17 +39,19 @@ const GameRoom = ({ location }) => {
                     <Chat />
                     { roomData.state === "WAITING_FOR_PLAYERS" && <RoomLobby />}
                     <div className="gameRoom">
-                        <Header className="header-container" />   
-                        <Menu className="menu-container" />                 
+                        <Header />   
+                        <Menu />                 
                         {roomData.prompt !== null
-                        ? <Prompt className="prompt-container" prompt={`${roomData.players[roomData.currentPlayerIndex].name} diz: ${roomData.prompt}`} />
-                        : <Prompt className="prompt-container" prompt={`Esperando ${roomData.players[roomData.currentPlayerIndex].name} mandar aquele bordão solerte`} 
+                        ? <Prompt prompt={`${roomData.players[roomData.currentPlayerIndex].name} diz: ${roomData.prompt}`} />
+                        : <Prompt prompt={`Esperando ${roomData.players[roomData.currentPlayerIndex].name} mandar aquele bordão solerte`} 
                         />}
                         {/* LOBBY ATIVO NA TELA DE TODOS OS JOGADORES DA SALA*/}
                         { roomData.state === "PICKING_PROMPT" && <InputPrompt /> }            
-                        <Table className="dropzone-container" canDrop={"true"}/>
-                        <Hand className="hand-container"/>
-                        <Score className="score-container"/>
+                        <Table canDrop={"true"}/>
+                        <Score />
+                        <Hand />
+                        <img id="carinha-image" src={carinha} />
+
                     </div>       
                         {(roomData.state === "PICKING_PROMPT" && roomData.turn > 1) && <TurnResults />} 
                       

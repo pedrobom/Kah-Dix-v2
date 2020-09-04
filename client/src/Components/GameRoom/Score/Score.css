@@ -1,11 +1,6 @@
 .players-nav-bar{
     grid-area: s;
-    min-height: 500px;
-    width: 300px;
-    min-height: 500px;
-    height: 500px;
-    left:0vw;
-    top:50vh;
+
 }
 
 .fl-table {
@@ -19,7 +14,7 @@
     white-space: nowrap;
     color: rgb(99, 94, 94);
     font-weight: 1000;
-    background-color: rgb(226, 205, 205);
+    background-color: rgb(196, 218, 211);
 }
 
 .fl-table td, .fl-table th {
@@ -34,13 +29,13 @@
 
 .fl-table thead th {
     color: #ffffff;
-    background: #4a52bd;
+    background: #30805a;
 }
 
 
 .fl-table thead th:nth-child(odd) {
     color: #ffffff;
-    background: #b3cfeb;
+    background: #30805a;
 }
 
 .fl-table tr:nth-child(odd) {

@@ -1,7 +1,7 @@
 .player-hand {
   grid-area: ha;
   display: flex;
-  flex-flow: row wrap;
+  flex-flow: row nowrap;
   justify-content: center;
   align-items: center;
   border-radius: 5px;

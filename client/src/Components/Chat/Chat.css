@@ -4,7 +4,7 @@
   justify-content: space-between;
   z-index: 1000;
   position: fixed;
-  top:calc(100% - 560px);
+  top:calc(100% - 36vh);
   right: 0vw;
 }
 
@@ -17,7 +17,7 @@
   flex-direction: column;
   justify-content: space-between;
   background: #234220;
-  height: 500px;
+  height: 30vh;
   width: 400px;
 
   
