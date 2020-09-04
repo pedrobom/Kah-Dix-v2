@@ -1,5 +1,5 @@
 .players-nav-bar{
-    position: fixed;
+    grid-area: s;
     min-height: 500px;
     width: 300px;
     min-height: 500px;

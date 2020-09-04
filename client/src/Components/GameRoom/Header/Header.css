@@ -1,9 +1,60 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap');
+
 .header{
-    position: relative;
-    width: 100vw;
-    background-color: burlywood;
+    grid-area: he;
+    height: 50px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: nowrap;
+    /* width: 100%; */
+    background-color: rgb(32, 37, 33);
+    font-family: 'Roboto', sans-serif;
 }
 
-.logo {
-    background-color: aqua;
+strong {
+    font-weight: 1000;
+}
+
+.header-content-left .logo{
+    padding-left:40px;
+    padding-right: 40px;
+}
+
+.header-content-left{
+    display: flex;
+    flex-direction: row;
+}
+
+.header-content-right{
+    display: flex;
+    flex-direction: row;
+}
+
+.header-links{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    margin-left: 5px;
+    margin-right: 10px;
+}
+
+.header-links a {
+    cursor: pointer;
+    margin-left: 15px;
+    text-decoration: none;
+    border: 3px solid navy;
+    border-radius: 5px;
+    background-color: rgb(255, 255, 255);
+    font-size: 1.5em;
+    color: rgb(0, 0, 0);
+}
+
+.header-links a:hover{
+    background-color: #000;
+}
+
+.header-links a:active {
+    transform: scale(0.8);
 }

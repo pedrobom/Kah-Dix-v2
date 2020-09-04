@@ -35,26 +35,23 @@ const GameRoom = ({ location }) => {
     if(roomData){
         return (
                 <RoomContext.Provider value={roomData}>
-                    <Header />
-                    <Menu />
                     <Chat />
-                                        
-                    {roomData.prompt !== null
-                        ? <Prompt prompt={`${roomData.players[roomData.currentPlayerIndex].name} diz: ${roomData.prompt}`} />
-                        : <Prompt prompt={`Esperando ${roomData.players[roomData.currentPlayerIndex].name} mandar aquela frase marota`} 
-                    />}
-
-                    <div className="dixit-table">
+                    { roomData.state === "WAITING_FOR_PLAYERS" && <RoomLobby />}
+                    <div className="gameRoom">
+                        <Header className="header-container" />   
+                        <Menu className="menu-container" />                 
+                        {roomData.prompt !== null
+                        ? <Prompt className="prompt-container" prompt={`${roomData.players[roomData.currentPlayerIndex].name} diz: ${roomData.prompt}`} />
+                        : <Prompt className="prompt-container" prompt={`Esperando ${roomData.players[roomData.currentPlayerIndex].name} mandar aquele bordão solerte`} 
+                        />}
                         {/* LOBBY ATIVO NA TELA DE TODOS OS JOGADORES DA SALA*/}
-                        { roomData.state === "WAITING_FOR_PLAYERS" && <RoomLobby />}
                         { roomData.state === "PICKING_PROMPT" && <InputPrompt /> }            
-                        <Table canDrop={"true"}/>
-                        <Hand />
-                        <Score />
-                        {(roomData.state === "PICKING_PROMPT" && roomData.turn > 1) && <TurnResults />}
-
-                        
-                    </div>     
+                        <Table className="dropzone-container" canDrop={"true"}/>
+                        <Hand className="hand-container"/>
+                        <Score className="score-container"/>
+                    </div>       
+                        {(roomData.state === "PICKING_PROMPT" && roomData.turn > 1) && <TurnResults />} 
+                      
                 </RoomContext.Provider>
         )        
     }

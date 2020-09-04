@@ -1,5 +1,6 @@
 .game-room-title {
-    font-family: 'Fjalla One';
+    grid-area: p;
+    font-family: 'Times New Roman', Times, serif;
     color: rgb(241, 82, 82);
     text-shadow: 4px 3px 2px rgb(201, 193, 193);
     text-justify: center;

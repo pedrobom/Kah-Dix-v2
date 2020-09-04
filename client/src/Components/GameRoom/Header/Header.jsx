@@ -6,10 +6,19 @@ function Header () {
     return(  
         <React.Fragment>
             <header className="header">
-                <div className="logo"> Kah-Dix! </div>
-                <div className="headerLinks">Regras do jogo</div>
-                <div className="headerLinks">Sobre os artistas</div>
-                <div className="headerLinks">Seja um colaborador</div>                  
+                <div className="header-content-left">
+                    <h3 className="logo">Kah-Dix!</h3>
+                    <div className="header-links">
+                        <a>Regras do jogo</a>
+                        <a>Último turno</a>             
+                    </div> 
+                </div>
+                <div className="header-content-right">
+                    <div className="header-links">
+                        <a>Sobre os artistas</a>
+                        <a>Seja um Colaborador</a>
+                    </div>
+                </div>
             </header>
              
         </React.Fragment>

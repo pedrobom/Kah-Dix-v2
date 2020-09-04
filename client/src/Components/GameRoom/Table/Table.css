@@ -1,14 +1,13 @@
 .dealer-table {
+    grid-area: d;
     width: 70vw;
-    min-height: 350px;
-    height: auto;
+    min-height: 38vh;
+    height: 38vh;
     display: flex;
     flex-flow: row wrap;
     justify-content: center;
     align-items: center;
     border-radius: 5px;
-    margin-top: 60px;
-
     background-color: rgb(243, 242, 235);
 
     border: 2px solid rgba(0,0,0,1);
