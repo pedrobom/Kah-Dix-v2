@@ -3,12 +3,12 @@
 .closeResultsButton{
   padding: 10px;
   border-radius: 4px;
-  background-color: yellow;
+  background-color: rgb(153, 166, 202);
 }
 
 .background-results{
-  margin:0;
-  padding:10;
+  margin: 0;
+  padding: 10;
   position: fixed;
   left: 0;
   top: 0;
@@ -79,6 +79,7 @@
   ". . . . . v v . . ." 1fr
   / 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
 }
+
 
 .card {
   grid-area: c;
