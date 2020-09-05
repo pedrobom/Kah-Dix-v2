@@ -11,8 +11,8 @@ function TurnResults (){
 
     const closeResults = e => {
         e.preventDefault()
-        const resultsContainer = document.querySelector('.background-results-button')
-        resultsContainer.classList.toggle('.results-hide')
+        const resultsContainer = document.querySelector('.background-results')
+        resultsContainer.classList.toggle('results-hide')
     }
 
 
@@ -24,17 +24,24 @@ function TurnResults (){
 
             if (roomData.state == "PICKING_PROMPT" && roomData.turn > 1)
             return (
-                <div className="background-results-button">
+                <React.Fragment>
+                <div className="background-results">
                     <div className="turnResultsBox">
-                        <div id="wrapper">
+                        <div className="turnPlayerResult">
+                            <div className="card">
                             <Card 
                                 class={'resultCards'}
                                 id={turnPlayerCard.cardTitle}
                                 src={turnPlayerCard.src} 
                                 alt={`Imagem da carta: ${turnPlayerCard.cardTitle}`}
-                            />
-                            <div>"{roomData.results[roomData.turn - 2].turnPrompt}"</div>
-                            <div>- {roomData.results[roomData.turn - 2].turnPlayer}</div>
+                            />                                
+                            </div>
+                            <div className="turnPrompt">"{roomData.results[roomData.turn - 2].turnPrompt}"<br />
+                                         - {roomData.results[roomData.turn - 2].turnPlayer}
+                            </div>
+                            <div className="turnPlayerScore">10 pontos!</div>
+                        </div>
+                        <div className="otherPlayersResult">
                             <div>ADICIONAR LISTA DE QUEM VOTOU NA CARTA DO TURNPLAYER</div>
                             <div>ADICIONAR OS OUTROS RESULTADOS</div>
                             <div></div>
@@ -42,6 +49,8 @@ function TurnResults (){
                         </div>
                     </div>
                 </div>
+                </React.Fragment>
+                
             )                
         }
         

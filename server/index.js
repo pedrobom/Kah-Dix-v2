@@ -109,7 +109,7 @@ io.on('connect', (socket) => {
     // }
 
     Rooms.emitRoomDataForAll(userRoom, io)
-    io.to(userRoom.name).emit('message', { user: 'Andrétnik', text: 'Já podem escolher a carta da vez!' });
+    io.to(userRoom.name).emit('message', { user: 'Andrétnik', text: 'Já podem escolher a cartinha!' });
     console.log('Novo estado de Jogo : [%s]', userRoom.state)
     //CALLBACK COM PROBLEMA
     //callback(null, Rooms.getRoomDataForUser({user, room: userRoom}))
@@ -201,7 +201,6 @@ io.on('connect', (socket) => {
     } 
     }
     else(!userRoom)
-    console.log('usuário saiu sem estar em uma sala.')
   })
 });
 

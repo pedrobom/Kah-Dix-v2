@@ -1,6 +1,6 @@
 @import url('https://fonts.googleapis.com/css?family=Montserrat:900');
 
-.background-results-button{
+.background-results{
   margin:0;
   padding:10;
   position: fixed;
@@ -9,14 +9,16 @@
   width: 100vw;
   height: 100vh;
   background-color:#292929;
-  opacity: 100%;
+  opacity: 90%;
   font-family: 'Montserrat', sans-serif;
   z-index: 20;
 }
 .turnResultsBox {
+    z-index:  30;
     max-width: 50vw;
     max-height: 80vh;
     display: flex;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
 	  margin: 0 auto;
@@ -24,6 +26,36 @@
     border-radius: 25px;
     padding: 25px;
     background-color: #ccc;
+}
+
+.turnPlayerResult {
+  display: grid;
+  width: 50vw;
+  height: 40vh;
+  grid-template: 
+  ". . . pr pr pr pr pr s s" 40px
+  ". . . . . pl . . . ." 20px
+  ". c . . . . . . . ." 1fr
+  ". . . . . . . . . ." 1fr
+  / 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
+}
+
+.card {
+  grid-area: c;
+}
+
+.turnPrompt {
+  grid-area: pr;
+  font-size: 30px;
+}
+
+.turnPlayer {
+  grid-area: pl;
+}
+
+.turnPlayerScore {
+  grid-area: s;
+  font-size: 24px;
 }
 .resultsInput{
   width:100vw;

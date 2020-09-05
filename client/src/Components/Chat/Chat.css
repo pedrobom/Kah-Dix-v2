@@ -4,8 +4,8 @@
   justify-content: space-between;
   z-index: 1000;
   position: fixed;
-  top:calc(100% - 36vh);
-  right: 0vw;
+  top:calc(100% - 42vh);
+  right: 2vw;
 }
 
 .container {
@@ -17,7 +17,7 @@
   flex-direction: column;
   justify-content: space-between;
   background: #234220;
-  height: 30vh;
+  height: 35vh;
   width: 400px;
 
   

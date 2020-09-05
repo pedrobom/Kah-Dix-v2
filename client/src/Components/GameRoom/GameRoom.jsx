@@ -7,7 +7,6 @@ import RoomLobby from './RoomLobby/RoomLobby'
 import Hand from './Hand/Hand'
 import Table from './Table/Table'
 import Score from './Score/Score'
-import InputPrompt from './InputPrompt/InputPrompt'
 import Menu from './Menu/Menu'
 import LoadingImg from '../../assets/images/loadingImg'
 import carinha from '../../assets/images/carinha'
@@ -26,7 +25,6 @@ const GameRoom = ({ location }) => {
 
     useEffect(() => {
         socket.once('roomData', (roomData) => {
-            console.log('GameLobby = Recebendo atualização RoomData do server')
             console.log("socket.on('roomData') = [%x]", roomData)
             setRoomData(roomData)
         })
@@ -46,13 +44,12 @@ const GameRoom = ({ location }) => {
                         : <Prompt prompt={`Esperando ${roomData.players[roomData.currentPlayerIndex].name} mandar aquele bordão solerte`} 
                         />}
                         {/* LOBBY ATIVO NA TELA DE TODOS OS JOGADORES DA SALA*/}
-                        { roomData.state === "PICKING_PROMPT" && <InputPrompt /> }            
+                        {/* { roomData.state === "PICKING_PROMPT" && <InputPrompt /> }             */}
                         <Table canDrop={"true"}/>
                         <Score />
                         <Hand />
                         <img id="carinha-image" src={carinha} />
-
-                    </div>       
+                    </div>
                         {(roomData.state === "PICKING_PROMPT" && roomData.turn > 1) && <TurnResults />} 
                       
                 </RoomContext.Provider>

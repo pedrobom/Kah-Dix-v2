@@ -1,7 +1,8 @@
 const RoomPlayer = require("../models/room_player");
 const Room = require("../models/room");
 const Results = require("../models/results")
-const io = require('../../ioserver')
+const io = require('../../ioserver');
+const users = require("./users");
 
 
 
@@ -340,10 +341,12 @@ module.exports = class Rooms {
   
   }
   static removePlayerFromRoom = (userRoom, user) => {
+
     const player = userRoom.getPlayerForUser(user)
     const userIndex = userRoom.players.indexOf(player, 0)
     console.log(userIndex)
     userRoom.players.splice(userIndex, 1)
+    console.log('Agora temos [%s] usuário conectado', users.users.length)
     if (player.user == userRoom.host){
       userRoom.host = userRoom.players[0].user
       console.log('new host is: [%s]', userRoom.host)
@@ -352,8 +355,10 @@ module.exports = class Rooms {
   }
 
   static removeRoom = (userRoom) => {
-    delete rooms.userRoom
-    console.log('Sala [%s] removida, lista atual de salas é',userRoom.name , rooms)
+    let emptyRoomIndex = rooms.indexOf(userRoom)
+    rooms.splice(emptyRoomIndex, 1)
+    console.log('Sala [%s] removida, agora temos [%s] salas',userRoom.name , rooms.length)
+    console.log('Agora temos [%s] usuário conectado', users.users.length)
   }
 }
 

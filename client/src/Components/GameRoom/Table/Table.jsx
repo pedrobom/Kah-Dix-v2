@@ -2,6 +2,7 @@ import React, {useEffect, useState, useContext } from 'react'
 import './Table.css'
 import { socket } from '../../socket'
 import{ RoomContext } from '../GameRoom'
+import InputPrompt from '../InputPrompt/InputPrompt'
 import AllCards from '../../allCards'
 import cardBackSrc from '../../../assets/images/cardBack'
 import Card from '../Card/Card'
@@ -88,6 +89,7 @@ export default function Table() {
 
     return(
         <div className="dealer-table" dixit-drop-zone="drop">
+            { roomData.state === "PICKING_PROMPT" && <InputPrompt /> }
             {renderCardBack()}
             {renderVotingCards()}
         </div>

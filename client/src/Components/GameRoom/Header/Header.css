@@ -38,21 +38,25 @@ strong {
     justify-content: center;
     margin-left: 5px;
     margin-right: 10px;
+    font-weight: 100;
+    font-size: small;
+    
 }
 
 .header-links a {
     cursor: pointer;
     margin-left: 15px;
     text-decoration: none;
-    border: 3px solid navy;
-    border-radius: 5px;
-    background-color: rgb(255, 255, 255);
     font-size: 1.5em;
-    color: rgb(0, 0, 0);
+    color: rgb(255, 255, 255);
 }
 
 .header-links a:hover{
-    background-color: #000;
+    background-color: rgb(77, 77, 77);
+    
+    
+
+    
 }
 
 .header-links a:active {

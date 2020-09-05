@@ -2,7 +2,7 @@ import React from 'react'
 import './Hand.css'
 import { useState, useEffect } from 'react'
 import { socket } from '../../socket'
-
+import InputPrompt from '../InputPrompt/InputPrompt'
 import Card from '../Card/Card'
 import AllCards from '../../allCards'
 import { useContext } from 'react'
@@ -99,9 +99,11 @@ function Hand () {
 
     
     return(
+        <React.Fragment>
         <div className="player-hand">
-            {renderCards()}
-        </div>
+                {renderCards()}
+        </div>            
+        </React.Fragment>
     )
 }
 
