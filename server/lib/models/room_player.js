@@ -6,6 +6,7 @@ module.exports = class RoomPlayer {
     constructor({user}){
         this.user = user
         this.score = 0
+        this.turnScore = 0
         this.hand = []
         this.mySelectedCard = null
         this.selectedCard = null

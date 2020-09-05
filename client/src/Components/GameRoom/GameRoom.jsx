@@ -25,7 +25,7 @@ const GameRoom = ({ location }) => {
 
     useEffect(() => {
         socket.once('roomData', (roomData) => {
-            console.log("socket.on('roomData') = [%x]", roomData)
+            console.log("socket.on('roomData') = [%x]", JSON.stringify(roomData, null, 2))
             setRoomData(roomData)
         })
 

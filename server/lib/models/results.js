@@ -1,9 +1,10 @@
 module.exports = class Results {
-    constructor({turn, turnPlayer, turnPrompt, turnPlayerCard, players}){
+    constructor({turn, turnPlayer, turnPrompt, turnPlayerCard, turnPlayerScore, players}){
         this.turn = turn
         this.turnPlayer = turnPlayer
         this.turnPrompt = turnPrompt
         this.turnPlayerCard = turnPlayerCard
-        this.players = [players]
+        this.turnPlayerScore = turnPlayerScore
+        this.players = players
     }
 }

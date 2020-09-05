@@ -277,7 +277,10 @@ module.exports = class Rooms {
       room.players.forEach(player => {
         if(player !== currentPlayer) {
           room.players.forEach(otherPlayer => {
-            if(otherPlayer.votedCard == player.selectedCard) player.score++
+            if(otherPlayer.votedCard == player.selectedCard) {
+              player.score++
+              player.turnScore++
+            }
           })
         }
       })
@@ -285,7 +288,8 @@ module.exports = class Rooms {
         currentPlayer.score += 3
         room.players.forEach(player => {
           if(player.votedCard == currentPlayer.selectedCard){
-            player.score += 3 
+            player.score += 3
+            player.turnScore +=3 
           }
         })         
       }
@@ -293,6 +297,8 @@ module.exports = class Rooms {
         room.players.forEach(player => {
           if(player.votedCard == currentPlayer.selectedCard){
             player.score += 2 
+            player.turnScore += 2 
+
           }         
         })        
       }
@@ -310,19 +316,22 @@ module.exports = class Rooms {
         new Results ({
         turn: room.turn,
         turnPlayer: room.players[room.currentPlayerIndex].user.name,
+        turnPlayerScore: room.players[room.currentPlayerIndex].turnScore,
         turnPrompt: room.prompt,
         turnPlayerCard: room.players[room.currentPlayerIndex].selectedCard,
-        players: room.players.map((player) => { return {name: player.user.name, votedCard: player.votedCard, selectedCard: player.selectedCard}})}))
+        players: room.players.map((player) => { return {name: player.user.name, votedCard: player.votedCard, selectedCard: player.selectedCard, turnScore: player.turnScore}})}))
 
       // LIMPANDO AS VARIÁVEIS PARA O PRÓXIMO TURNO 
       room.selectedCardCount = 0
-      console.log('limpando contador de cartas selecionadas na sala para room.selectedCardCount ',room.selectedCardCount)
+      console.log('limpando contador de cartas selecionadas na sala para room.selectedCardCount',room.selectedCardCount)
       room.mySelectedCard = null
-      console.log('limpando informação da carta selecionada do jogador room.mySelectedCard ', room.mySelectedCard)
+      console.log('limpando informação da carta selecionada do jogador room.mySelectedCard', room.mySelectedCard)
       room.players.forEach(player => player.selectedCard = null)
-      console.log('limpando informação de cartas selecionadas da array room.players ')
+      console.log('limpando informação de cartas selecionadas da array room.players')
       room.players.forEach(player => player.votedCard = null)
-      console.log('limpando informação de cartas votadas da array room.players ')
+      console.log('limpando informação de cartas votadas da array room.players')
+      room.players.forEach(player => player.turnScore = 0)
+      console.log('limpando informação de pontos de room.players')
 
       // RODANDO O JOGADOR DA RODADA (currentPlayerIndex + 1)
       if (room.currentPlayerIndex < room.players.length - 1){
