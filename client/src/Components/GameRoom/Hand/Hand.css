@@ -8,3 +8,7 @@
   background-color: rgb(243, 242, 235);
   border: 2px solid rgba(0,0,0,1);
 }
+
+.CardsInHand {
+  margin: -1.5vw;
+}

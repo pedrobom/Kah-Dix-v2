@@ -9,3 +9,10 @@
 
     border: 2px solid rgba(0,0,0,1);
 }
+
+.cardBackAtTable {
+    margin: 1vw;
+}
+.votingCardsAtTable {
+    margin-right: 1vw;
+}

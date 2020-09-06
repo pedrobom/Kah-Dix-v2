@@ -12,7 +12,7 @@ function TurnResults (){
     const closeResults = e => {
         e.preventDefault()
         const resultsContainer = document.querySelector('.background-results')
-        resultsContainer.classList.toggle('results-hide')
+        resultsContainer.classList.add('results-hide')
     }
 
     const renderOtherPlayersResults = () =>{
@@ -40,7 +40,7 @@ function TurnResults (){
                                 alt={`Imagem da carta: ${playerCard.cardTitle}`}
                             />                                
                             <div className="playerName">Cartinha do {player.name}</div>
-                            <div className="PlayerScore">{player.turnScore} {player.turnScore == 1 ? "pontinho!" : "pontos!"} </div>
+                            <div className="PlayerScore">{player.name} fez {player.turnScore} {player.turnScore == 1 ? "pontinho!" : "pontos!"} </div>
                             <div className="VotedPlayers">
                                 <ul>
                                     {!votes ? 'Não engana ninguém!' : votes.map(player => {return <li>{player.name}</li>})}
@@ -51,6 +51,7 @@ function TurnResults (){
             }
         })
     }
+
     const renderTurnResults = () =>{
         let turnResults = roomData.results[roomData.turn -2]        
         let cardsVotes = {}
@@ -62,12 +63,13 @@ function TurnResults (){
             cardsVotes[player.votedCard].push(player)
         })
 
+
         const getCardInfo = cardInput => cardsArray.find(card => card.cardTitle === cardInput)
         if(roomData.state == "PICKING_PROMPT" && roomData.turn > 1){
             console.log('Results', roomData.results)            
             let turnPlayerCard = getCardInfo(turnResults.turnPlayerCard)
             let votes = cardsVotes[turnResults.turnPlayerCard]
-
+            console.log('votes on TurnPlayer', votes)
             if (roomData.state == "PICKING_PROMPT" && roomData.turn > 1)
             return (
                 <React.Fragment>
@@ -85,13 +87,28 @@ function TurnResults (){
                             <div className="turnPrompt">"{turnResults.turnPrompt}"<br />
                                          - {turnResults.turnPlayer}
                             </div>
-                            <div className="turnPlayersVoters">Votos: <br/>{!votes ? 'Um poeta incompreendido!' : votes.map(player => {return <li>{player.name}</li>})}</div>
-            <div className="turnPlayerScore">{turnResults.turnPlayerScore} {turnResults.turnPlayerScore == 1 ? 'ponto!' : 'pontos!'}</div>
+                            <div className="turnPlayersVoters">
+                                {
+                                    !votes 
+                                        ? 'Poetize incomprendide! :(' 
+                                        : (
+                                            <>
+                                            <h3>Batutinhas que sacaram:</h3>   
+                                            <ul>{votes.map(player => <li>{player.name}</li>)}</ul>
+                                            </>
+                                            )                                      
+                                }  
+                            </div>
+                            <div className="turnPlayerScore">{turnResults.turnPlayerScore} {turnResults.turnPlayerScore == 1 ? 'ponto!' : 'pontos!'}</div>
                         </div>
-                        <div className="otherPlayerResultsContainer">
-                            {renderOtherPlayersResults()} 
-                        </div>    
-                            <button className="closeResultsButton" onClick={e => closeResults(e)}>Fechar</button>
+                        <div className="secondBox" >
+                            <div className="otherPlayerResultsContainer">
+                                {renderOtherPlayersResults()}    
+                            </div> 
+                            <button className="closeResultsButton" onClick={e => closeResults(e)}>Voltar para partida</button>                           
+                        </div>
+
+                            
                         
                     </div>
                 </div>

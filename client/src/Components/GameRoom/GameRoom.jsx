@@ -4,6 +4,7 @@ import Header from './Header/Header'
 import Prompt from './Prompt/Prompt'
 import Chat from '../Chat/Chat'
 import RoomLobby from './RoomLobby/RoomLobby'
+import EndScreen from "./EndScreen/EndScreen";
 import Hand from './Hand/Hand'
 import Table from './Table/Table'
 import Score from './Score/Score'
@@ -14,6 +15,7 @@ import './GameRoom.css'
 
 import {socket} from "../socket.js"
 import TurnResults from "./TurnResults/TurnResults";
+
 
 // import io from 'socket.io-client'
 // let socket;
@@ -50,7 +52,8 @@ const GameRoom = ({ location }) => {
                         <Hand />
                         <img id="carinha-image" src={carinha} />
                     </div>
-                        {(roomData.state === "PICKING_PROMPT" && roomData.turn > 1) && <TurnResults />} 
+                        {(roomData.state === "PICKING_PROMPT" && roomData.turn > 1) && <TurnResults />}
+                        { roomData.state === "GAME_ENDED" && <EndScreen />}
                       
                 </RoomContext.Provider>
         )        

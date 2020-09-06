@@ -1,7 +1,10 @@
 @import url('https://fonts.googleapis.com/css?family=Montserrat:900');
 
 .closeResultsButton{
-  padding: 10px;
+  width: 10vw;
+  height: 40px;
+  margin-top: 3vh;
+  align-self: center;
   border-radius: 4px;
   background-color: rgb(153, 166, 202);
 }
@@ -31,16 +34,19 @@
     border-radius: 25px;
     padding: 10px;
 }
-
-.otherPlayerResultsContainer {
+.secondBox{
   display: flex;
-  width: 40vw;
+  flex-flow: column wrap;
+  width: 45vw;
   padding: 20px;
   background-color: darkslategray;
-  border-radius: 20px;
+  border-radius: 20px;  
+}
+.otherPlayerResultsContainer {
+  display: flex;
   flex-direction: row;
   flex-wrap: wrap;
-  justify-content: space-between;
+  justify-content: space-around;
 
 }
 
@@ -59,24 +65,28 @@
   color: aliceblue;
 
 }
+
 .PlayerScore{
   color: aliceblue;
 }
+
 .VotedPlayers{
   color: aliceblue;
 }
+
 .turnPlayerResult {
   display: grid;
   background-color: rgb(140, 197, 162);
   border-radius: 25px;
-  width: 40vw;
+  width: 50vw;
   height: 40vh;
   gap: 20px;
   grid-template: 
-  ". . . pr pr pr pr s s s" 40px
-  ". c . . . . . . . ." 20px
-  ". c . . . v v . . ." 50px
-  ". . . . . v v . . ." 1fr
+  ". . . . . . . . . ." 10px
+  ". c pr pr pr pr pr s s s" 20px
+  ". c . . . . . . . ." 1fr
+  ". c . . . v v v . ." 1fr
+  ". . . . . v v v . ." 1fr
   / 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
 }
 

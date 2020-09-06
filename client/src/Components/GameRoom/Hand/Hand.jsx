@@ -79,22 +79,26 @@ function Hand () {
 
     //ENCONTRAR UMA FORMA MAIS EFICIÊNTE DE FAZER ISSO!
     const renderCards = () => {   
-        
-        const getCardInfo = cardInput => cardsArray.find(card => card.cardTitle === cardInput)
+        if(roomData.myHand !== []){
+            const getCardInfo = cardInput => cardsArray.find(card => card.cardTitle === cardInput)
+            return roomData.myHand.map((card, index) => {            
+                let cardInfo = getCardInfo(card)
+                console.log('hand card', card)
+                return (
+                    <div className="CardsInHand">
+                        <Card 
+                            key={index} 
+                            class={"hand"}
+                            id={cardInfo.cardTitle}
+                            src={cardInfo.src} 
+                            alt={`Imagem da carta: ${cardInfo.cardTitle}`}
+                        />                        
+                    </div>
 
-        return roomData.myHand.map((card, index) => {            
-            let cardInfo = getCardInfo(card)
-            console.log('hand card', card)
-            return (
-                <Card 
-                    key={index} 
-                    class={"hand"}
-                    id={cardInfo.cardTitle}
-                    src={cardInfo.src} 
-                    alt={`Imagem da carta: ${cardInfo.cardTitle}`}
-                />
-            )            
-        })
+                )            
+            })              
+        }
+          
     }
 
     

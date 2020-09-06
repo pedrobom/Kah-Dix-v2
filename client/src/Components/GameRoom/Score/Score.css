@@ -15,6 +15,7 @@
     color: rgb(99, 94, 94);
     font-weight: 1000;
     background-color: rgb(196, 218, 211);
+    border-radius: 20px 20px 0px 0px;
 }
 
 .fl-table td, .fl-table th {
@@ -29,15 +30,20 @@
 
 .fl-table thead th {
     color: #ffffff;
-    background: #30805a;
+    background: #2b476b;
+    border-radius: 0px 20px 0px 0px;
 }
 
 
 .fl-table thead th:nth-child(odd) {
     color: #ffffff;
-    background: #30805a;
+    background: #2b476b;
+    border-radius: 20px 0px 0px 0px;
+
+    
 }
 
 .fl-table tr:nth-child(odd) {
     background: #8cb670;
+    border-radius: 20px 20px 0px 0px;
 }

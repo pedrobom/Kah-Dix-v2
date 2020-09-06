@@ -96,6 +96,26 @@ module.exports = class Rooms {
       console.warn("Usuário [%s] está tentando começar o jogo na sala [%s] mas não é o host!", user.id, room.name)
       return {error: "Você não pode começar o jogo nessa sala, você não é o anfitrião!"}
     }  
+    if(room.state == Room.States.GAME_ENDED){
+      room.turn = 1
+      room.players.forEach(player =>{
+        player.score = 0
+        player.turnScore = 0
+        player.hand = []
+        player.mySelectedCard = null
+        player.selectedCard = null
+        player.votedCard = null
+      })
+      room.currentPlayerIndex = 0
+      room.prompt = null
+      room.selectedCardCount = 0
+      room.results = []
+      room.deck = []
+      for (var i = 1; i <= 21; i++){
+          let card = `card${i}`
+          room.deck.push(card)    
+     }
+    }
   
     Rooms.dealInitCardsWithoutReposition(room);
     room.players = shuffle(room.players)
@@ -259,13 +279,14 @@ module.exports = class Rooms {
     console.info("Cartas suficientes votadas na sala [%s], vamos passar de estado!", room.name)
   
       // Temos cartas suficientes?
-      if (room.deck.lenght < room.players.length) {
-        console.info("Não temos mais cartas suficientes no deck, o jogo acabou!")
+      if (room.deck.length < room.players.length) {
         room.state = Room.States.GAME_ENDED
-        return
+        return console.info("Não temos mais cartas suficientes no deck, o jogo mudou de estado para GAME_ENDED!")
+        
+
       }
       
-      
+      console.info("temos mais cartas suficientes no deck, Vamos pro próximo!")
       // Temos cartas suficientes então.. então hora de pontuar :)
       const currentPlayer = room.getCurrentPlayer()
       let numberOfCurrentPlayerCardVoted = 0
@@ -307,8 +328,10 @@ module.exports = class Rooms {
         console.debug("Distribuindo uma nova carta para o jogador [%s]", player.user.name)
         
         let randomCard = room.deck[0]
-        player.hand.push(randomCard)
-        room.deck.splice(0, 1)
+        if(room.deck.length > 0){
+          player.hand.push(randomCard)
+          room.deck.splice(0, 1)          
+        }
       })
 
       // SALVANDO OS RESULTADOS DO TURNO
@@ -357,8 +380,10 @@ module.exports = class Rooms {
     userRoom.players.splice(userIndex, 1)
     console.log('Agora temos [%s] usuário conectado', users.users.length)
     if (player.user == userRoom.host){
-      userRoom.host = userRoom.players[0].user
-      console.log('new host is: [%s]', userRoom.host)
+      if(userRoom.players.length > 1){
+        userRoom.host = userRoom.players[0].user
+        console.log('new host is: [%s]', userRoom.host)        
+      }
     }
      
   }

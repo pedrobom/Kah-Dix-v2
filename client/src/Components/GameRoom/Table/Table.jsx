@@ -56,11 +56,13 @@ export default function Table() {
 
             return cardsBackArray.map( (cardBack, index) => {
                 return(
-                    <Card
-                        key={index}
-                        class={""} 
-                        src={cardBack}
-                    />
+                    <div className="cardBackAtTable">
+                        <Card
+                            key={index}
+                            class={""} 
+                            src={cardBack}
+                        />
+                    </div>
                 )
             })
 
@@ -75,13 +77,16 @@ export default function Table() {
             return roomData.votingCardsTurn.map((card, index) => {
                 let cardInfo = getCardInfo(card)
                 return(
-                    <Card 
-                        key={index} 
-                        class={'votingCards'}
-                        id={cardInfo.cardTitle}
-                        src={cardInfo.src} 
-                        alt={`Imagem da carta: ${cardInfo.cardTitle}`}
-                />
+                    <div className="votingCardsAtTable">
+                        <Card 
+                            key={index} 
+                            class={'votingCards'}
+                            id={cardInfo.cardTitle}
+                            src={cardInfo.src} 
+                            alt={`Imagem da carta: ${cardInfo.cardTitle}`}
+                        />                        
+                    </div>
+
                 )
             })                
         }
@@ -90,8 +95,9 @@ export default function Table() {
     return(
         <div className="dealer-table" dixit-drop-zone="drop">
             { roomData.state === "PICKING_PROMPT" && <InputPrompt /> }
-            {renderCardBack()}
-            {renderVotingCards()}
+                {renderCardBack()}
+                {renderVotingCards()}
+            
         </div>
     )
 }

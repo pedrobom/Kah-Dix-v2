@@ -198,7 +198,8 @@ io.on('connect', (socket) => {
         console.log('não existe mais ninguem na sala, sala será deletada.')
         Rooms.removeRoom(userRoom)
       }
-    } 
+    }
+    Rooms.removePlayerFromRoom(userRoom, user)
     }
     else(!userRoom)
   })
