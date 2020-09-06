@@ -47,6 +47,23 @@ io.on('connect', (socket) => {
   // Neste ponto já temos um usuário, entõa vamos associar a socket a ele :)
   Users.linkSocketToUser({socket, user})
 
+  // Vamos mandar esses dados para o usuário :)
+  console.log("Enviando dados de sessão para o usuário [%s]", user)
+  // socket.emit('sessionData', {
+  //   user: user,
+  //   room: Rooms.getRoomOfUser(user)
+  // })
+
+  socket.on('fetchMySession', (callback) => {
+    let userRoom = Rooms.getRoomOfUser(user)
+    let sessionData = {
+      user: user,
+      roomData: userRoom ? Rooms.getRoomDataForUser({user, room: userRoom}) : null
+    }
+    console.log("User [%s] is fetching session data:", user, sessionData)
+    callback(null, sessionData)
+  })
+
   // Este metodo representa um usuário tentando entrar em uma sala
   socket.on('join', ({ name, roomName }, callback) => {
     console.log("Usuário [%s] tentando entrar com nome [%s] na sala com nome [%s]", user.id, name, roomName)

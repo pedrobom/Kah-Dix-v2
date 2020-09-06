@@ -1,7 +1,7 @@
 import React from 'react';
 import './App.css'
 
-import { BrowserRouter as Router, Route} from 'react-router-dom';
+import { Redirect, BrowserRouter as Router, Route} from 'react-router-dom';
 
 import Join from "../Components/Join/Join.js"
 import GameRoom from "../Components/GameRoom/GameRoom.jsx"
