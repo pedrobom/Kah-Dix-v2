@@ -86,7 +86,8 @@ module.exports = class Rooms {
       return {}
   }
   
-  static startGame = ({user, room}) => {
+  static startGame = ({user, room, isDeckDixit, isDeckPeq}) => {
+    console.log('isDeckDixit no rooms. 90', isDeckDixit)
     console.log("O jogador [%s] está iniciando o jogo na sala [%s]", user.id, room.name)
     if(room.state != Room.States.WAITING_FOR_PLAYERS && room.state != Room.States.GAME_ENDED) {
       console.log("usuário [%s] está tentando iniciar o jogo na sala [%s] e o estado atual é [%s]", user.id, room.name, room.state)
@@ -111,12 +112,34 @@ module.exports = class Rooms {
       room.selectedCardCount = 0
       room.results = []
       room.deck = []
-      for (var i = 1; i <= 21; i++){
-          let card = `card${i}`
-          room.deck.push(card)    
-     }
+      if(isDeckDixit == true){
+        for (var i = 1; i <= 97; i++){
+            let card = `Dixit${i}`
+            room.deck.push(card)    
+        }        
+      }
+      if(isDeckPeq == true){
+        for (var i = 1; i <= 21; i++){
+            let card = `Peq${i}`
+            room.deck.push(card)    
+        }        
+      }
     }
-  
+    // ADICIONANDO CARTAS DE DIXIT NO DECK 
+    if(isDeckDixit == true){
+      for (var i = 1; i <= 97; i++){
+          let card = `Dixit${i}`
+          room.deck.push(card)    
+      }        
+    }
+    
+    // ADICIONANDO CARTAS DO PEQ NO DECK 
+    if(isDeckPeq == true){
+      for (var i = 1; i <= 21; i++){
+          let card = `Peq${i}`
+          room.deck.push(card)    
+      }        
+    }
     Rooms.dealInitCardsWithoutReposition(room);
     room.players = shuffle(room.players)
     room.state = Room.States.PICKING_PROMPT

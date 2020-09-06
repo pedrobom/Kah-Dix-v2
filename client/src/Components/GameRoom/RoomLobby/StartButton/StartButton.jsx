@@ -3,11 +3,13 @@ import './StartButton.css'
 
 import { socket } from '../../../socket'
 
-function StartButton (){
-    
+function StartButton ({isDeckDixit, isDeckPeq}){
+    console.log("isDeckDixit at StartButton", isDeckDixit)
+    console.log("isDeckPeck at StartButton", isDeckPeq)
+
     function startGame(e) {
         e.preventDefault();
-        socket.emit('gameStart', (error) =>{
+        socket.emit('gameStart', isDeckDixit, isDeckPeq, (error) =>{
             if(error){
                 alert(error)
             }

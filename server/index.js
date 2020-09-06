@@ -69,14 +69,14 @@ io.on('connect', (socket) => {
         
   });
 
-  socket.on('gameStart', (callback) =>{
+  socket.on('gameStart', (isDeckDixit, isDeckPeq ,callback) =>{
     let userRoom = Rooms.getRoomOfUser(user)
     if (!userRoom) {
       console.warn("Usuário [%s] tentando começar o jogo [%s] sem estar em um jogo!", user.id, card)
       return callback("Você precisa estar em um jogo para escolher uma carta!")
     }
-
-    const {error} = Rooms.startGame({user, room: userRoom})
+    console.log('isDeckDixit no index. 78', isDeckDixit)
+    const {error} = Rooms.startGame({user, room: userRoom, isDeckDixit, isDeckPeq})
     if (error) {
       console.log("Não foi possível começar o jogo: %s", error)
       return callback(error)

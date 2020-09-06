@@ -28,10 +28,6 @@ module.exports = class Room {
 
         // Populates the deck
         this.deck = []
-        for (var i = 1; i <= 21; i++){
-            let card = `card${i}`
-            this.deck.push(card)    
-       }
     }
 
     isUserWithNameInRoom(name){
