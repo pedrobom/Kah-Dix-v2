@@ -14,6 +14,7 @@ const addUser = ({ id }) => {
   const user = { id, name: "Usuário ainda sem nome" };
 
   users.push(user);
+  console.debug("Novo usuário criado: %s", JSON.stringify(user, true, 2))
   console.info("Usuário  com socket.id [%s] adicionado, agora temos [%s] usuário(s)", user.id, users.length)
 
   return { user };
@@ -55,6 +56,7 @@ const removeUser = (id) => {
 
 const getUser = (id) => {
   console.debug("Buscando usuário com id [%s]", id)
+  console.debug("Usuários disponíveis: ", users)
   return users.find((user) => user.id === id);
 }
 // Pedro diz: acho que essa função tá desatualizada, não funcional.
