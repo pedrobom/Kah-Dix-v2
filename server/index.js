@@ -1,22 +1,77 @@
 
-const {io, server} = require('./ioserver')
-const express = require('express');
-const app = express();
+const {io, app, server} = require('./ioserver')
 
-const cors = require('cors');
-const router = require('./router');
 
 const Users = require('./lib/services/users');
 const Rooms = require('./lib/services/rooms')
 
-app.use(cors());
-app.use(router);
-
 io.on('connect', (socket) => {
 
-  console.log("[io.on('connect') - Novo usuário conectado com socket [%s]", socket.id)
-  // Assim que o usuário conecta, a gente cria um usuário para ele
-  const { error, user } = Users.addUser({ id: socket.id });
+  const session = socket.request.session
+
+  console.log("[io.on('connect') - Nova socket conectada com id [%s]", socket.id)
+  console.debug("Conteúdo de handshake da socket [%s]: %s", socket.id, JSON.stringify(socket.handshake, null, 2))
+  console.debug("Conteúdo da sessão da socket [%s]: %s", socket.id, JSON.stringify(session, null, 2))
+
+  var user;
+
+
+  //
+  // NOVA SOCKETIO.. VAMOS VERIFICAR SE JÁ EXISTE UM USUÁRIO NESSE NAVEGADOR
+  // (USANDO AQUELE ESQUEMA DOS COOKIES, ATRAVÉS DO EXPRESS-SOCKET, que cria o
+  // elemento socket.request.session)
+  //
+
+  // Essa socket já tem um usuário conectado!
+  if (session && session.userId) {
+    user = Users.getUser(session.userId)
+    if (!user) {
+      console.error("Não foi possivel encontrar o usuário do socket [%s], com ID [%s]", socket.id, session.userId)
+      socket.disconnect(true)
+      return;
+    }
+    console.log("Detectei o usuário com id [%s] para a socket com id [%s]", user.id, socket.id)
+    var room = Rooms.getRoomOfUser(user)
+    if (room) {
+      console.log("O usuário [%s] já está na sala [%s], vou mandar os dados da sala para ele!", user.id, room.id)
+      Rooms.emitRoomDataForAll(room, io)
+    }
+  }
+  // Ou então é um novo usuário, que será gravado no socket!
+  else {
+    console.log("A socket com id [%s] é um novo usuário, criando novo usuário!", socket.id)
+    var { error, user } = Users.createUser();
+    if (error) {
+      console.error("Não foi possível criar o usuário! [%s]", error)
+      socket.disconnect(true)
+      return;
+    }
+    session.userId = user.id;
+    session.save();
+    console.log("Salvando sessao da socket [%s]: ", socket.id, session)
+  }
+
+  // Neste ponto já temos um usuário, entõa vamos associar a socket a ele :)
+  // ASSOCIAR SOCKET AO USUÁRIO (para saber quais sockets )
+  Users.linkSocketToUser({socket, user})
+
+  // 
+  // SESSÃO DO USUÁRIO - ASSIM QUE CONECTA, ENVIAMOS OS DADOS
+  // Ligado ao SessionContext do front
+  //
+  // Vamos mandar esses dados para o usuário :)
+  console.log("Enviando dados de sessão para o usuário [%s]", user)
+  let userRoom = Rooms.getRoomOfUser(user)
+  let sessionData = {
+    user: user,
+    roomData: userRoom ? Rooms.getRoomDataForUser({user, room: userRoom}) : null
+  }
+  socket.emit('sessionData', sessionData)
+
+
+  //
+  // MÉTODO JOIN - USUÁRIO ENTRANDO NA SALA
+  //
 
   // Este metodo representa um usuário tentando entrar em uma sala
   socket.on('join', ({ name, roomName }, callback) => {
@@ -69,6 +124,11 @@ io.on('connect', (socket) => {
         
   });
 
+
+  //
+  // MÉTODO GAMESTART - USUÁRIO COMEÇANDO UM JOGO - PRECISA SER HOST
+  //
+
   socket.on('gameStart', (isDeckDixit, isDeckPeq ,callback) =>{
     let userRoom = Rooms.getRoomOfUser(user)
     if (!userRoom) {
@@ -87,6 +147,10 @@ io.on('connect', (socket) => {
     io.to(userRoom.name).emit('message', { user: 'Andrétnik', text: `É a vez de ${userRoom.players[userRoom.currentPlayerIndex].user.name} mandar uma frase!` });
     //callback(null, Rooms.getRoomDataForUser({user, room: userRoom}))
   })
+
+  //
+  // MÉTODO PICKPROMPT - USUÁRIO DA VEZ ESCOLHE UMA FRASE
+  //
 
   // Quando o jogador escolhe a prompt em PICKING_PROMPT, é isso que acontece :)
   socket.on('pickPrompt', (prompt, callback) => {
@@ -115,6 +179,10 @@ io.on('connect', (socket) => {
     //callback(null, Rooms.getRoomDataForUser({user, room: userRoom}))
   })
 
+  //
+  // MÉTODO SELECTCARD - USUÁRIOS ESCOLHEM UMA CARTA :)
+  //
+
   // Quando o jogador seleciona uma carta na fase SELECTING_CARDS, é isso que acontece :)
   socket.on('selectCard', (card, callback) => {
     // O jogador está em um jogo?
@@ -137,6 +205,10 @@ io.on('connect', (socket) => {
     //callback(null, Rooms.getRoomDataForUser({user, room: userRoom}))
 
   })
+
+  //
+  // MÉTODO VOTECARD - USUÁRIOS VOTAM EM QUAL CARTA
+  //
 
   // Quando o jogador escolhe a carta em qual está votando
   socket.on('voteCard', (card, callback) => {
@@ -165,6 +237,10 @@ io.on('connect', (socket) => {
     //callback(null, Rooms.getRoomDataForUser({user, room: userRoom}))
   })
 
+  //
+  // MÉTODO SENDMESSAGE - ENVIAR MENSAGEM DE CHAT
+  //
+
   socket.on('sendMessage', (message, callback) => {
     userRoom = Rooms.getRoomOfUser(user)
     console.log('jogador [%s] está mandando mensagem na sala [$s]', user.name, userRoom.name)
@@ -176,33 +252,37 @@ io.on('connect', (socket) => {
 
   // SE O HOST SAIR SOZINHO CRASHA PORQUE ELE TENTA PASSAR PRA OUTRO USUARIO
   socket.on('disconnect', () => {
-    console.log("Usuário [%s] desconectou do servidor", socket.id)
+    console.log("Usuário [%s] com socket [%s] desconectou do servidor", user.id, socket.id)
+    Users.removeSocketFromUser({user, socket})
     // DESCOBRIR SE É POSSÍVEL RECONECTAR
-    const user = Users.removeUser(socket.id);
-    userRoom = Rooms.getRoomOfUser(user)
-    if(userRoom){
-      io.to(userRoom.name).emit('message', { user: 'Andrétnik', text: `${user.name} meteu o pé.` });  
-      if(userRoom.state == "WAITING_FOR_PLAYERS") {
-        if(user == userRoom.host && userRoom.players.length >= 2){
-          Rooms.removePlayerFromRoom(userRoom, user)
-          io.to(userRoom.name).emit('message', { user: 'Andrétnik', text: `O ${userRoom.host.name} é o novo anfitrião da partida!` });
-          console.log(' Host [%s] saiu do RoomLobby, removendo jogador da sala e definindo o novo Host para [%s]', user.name, userRoom.host.name)
-          Rooms.emitRoomDataForAll(userRoom, io)    
-        }
-        else if(userRoom.players.length > 1){
-        Rooms.removePlayerFromRoom(userRoom, user)
-        Rooms.emitRoomDataForAll(userRoom, io)    
-        console.log('removendo jogador [%s] da sala [%s] porque ele saiu do RoomLobby', user.name, userRoom.name)
-        }
-        else {
-        console.log('não existe mais ninguem na sala, sala será deletada.')
-        Rooms.removeRoom(userRoom)
-      }
-    }
-    Rooms.removePlayerFromRoom(userRoom, user)
-    }
-    else(!userRoom)
+    // AGORA NÃO PODEMOS MAIS REMOVER O USUÁRIO PORQUE ELE PODE VOLTAR..
+    // const user = Users.removeUser(socket.id);
+    // userRoom = Rooms.getRoomOfUser(user)
+    // if (userRoom) {
+    //   io.to(userRoom.name).emit('message', { user: 'Andrétnik', text: `${user.name} meteu o pé.` });
+    //   if (userRoom.state == "WAITING_FOR_PLAYERS") {
+    //     if (user == userRoom.host && userRoom.players.length >= 2) {
+    //       Rooms.removePlayerFromRoom(userRoom, user)
+    //       io.to(userRoom.name).emit('message', { user: 'Andrétnik', text: `O ${userRoom.host.name} é o novo anfitrião da partida!` });
+    //       console.log(' Host [%s] saiu do RoomLobby, removendo jogador da sala e definindo o novo Host para [%s]', user.name, userRoom.host.name)
+    //       Rooms.emitRoomDataForAll(userRoom, io)
+    //     }
+    //     else if (userRoom.players.length > 1) {
+    //       Rooms.removePlayerFromRoom(userRoom, user)
+    //       Rooms.emitRoomDataForAll(userRoom, io)
+    //       console.log('removendo jogador [%s] da sala [%s] porque ele saiu do RoomLobby', user.name, userRoom.name)
+    //     }
+    //     else {
+    //       console.log('não existe mais ninguem na sala, sala será deletada.')
+    //       Rooms.removeRoom(userRoom)
+    //     }
+    //   }
+    // }
+    // else (!userRoom)
   })
 });
 
-server.listen(process.env.PORT || 5000, () => console.log(`Servidor rodando na porta 5000.`));
+
+// Inicializando o servidor
+let PORT = process.env.PORT || 5000
+server.listen(PORT, () => console.log(`Servidor rodando na porta ${PORT}.`));

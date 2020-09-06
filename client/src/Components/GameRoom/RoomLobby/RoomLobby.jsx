@@ -51,10 +51,10 @@ function RoomLobby (){
                     : <h1>Partida Pronta!</h1>
                 }
                 {renderIncommingPlayer()}
-                {/* {(socket.id === roomData.host.id && isStartButtonReady === true)
+                {(socket.id === roomData.host.id && isStartButtonReady === true)
                     ? <StartButton isDeckDixit={isDeckDixit} isDeckPeq={isDeckPeq} />
                     : null
-                } */}
+                }
             </div>
         </div>
     )     

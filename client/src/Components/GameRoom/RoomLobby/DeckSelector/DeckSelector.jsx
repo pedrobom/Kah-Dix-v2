@@ -13,23 +13,23 @@ function DeckSelector (){
     console.log('isDeckPeq', isDeckPeq)
 
     return (
-                    <div id="build-deck">
-                        <h2>Seu Baralho é do caralho!</h2>
-                        {(socket.id === roomData.host.id) ? (<><div className="deck-input"><input
-                        name="Deck do Peq"
-                        type="checkbox"
-                        onChange={(e) => {
-                            let checked=e.target.checked;
-                            setDeckPeq(checked)
-                        }}/><h3>Cartas do Peq</h3></div></>) : null}
-                        {(socket.id === roomData.host.id) ? (<><div className="deck-input"><input
-                        name="Deck de Dixit"
-                        type="checkbox"
-                        onChange={(e) => {
-                            let checked=e.target.checked;
-                            setDeckDixit(checked)
-                        }}/><h3>Cartas de Dixit</h3></div></>) : null}
-                    </div>
+        <div id="build-deck">
+            <h2>Seu Baralho é do caralho!</h2>
+            {(socket.id === roomData.host.id) ? (<><div className="deck-input"><input
+            name="Deck do Peq"
+            type="checkbox"
+            onChange={(e) => {
+                let checked=e.target.checked;
+                setDeckPeq(checked)
+            }}/><h3>Cartas do Peq</h3></div></>) : null}
+            {(socket.id === roomData.host.id) ? (<><div className="deck-input"><input
+            name="Deck de Dixit"
+            type="checkbox"
+            onChange={(e) => {
+                let checked=e.target.checked;
+                setDeckDixit(checked)
+            }}/><h3>Cartas de Dixit</h3></div></>) : null}
+        </div>
     )     
 }
 
