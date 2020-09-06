@@ -15,6 +15,13 @@ io.on('connect', (socket) => {
 
   var user;
 
+
+  //
+  // NOVA SOCKETIO.. VAMOS VERIFICAR SE JÁ EXISTE UM USUÁRIO NESSE NAVEGADOR
+  // (USANDO AQUELE ESQUEMA DOS COOKIES, ATRAVÉS DO EXPRESS-SOCKET, que cria o
+  // elemento socket.request.session)
+  //
+
   // Essa socket já tem um usuário conectado!
   if (session && session.userId) {
     user = Users.getUser(session.userId)
@@ -45,8 +52,13 @@ io.on('connect', (socket) => {
   }
 
   // Neste ponto já temos um usuário, entõa vamos associar a socket a ele :)
+  // ASSOCIAR SOCKET AO USUÁRIO (para saber quais sockets )
   Users.linkSocketToUser({socket, user})
 
+  // 
+  // SESSÃO DO USUÁRIO - ASSIM QUE CONECTA, ENVIAMOS OS DADOS
+  // Ligado ao SessionContext do front
+  //
   // Vamos mandar esses dados para o usuário :)
   console.log("Enviando dados de sessão para o usuário [%s]", user)
   let userRoom = Rooms.getRoomOfUser(user)
@@ -56,15 +68,10 @@ io.on('connect', (socket) => {
   }
   socket.emit('sessionData', sessionData)
 
-  // socket.on('fetchMySession', (callback) => {
-  //   let userRoom = Rooms.getRoomOfUser(user)
-  //   let sessionData = {
-  //     user: user,
-  //     roomData: userRoom ? Rooms.getRoomDataForUser({user, room: userRoom}) : null
-  //   }
-  //   console.log("User [%s] is fetching session data:", user, sessionData)
-  //   callback(null, sessionData)
-  // })
+
+  //
+  // MÉTODO JOIN - USUÁRIO ENTRANDO NA SALA
+  //
 
   // Este metodo representa um usuário tentando entrar em uma sala
   socket.on('join', ({ name, roomName }, callback) => {
@@ -117,6 +124,11 @@ io.on('connect', (socket) => {
         
   });
 
+
+  //
+  // MÉTODO GAMESTART - USUÁRIO COMEÇANDO UM JOGO - PRECISA SER HOST
+  //
+
   socket.on('gameStart', (isDeckDixit, isDeckPeq ,callback) =>{
     let userRoom = Rooms.getRoomOfUser(user)
     if (!userRoom) {
@@ -135,6 +147,10 @@ io.on('connect', (socket) => {
     io.to(userRoom.name).emit('message', { user: 'Andrétnik', text: `É a vez de ${userRoom.players[userRoom.currentPlayerIndex].user.name} mandar uma frase!` });
     //callback(null, Rooms.getRoomDataForUser({user, room: userRoom}))
   })
+
+  //
+  // MÉTODO PICKPROMPT - USUÁRIO DA VEZ ESCOLHE UMA FRASE
+  //
 
   // Quando o jogador escolhe a prompt em PICKING_PROMPT, é isso que acontece :)
   socket.on('pickPrompt', (prompt, callback) => {
@@ -163,6 +179,10 @@ io.on('connect', (socket) => {
     //callback(null, Rooms.getRoomDataForUser({user, room: userRoom}))
   })
 
+  //
+  // MÉTODO SELECTCARD - USUÁRIOS ESCOLHEM UMA CARTA :)
+  //
+
   // Quando o jogador seleciona uma carta na fase SELECTING_CARDS, é isso que acontece :)
   socket.on('selectCard', (card, callback) => {
     // O jogador está em um jogo?
@@ -185,6 +205,10 @@ io.on('connect', (socket) => {
     //callback(null, Rooms.getRoomDataForUser({user, room: userRoom}))
 
   })
+
+  //
+  // MÉTODO VOTECARD - USUÁRIOS VOTAM EM QUAL CARTA
+  //
 
   // Quando o jogador escolhe a carta em qual está votando
   socket.on('voteCard', (card, callback) => {
@@ -212,6 +236,10 @@ io.on('connect', (socket) => {
     io.to(userRoom.name).emit('message', { user: 'Andrétnik', text: `O ${user.name} votou!` });
     //callback(null, Rooms.getRoomDataForUser({user, room: userRoom}))
   })
+
+  //
+  // MÉTODO SENDMESSAGE - ENVIAR MENSAGEM DE CHAT
+  //
 
   socket.on('sendMessage', (message, callback) => {
     userRoom = Rooms.getRoomOfUser(user)
