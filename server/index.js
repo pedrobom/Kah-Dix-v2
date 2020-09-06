@@ -49,20 +49,22 @@ io.on('connect', (socket) => {
 
   // Vamos mandar esses dados para o usuário :)
   console.log("Enviando dados de sessão para o usuário [%s]", user)
-  // socket.emit('sessionData', {
-  //   user: user,
-  //   room: Rooms.getRoomOfUser(user)
-  // })
+  let userRoom = Rooms.getRoomOfUser(user)
+  let sessionData = {
+    user: user,
+    roomData: userRoom ? Rooms.getRoomDataForUser({user, room: userRoom}) : null
+  }
+  socket.emit('sessionData', sessionData)
 
-  socket.on('fetchMySession', (callback) => {
-    let userRoom = Rooms.getRoomOfUser(user)
-    let sessionData = {
-      user: user,
-      roomData: userRoom ? Rooms.getRoomDataForUser({user, room: userRoom}) : null
-    }
-    console.log("User [%s] is fetching session data:", user, sessionData)
-    callback(null, sessionData)
-  })
+  // socket.on('fetchMySession', (callback) => {
+  //   let userRoom = Rooms.getRoomOfUser(user)
+  //   let sessionData = {
+  //     user: user,
+  //     roomData: userRoom ? Rooms.getRoomDataForUser({user, room: userRoom}) : null
+  //   }
+  //   console.log("User [%s] is fetching session data:", user, sessionData)
+  //   callback(null, sessionData)
+  // })
 
   // Este metodo representa um usuário tentando entrar em uma sala
   socket.on('join', ({ name, roomName }, callback) => {
