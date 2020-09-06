@@ -24,11 +24,16 @@ io.on('connect', (socket) => {
       return;
     }
     console.log("Detectei o usuário com id [%s] para a socket com id [%s]", user.id, socket.id)
+    var room = Rooms.getRoomOfUser(user)
+    if (room) {
+      console.log("O usuário [%s] já está na sala [%s], vou mandar os dados da sala para ele!", user.id, room.id)
+      Rooms.emitRoomDataForAll(room, io)
+    }
   }
   // Ou então é um novo usuário, que será gravado no socket!
   else {
     console.log("A socket com id [%s] é um novo usuário, criando novo usuário!", socket.id)
-    var { error, user } = Users.addUser({ id: socket.id });
+    var { error, user } = Users.createUser();
     if (error) {
       console.error("Não foi possível criar o usuário! [%s]", error)
       socket.disconnect(true)
@@ -38,6 +43,9 @@ io.on('connect', (socket) => {
     session.save();
     console.log("Salvando sessao da socket [%s]: ", socket.id, session)
   }
+
+  // Neste ponto já temos um usuário, entõa vamos associar a socket a ele :)
+  Users.linkSocketToUser({socket, user})
 
   // Este metodo representa um usuário tentando entrar em uma sala
   socket.on('join', ({ name, roomName }, callback) => {
@@ -198,6 +206,7 @@ io.on('connect', (socket) => {
   // SE O HOST SAIR SOZINHO CRASHA PORQUE ELE TENTA PASSAR PRA OUTRO USUARIO
   socket.on('disconnect', () => {
     console.log("Usuário [%s] com socket [%s] desconectou do servidor", user.id, socket.id)
+    Users.removeSocketFromUser({user, socket})
     // DESCOBRIR SE É POSSÍVEL RECONECTAR
     // AGORA NÃO PODEMOS MAIS REMOVER O USUÁRIO PORQUE ELE PODE VOLTAR..
     // const user = Users.removeUser(socket.id);

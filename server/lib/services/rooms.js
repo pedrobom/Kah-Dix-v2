@@ -190,10 +190,19 @@ module.exports = class Rooms {
     }
   }
 
+  static emitRoomDataForUserSocket = (room, user, socket) => {
+    console.debug("emitindo RoomData para o usuário [%s] no socket [%s]", user.id, socket.id)
+    var roomData = Rooms.getRoomDataForUser({room, user})
+    io.to(socket.id).emit('roomData', roomData)
+  }
+
   static emitRoomDataForPlayer = (room, player, io) => {
-    console.debug("emitindo RoomData para usuário [%s]", player.user.id)
+    console.debug("emitindo RoomData para todos os sockets do usuário [%s]", player.user.id)
     var roomData = Rooms.getRoomDataForPlayer(room, player)
-    io.to(player.user.id).emit('roomData', roomData)
+    player.user.socketIds.forEach((socketId) => {
+      console.debug("emitindo roomData para o socket [%s] do usuário [%s]", socketId, player.user.id)
+      io.to(socketId).emit('roomData', roomData)
+    })
   }
   static setOnGoingGameRoomState = (room) => {
     room.state = RoomStates.ONGOING_GAME
