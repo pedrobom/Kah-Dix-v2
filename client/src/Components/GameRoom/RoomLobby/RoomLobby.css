@@ -27,42 +27,6 @@
   flex-flow: row nowrap;
 }
 
-#build-deck{
-  background-color: rgb(74, 97, 139);
-  max-width: 30vw;
-  display: flex;
-  flex-flow: column nowrap;
-  padding: 1vh;
-  border-radius: 10px;
-  font-size: small;
-  border-right-style: solid;
-  border-right: 10px
-}
-
-.deck-input{
-  display:flex;
-  flex-flow: row nowrap;
-  align-items: center;
-  margin: 4px
-}
-
-#victory-conditions{
-  background-color: darkcyan;
-  width: 30vw;
-  display: flex;
-  flex-flow: column nowrap;
-  padding: 1vh;
-  border-radius: 10px;
-  font-size: small;;
-}
-
-.victory-input{
-  display:flex;
-  flex-flow: row nowrap;
-  align-items: center;
-  margin: 4px
-}
-
 #wrapper h1 {
   margin-top: 30px;
   color:#fff;

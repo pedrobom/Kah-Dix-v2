@@ -1,0 +1,16 @@
+#victory-conditions{
+    background-color: darkcyan;
+    width: 30vw;
+    display: flex;
+    flex-flow: column nowrap;
+    padding: 1vh;
+    border-radius: 10px;
+    font-size: small;;
+  }
+  
+  .victory-input{
+    display:flex;
+    flex-flow: row nowrap;
+    align-items: center;
+    margin: 4px
+  }

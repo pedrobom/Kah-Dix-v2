@@ -13,7 +13,7 @@ import LoadingImg from '../../assets/images/loadingImg'
 import carinha from '../../assets/images/carinha'
 import './GameRoom.css'
 
-import {socket} from "../socket.js"
+import { socket } from "../socket.js"
 import TurnResults from "./TurnResults/TurnResults";
 
 
@@ -25,11 +25,13 @@ export const RoomContext = React.createContext()
 const GameRoom = ({ location }) => {   
     const [roomData, setRoomData] = useState()
 
+    socket.once('roomData', (roomData) => {
+        console.log("socket.on('roomData') = [%x]", JSON.stringify(roomData, null, 2))
+        setRoomData(roomData)
+    })    
+
     useEffect(() => {
-        socket.once('roomData', (roomData) => {
-            console.log("socket.on('roomData') = [%x]", JSON.stringify(roomData, null, 2))
-            setRoomData(roomData)
-        })
+
 
     }, [roomData])
     

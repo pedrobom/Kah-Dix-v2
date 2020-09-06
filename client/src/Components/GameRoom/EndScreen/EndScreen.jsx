@@ -1,9 +1,11 @@
 import React, {useState, useEffect, useContext } from 'react'
 import './EndScreen.css'
 import { socket } from '../../socket'
-import { RoomContext } from '../GameRoom'
+import { RoomContext } from '../../GameRoom/GameRoom'
 
 import StartButton from '../RoomLobby/StartButton/StartButton'
+import DeckSelector from '../RoomLobby/DeckSelector/DeckSelector'
+import VictorySelector from '../RoomLobby/VictorySelector/VictorySelector'
 
 function EndScreen (){
     console.log('renderizando Componente EndScreen')
@@ -31,40 +33,40 @@ function EndScreen (){
         }
     }
 
-    function renderStartButton(){
-        if(roomData){
-            if(socket.id === roomData.host.id && isStartButtonReady === true){
-                return(
-                <StartButton /> 
-                )            
-            }
-        }            
-    }
-
     const renderChampion = () => {
         return (
             <div className="championBox">
-
+                <h1 className="champion-name">PLAYERNAME VITORIOSO</h1>
+                <h2 className="champion-score">PLAYER SCORE</h2>
             </div>
         )
     }
 
     return (
-        <React.Fragment>
-            <div>
-            </div>
-            <div id="background-start-button">
+        <>
+        <div id="background-start-button">
             <div className="champion">{renderChampion()}</div> 
-                <div id="wrapper">
-                    {renderStartButton()}                
-                    { !isStartButtonReady 
-                        ? <h1>Aguardando a galera...</h1> 
-                        : <h1>Bora jogar mais uma!</h1>
-                    }
-                    {renderIncommingPlayer()}
-                </div>
-            </div>            
-        </React.Fragment>
+            <div id="wrapper">
+                {(socket.id === roomData.host.id && isStartButtonReady === true) 
+                    ?   (<><div id="lobby-settings">
+                                <DeckSelector />
+                                <VictorySelector />
+                           </div> 
+                        </>)
+                    : null
+                }               
+                { !isStartButtonReady 
+                    ? <h1>Aguardando a galera...</h1> 
+                    : <h1>Partida Pronta!</h1>
+                }
+                {renderIncommingPlayer()}
+                {/* {(socket.id === roomData.host.id && isStartButtonReady === true)
+                    ? <StartButton isDeckDixit={isDeckDixit} isDeckPeq={isDeckPeq} />
+                    : null
+                } */}
+            </div>
+        </div>           
+        </>
 
     )     
 }
