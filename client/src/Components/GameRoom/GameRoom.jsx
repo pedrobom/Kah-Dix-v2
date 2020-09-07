@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext, useMemo } from "react";
 
 import Header from './Header/Header'
 import Prompt from './Prompt/Prompt'
@@ -16,6 +16,7 @@ import './GameRoom.css'
 import { socket } from "../socket.js"
 import TurnResults from "./TurnResults/TurnResults";
 import { Redirect } from "react-router";
+import SessionContext from "../SessionContext"
 
 
 // import io from 'socket.io-client'
@@ -23,19 +24,16 @@ import { Redirect } from "react-router";
 
 export const RoomContext = React.createContext()
 
+
 const GameRoom = ({ location }) => {   
-    const [roomData, setRoomData] = useState()
-    const [isSettingUp, setIsSettingUp] = useState(true)
+    const { session } = useContext(SessionContext)
+    const [roomDataFromEvent, setRoomDataFromEvent] = useState()
+    const roomData = useMemo(() => roomDataFromEvent || (session && session.roomData), [session, roomDataFromEvent]);
 
     console.log("OUTSIDE %s", location)
 
     // Efeitos para buscar informações no servidor e escutar coisas da sala
     useEffect(() => {
-
-        if (!isSettingUp) {
-            console.log("Already set up!")
-            return
-        }
 
         // Carregar os dados
         console.log("Carregando os dados da sala no GameRoom e escutando mudança de dados da sala!")
@@ -43,16 +41,9 @@ const GameRoom = ({ location }) => {
         // Escutando dados da sala
         let onRoomData = (roomData) => {
             console.log("socket.on('roomData') = [%x]", JSON.stringify(roomData, null, 2))
-            setRoomData(roomData)
+            setRoomDataFromEvent(roomData)
         }
         socket.addEventListener('roomData', onRoomData)
-
-        // Buscando dados iniciais da sessão
-        socket.emit("fetchMySession", (err, sessionData) => {
-            console.log('Session data:', sessionData)
-            setRoomData(sessionData.roomData)
-            setIsSettingUp(false)
-        })
 
         return () => {
             console.log('Cleanup of GameRoom')
@@ -61,7 +52,7 @@ const GameRoom = ({ location }) => {
 
     }, [])
 
-    if (isSettingUp) {
+    if (!session) {
         console.log("Ainda carregando dados da sala!")
         return <div className="inside-room-loading-cointainer">
             <h1 className="game-room-title">Carregando Partida</h1>
