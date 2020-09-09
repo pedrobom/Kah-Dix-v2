@@ -24,9 +24,9 @@ export default (props) => {
 
         socket.on('sessionData', onSessionData)
 
-        return () => {
-            socket.removeListener('sessionData', onSessionData)
-        }
+        // return () => {
+        //     socket.removeListener('sessionData', onSessionData)
+        // }
     }, [])
 
     return <SessionContext.Provider value={value}>

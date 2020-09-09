@@ -43,7 +43,7 @@ function TurnResults (){
                             <div className="PlayerScore">{player.name} fez {player.turnScore} {player.turnScore == 1 ? "pontinho!" : "pontos!"} </div>
                             <div className="VotedPlayers">
                                 <ul>
-                                    {!votes ? 'Não engana ninguém!' : votes.map(player => {return <li>{player.name}</li>})}
+                                    {!votes ? 'Não engana ninguém!' : (<>Batutinha(s) iludide(s): <br />{votes.map(player => {return <li>{player.name}</li>})}</>)}
                                 </ul>
                             </div>
                         </div>  
@@ -85,7 +85,7 @@ function TurnResults (){
                             />                                
                             </div>
                             <div className="turnPrompt">"{turnResults.turnPrompt}"<br />
-                                         - {turnResults.turnPlayer}
+                            - {turnResults.turnPlayer}
                             </div>
                             <div className="turnPlayersVoters">
                                 {

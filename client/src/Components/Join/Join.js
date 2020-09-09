@@ -33,8 +33,10 @@ const Join = () => {
     return (
         <div className="joinOuterContainer">
             <div className="joinInnerContainer">
+                <div class="wordart blues"><span class="text">Versão de Teste!</span></div>
                 <h1 className="heading">Seja Mau-Vindo!</h1>
-                <div><input placeholder="Escreve um apelido maroto..." className="joinInput" type="text" onChange={(event) => setName(event.target.value)} /></div>
+                
+                <div><input placeholder="Escreve um apelido maroto..." className="joinInput mt-20" type="text" onChange={(event) => setName(event.target.value)} /></div>
                 <div><input placeholder="Qual o nome da sala?" className="joinInput mt-20" type="text" onChange={(event) => setRoom(event.target.value)} /></div>
                 <Link onClick={event => (!name || !room) ? event.preventDefault() : CreateUser()}  to={`/GameRoom`}> 
                     <button className="button mt-20" type="submit">Manda bala</button>

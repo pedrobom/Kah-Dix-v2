@@ -3,13 +3,16 @@ import './StartButton.css'
 
 import { socket } from '../../../socket'
 
-function StartButton ({isDeckDixit, isDeckPeq}){
+function StartButton ({isDeckDixit, isDeckPeq, isDeckEuro, isDeckNude, victoryConditions}){
     console.log("isDeckDixit at StartButton", isDeckDixit)
     console.log("isDeckPeck at StartButton", isDeckPeq)
+    console.log("isDeckEuro at StartButton", isDeckEuro)
+    console.log("isDeckNude at StartButton", isDeckNude)
+    console.log("victoryConditions at StartButton", victoryConditions)
 
     function startGame(e) {
         e.preventDefault();
-        socket.emit('gameStart', isDeckDixit, isDeckPeq, (error) =>{
+        socket.emit('gameStart', isDeckDixit, isDeckPeq, isDeckEuro, isDeckNude, victoryConditions, (error) =>{
             if(error){
                 alert(error)
             }
@@ -19,7 +22,7 @@ function StartButton ({isDeckDixit, isDeckPeq}){
 
     return (                 
         <a href="#" className="my-super-cool-btn">
-            <div class="dots-container">
+            <div className="dots-container">
                 <div className="dot"></div>
                 <div className="dot"></div>
                 <div className="dot"></div>

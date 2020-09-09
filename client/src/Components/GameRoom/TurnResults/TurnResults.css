@@ -19,7 +19,7 @@
   height: 100vh;
   background-color: rgba(78, 78, 76, 0.9);
   ;
-  font-family: 'Montserrat', sans-serif;
+  font-family: 'TimesNewRoman', sans-serif;
   z-index: 20;
 }
 .turnResultsBox {
@@ -68,6 +68,7 @@
 
 .PlayerScore{
   color: aliceblue;
+  font-weight: 1000;
 }
 
 .VotedPlayers{

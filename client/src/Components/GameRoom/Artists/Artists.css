@@ -1,0 +1,39 @@
+.background-artists-button{
+    display: none;
+    align-items: center;
+    align-content: center;
+    margin:0;
+    padding:0;
+    position: fixed;
+    top: 0;
+    left:0;
+    width: 100vw;
+    height: 100vh;
+    background-color:#292929;
+    opacity: 90%;
+    font-family: 'Montserrat', sans-serif;
+    transition: 0.5s;
+}
+.Artists-content {
+    display: flex;
+    justify-content: center;
+    position: fixed;
+    width: 40vw;
+    flex-flow: column wrap;
+    background-color: burlywood;
+    border-radius: 20px;
+    transition: 0.5s;
+
+}
+
+.hide {
+    display: none;
+    transition: 0.5s;
+
+}
+
+.show {
+    display: flex;
+    transition: 0.5s;
+
+}

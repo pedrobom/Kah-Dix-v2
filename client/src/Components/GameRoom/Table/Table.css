@@ -16,3 +16,8 @@
 .votingCardsAtTable {
     margin-right: 1vw;
 }
+
+.votingCardsAtTable:focus{
+    border: 2px solid;
+    border-color: crimson;
+}

@@ -3,7 +3,7 @@ const {io, app, server} = require('./ioserver')
 
 
 const Users = require('./lib/services/users');
-const Rooms = require('./lib/services/rooms')
+const Rooms = require('./lib/services/rooms');
 
 io.on('connect', (socket) => {
 
@@ -33,7 +33,8 @@ io.on('connect', (socket) => {
     console.log("Detectei o usuário com id [%s] para a socket com id [%s]", user.id, socket.id)
     var room = Rooms.getRoomOfUser(user)
     if (room) {
-      console.log("O usuário [%s] já está na sala [%s], vou mandar os dados da sala para ele!", user.id, room.id)
+      console.log("O usuário [%s] já está na sala [%s], vou mandar os dados da sala para ele!", user.id, room.name)
+      console.log('adicionando socket.id [%s] na socketRoom [%s]', socket.id, room.name)
       Rooms.emitRoomDataForAll(room, io)
     }
   }
@@ -62,6 +63,8 @@ io.on('connect', (socket) => {
   // Vamos mandar esses dados para o usuário :)
   console.log("Enviando dados de sessão para o usuário [%s]", user)
   let userRoom = Rooms.getRoomOfUser(user)
+  if(userRoom !== undefined) socket.join(room.name)
+  console.log('verificando se existem dados de partida para o usuário')
   let sessionData = {
     user: user,
     roomData: userRoom ? Rooms.getRoomDataForUser({user, room: userRoom}) : null
@@ -70,7 +73,7 @@ io.on('connect', (socket) => {
 
 
   //
-  // MÉTODO JOIN - USUÁRIO ENTRANDO NA SALA
+  // MÉTODO JOIN - USUÁRIO ENTRANDO NA SALA A PARTIR DO INPUT JOIN.JSX
   //
 
   // Este metodo representa um usuário tentando entrar em uma sala
@@ -103,7 +106,6 @@ io.on('connect', (socket) => {
     // Sala já existe, então vamos jogar nosso usuário lá dentro!
     else {
       console.info("A sala [%s] que o usuário [%s] está tentando acessar já existe, colocando ele como jogador!", roomName, user.id)
-      // mudança pedro > original = { error } = Rooms.addUserToRoom({room, user})
       var {error} = Rooms.addUserToRoom({room, user})
       if (error) {
         console.error("Não foi possivel entrar na sala [%s]: [%s]", roomName, error)
@@ -129,14 +131,15 @@ io.on('connect', (socket) => {
   // MÉTODO GAMESTART - USUÁRIO COMEÇANDO UM JOGO - PRECISA SER HOST
   //
 
-  socket.on('gameStart', (isDeckDixit, isDeckPeq ,callback) =>{
+  socket.on('gameStart', (isDeckDixit, isDeckPeq, isDeckEuro, isDeckNude, victoryCondition ,callback) =>{
     let userRoom = Rooms.getRoomOfUser(user)
     if (!userRoom) {
       console.warn("Usuário [%s] tentando começar o jogo [%s] sem estar em um jogo!", user.id, card)
       return callback("Você precisa estar em um jogo para escolher uma carta!")
     }
     console.log('isDeckDixit no index. 78', isDeckDixit)
-    const {error} = Rooms.startGame({user, room: userRoom, isDeckDixit, isDeckPeq})
+    console.log('isDeckNude no index. 78', isDeckNude)
+    const {error} = Rooms.startGame({user, room: userRoom, isDeckDixit, isDeckPeq, isDeckEuro, isDeckNude, victoryCondition})
     if (error) {
       console.log("Não foi possível começar o jogo: %s", error)
       return callback(error)
@@ -144,7 +147,7 @@ io.on('connect', (socket) => {
 
     io.to(userRoom.name).emit('message', { user: 'Andrétnik', text: 'Tá valendo! A partida começou!' });
     Rooms.emitRoomDataForAll(userRoom, io)
-    io.to(userRoom.name).emit('message', { user: 'Andrétnik', text: `É a vez de ${userRoom.players[userRoom.currentPlayerIndex].user.name} mandar uma frase!` });
+    io.to(userRoom.name).emit('message', { user: 'Andrétnik', text: `${userRoom.players[userRoom.currentPlayerIndex].user.name} tá matutando a epígrafe!` });
     //callback(null, Rooms.getRoomDataForUser({user, room: userRoom}))
   })
 
@@ -233,7 +236,7 @@ io.on('connect', (socket) => {
     }
 
     Rooms.emitRoomDataForAll(userRoom, io)
-    io.to(userRoom.name).emit('message', { user: 'Andrétnik', text: `O ${user.name} votou!` });
+    io.to(userRoom.name).emit('message', { user: 'Andrétnik', text: `${user.name} votou!` });
     //callback(null, Rooms.getRoomDataForUser({user, room: userRoom}))
   })
 
@@ -243,17 +246,60 @@ io.on('connect', (socket) => {
 
   socket.on('sendMessage', (message, callback) => {
     userRoom = Rooms.getRoomOfUser(user)
-    console.log('jogador [%s] está mandando mensagem na sala [$s]', user.name, userRoom.name)
+    if(userRoom != undefined )console.log('jogador [%s] está mandando mensagem [%s] na sala [%s]', user.name, message, userRoom.name)
     io.to(userRoom.name).emit('message', { user: user.name, text: message });
 
     callback();
   });
+
+  socket.on('leaveRoom', (callback) => {
+    userRoom = Rooms.getRoomOfUser(user)
+    Rooms.removePlayerFromRoom(userRoom, user)
+    Rooms.emitRoomDataForAll(userRoom, io)
+    io.to(userRoom.name).emit('message', { user: 'Andrétnik', text: `${user.name} meteu o pé.` });
+  })
     
 
-  // SE O HOST SAIR SOZINHO CRASHA PORQUE ELE TENTA PASSAR PRA OUTRO USUARIO
+  socket.on('quitRoom', (callback) =>{
+    userRoom = Rooms.getRoomOfUser(user)
+    if(userRoom !== undefined){
+      io.to(userRoom.name).emit('message', { user: 'Andrétnik', text: `${user.name} meteu o pé.` })    
+      Rooms.removePlayerFromRoom(userRoom, user)
+      Rooms.emitRoomDataForAll(userRoom, io)
+      return callback(`Saindo da sala ${userRoom.name}` )
+    }
+    return callback("Você não está nessa sala! Redirecionando para página principal")
+  })
+
   socket.on('disconnect', () => {
     console.log("Usuário [%s] com socket [%s] desconectou do servidor", user.id, socket.id)
     Users.removeSocketFromUser({user, socket})
+
+    userRoom = Rooms.getRoomOfUser(user)
+
+    // SE O USUARIO ESTIVER EM UMA SALA
+    if(userRoom !== undefined){
+      // SE O USUARIO ESTIVER NO ROOMLOBBY
+      if(user.socketIds.length == 0 && userRoom.state !== "WAITING_FOR_PLAYERS" ) {
+        io.to(userRoom.name).emit('message', { user: 'Andrétnik', text: `Aí, se liga, ${user.name} caiu.` })
+        io.to(userRoom.name).emit('message', { user: 'Andrétnik', text: `Bora marcar um 10 (5min) e se não voltar a gente continua?` })
+        Rooms.emitRoomDataForAll(userRoom, io)
+      }
+      // SE O USUARIO ESTIVER NO MEIO DO JOGO
+      else if(user.socketIds.length == 0 && userRoom.state == "WAITING_FOR_PLAYERS" ) {
+        Rooms.removePlayerFromRoom(userRoom, user)
+        io.to(userRoom.name).emit('message', { user: 'Andrétnik', text: `${user.name} meteu o pé.` })
+        Rooms.emitRoomDataForAll(userRoom, io)
+      }
+
+      // SE O USUARIO ESTIVER NUMA PARTIDA ONDE SÓ TEM ELE MESMO
+      else if(user.socketIds.length == 0 && userRoom.state !== "WAITING_FOR_PLAYERS" && userRoom.players.length == 1){
+        Rooms.removePlayerFromRoom(userRoom, user)
+        Rooms.removeRoom(userRoom)
+      }  
+      // FALTA CRIAR ELIMINAR SALA ONDE TENHA JOGADORES MAS TODOS ESTÃO SEM SOCKETS   
+    }
+
     // DESCOBRIR SE É POSSÍVEL RECONECTAR
     // AGORA NÃO PODEMOS MAIS REMOVER O USUÁRIO PORQUE ELE PODE VOLTAR..
     // const user = Users.removeUser(socket.id);

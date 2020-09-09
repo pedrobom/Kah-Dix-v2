@@ -2,7 +2,8 @@
   grid-area: ha;
   display: flex;
   flex-flow: row nowrap;
-  justify-content: center;
+  justify-content: space-between;
+  padding: 3vw;
   align-items: center;
   border-radius: 20px;
   background-color: rgb(243, 242, 235);
@@ -11,4 +12,5 @@
 
 .CardsInHand {
   margin: -1.5vw;
+  max-width: 10vw;
 }
