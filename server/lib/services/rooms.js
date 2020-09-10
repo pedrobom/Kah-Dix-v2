@@ -124,7 +124,7 @@ module.exports = class Rooms {
     }
     // ADICIONANDO CARTAS DE DIXIT NO NOVO DECK
     if(isDeckDixit == true){
-      for (var i = 1; i <= 97; i++){
+      for (var i = 1; i <= 257; i++){
           let card = `Dixit${i}`
           room.deck.push(card)    
       }        
