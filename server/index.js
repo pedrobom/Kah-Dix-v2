@@ -251,19 +251,11 @@ io.on('connect', (socket) => {
     callback();
   });
 
-  socket.on('leaveRoom', (callback) => {
-    userRoom = Rooms.getRoomOfUser(user)
-    Rooms.removePlayerFromRoom(userRoom, user, io)
-    Rooms.emitRoomDataForAll(userRoom, io)
-    io.to(userRoom.name).emit('message', { user: 'Andrétnik', text: `${user.name} meteu o pé.` });
-  })
-    
-
   socket.on('quitRoom', (callback) =>{
     userRoom = Rooms.getRoomOfUser(user)
     if(userRoom !== undefined){
       io.to(userRoom.name).emit('message', { user: 'Andrétnik', text: `${user.name} meteu o pé.` })    
-      Rooms.removePlayerFromRoom(userRoom, user)
+      Rooms.removePlayerFromRoom(userRoom, user, io)
       Rooms.emitRoomDataForAll(userRoom, io)
       return callback(`Saindo da sala ${userRoom.name}` )
     }

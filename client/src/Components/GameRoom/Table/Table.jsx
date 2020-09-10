@@ -68,11 +68,6 @@ export default function Table() {
 
         }            
     }
-
-    const votedCardChangeCSS = (e) => {
-        e.preventDefault()
-        const votedCard = document.querySelector('.votingCardsAtTable')
-    }
  
     const renderVotingCards = () => {
         const getCardInfo = cardInput => cardsArray.find(card => card.cardTitle === cardInput)
@@ -81,7 +76,7 @@ export default function Table() {
             return roomData.votingCardsTurn.map((card, index) => {
                 let cardInfo = getCardInfo(card)
                 return(
-                    <div className="votingCardsAtTable" onClick={(e) => votedCardChangeCSS(e)}>
+                    <div className="votingCardAtTable">
                         <Card 
                             key={index} 
                             class={'votingCards'}

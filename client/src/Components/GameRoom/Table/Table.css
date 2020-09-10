@@ -12,11 +12,12 @@
 .cardBackAtTable {
     margin: 1vw;
 }
-.votingCardsAtTable {
+.votingCardAtTable {
     margin-right: 1vw;
+
 }
 
-.votingCardsAtTable:focus{
-    border: 2px solid;
+.votingCardAtTable:focus{
+    border: 20px solid;
     border-color: crimson;
 }

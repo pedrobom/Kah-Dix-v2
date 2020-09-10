@@ -7,6 +7,8 @@ import SessionContext from '../../SessionContext'
 import StartButton from '../RoomLobby/StartButton/StartButton'
 import DeckSelector from '../RoomLobby/DeckSelector/DeckSelector'
 import VictorySelector from '../RoomLobby/VictorySelector/VictorySelector'
+import loadingImg from '../../../assets/images/loadingImg'
+import snadesImg from '../../../assets/images/snades'
 
 function EndScreen (){
     console.log('renderizando Componente EndScreen')
@@ -40,9 +42,11 @@ function EndScreen (){
     const renderChampion = () => {
         return (
             <div className="championBox">
+                <img id="snades" src={snadesImg} alt="snades"/>           
                 <div class="wordart rainbow"><span class="text">PARABÉNS!</span></div>
                 <div class="wordart2 superhero"><span class="text">{roomData.winner.user.name}</span></div> 
-                <div class="wordart3 tilt"><span class="text">Fez {roomData.winner.score} pontos!</span></div>               
+                <div class="wordart3 tilt"><span class="text">Fez {roomData.winner.score} pontos!</span></div>    
+                <img id="jonas" src={loadingImg} alt="Jonas"/>           
             </div>
         )
     }

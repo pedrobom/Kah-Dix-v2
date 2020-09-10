@@ -68,7 +68,7 @@
     background-color: rgba(240, 248, 255, 0.212);
     margin-top: 1%;
     height: 10vh;
-    border: 1px solid blue;
+    border: 1px dashed blue;
     border-radius: 10px;
 }
 .be-part-text{

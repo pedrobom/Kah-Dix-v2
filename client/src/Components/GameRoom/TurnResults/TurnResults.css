@@ -21,7 +21,6 @@
   ;
   font-family: 'TimesNewRoman', sans-serif;
   z-index: 20;
-  overflow: ;
 }
 .turnResultsBox {
     z-index:  30;
@@ -34,6 +33,7 @@
 	  margin: 0 auto;
     border-radius: 25px;
     padding: 10px;
+
 }
 .secondBox{
   display: flex;
@@ -42,6 +42,7 @@
   padding: 20px;
   background-color: darkslategray;
   border-radius: 20px;
+  transition: 1s;
 }
 .otherPlayerResultsContainer {
   display: flex;
@@ -124,5 +125,6 @@
 }
 
 .results-hide{
-  display: none
+  display: none;
+
 }

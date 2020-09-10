@@ -32,7 +32,7 @@ function Header () {
                     <div className="header-links">
                         <p onClick={(e) => quitRoom(e)}>Sair da partida</p>
                         <Regras />
-                        { (roomData.turn > 1) ? (<><a onClick={(e) => openResults(e)}>Último turno</a></>) : null}            
+                        { (roomData.turn > 1) ? (<><p onClick={(e) => openResults(e)}>Último turno</p></>) : null}            
                     </div> 
                 </div>
                 <div className="header-content-right">

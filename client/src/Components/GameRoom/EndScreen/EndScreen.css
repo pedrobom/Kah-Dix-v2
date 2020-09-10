@@ -125,3 +125,20 @@
       -o-transform: perspective(1em) rotateX(65deg) scale(0.77);
       -ms-transform: perspective(1em) rotateX(65deg) scale(0.77);
   }
+
+  #jonas {
+   display: flex;
+   width: 10vw; 
+   justify-self: flex-start;
+  }
+
+  #snades {
+    display: flex;
+    height: 30vh;
+   }
+
+  .championBox{
+    display: flex;
+    flex-flow: row nowrap;
+    align-items: center;
+  }

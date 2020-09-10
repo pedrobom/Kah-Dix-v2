@@ -80,7 +80,7 @@ module.exports = class Rooms {
         console.debug("usuário [%s] tentando entrar na sala [%s] com nome já existente.", user.name, room.name )
         return { error: "esse nome de usuário já existe na sala!"}
       }
-      else if (room.state !== "WAITING_FOR_PLAYERS"){
+      else if (room.state !== "WAITING_FOR_PLAYERS" ){
         console.debug("usuário [%s] tentando entrar na sala [%s] já em andamento", user.name, room.name )
         return { error: "Essa sala já começou a partida!"}
       }
@@ -291,6 +291,7 @@ module.exports = class Rooms {
       room.state = Room.States.VOTING
       room.votingCardsTurn =  room.players.map((player) => {return player.selectedCard})
       shuffle(room.votingCardsTurn)
+      io.to(room.name).emit('message', { user: 'Andrétnik', text: `Podem votar na carta ` });
     } else {
       room.selectedCardCount = totalSelectedCards
       console.log('selectedCardCount :', room.selectedCardCount)

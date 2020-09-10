@@ -11,6 +11,8 @@
 }
 
 .CardsInHand {
-  margin: -1.5vw;
+  margin-left: -1.5vw;
   max-width: 10vw;
+  align-self: center;
+  justify-self: center;
 }
