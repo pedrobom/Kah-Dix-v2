@@ -402,7 +402,7 @@ module.exports = class Rooms {
       }
       if (room.victory == "points-victory"){
         room.players.forEach(player => {
-          if(player.score >= 10) {              
+          if(player.score >= 30) {              
             room.winner.push({name: player.user.name, score: player.score})
             room.state = Room.States.GAME_ENDED
             

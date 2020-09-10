@@ -13,9 +13,11 @@ import snadesImg from '../../../assets/images/snades'
 function EndScreen (){
     console.log('renderizando Componente EndScreen')
     const roomData = useContext(RoomContext)
-    const [isStartButtonReady, setIsStartButtonReady] = useState(roomData.players.length >= 3 ? true : false)
+    const [isStartButtonReady, setIsStartButtonReady] = useState(false)
     const [isDeckPeq, setDeckPeq] = useState(false)
     const [isDeckDixit, setDeckDixit] = useState(false)
+    const [isDeckNude, setDeckNude] = useState(false)
+    const [isDeckEuro, setDeckEuro] = useState(false)
     const [victoryConditions, setVictory] = useState("")
     const { session, setSession } = useContext(SessionContext)
 
@@ -92,6 +94,26 @@ function EndScreen (){
                     }}/>
                     <h3>Cartas do Peq</h3>
                     </div>
+                    <div className="deck-input">
+                    <input
+                    name="Deck de Nude"
+                    type="checkbox"
+                    onChange={(e) => {
+                        let checked=e.target.checked;
+                        setDeckNude(checked)
+                    }}/>
+                    <h3>Cartas de Nudes</h3>
+                    </div>
+                    <div className="deck-input">
+                    <input
+                    name="Deck de Euro"
+                    type="checkbox"
+                    onChange={(e) => {
+                        let checked=e.target.checked;
+                        setDeckEuro(checked)
+                    }}/>
+                    <h3>Cartas de Museus Europeus</h3>
+                    </div>
                     <div className="deck-input"><input
                     name="Deck de Dixit"
                     type="checkbox"
@@ -143,7 +165,7 @@ function EndScreen (){
                 (session.user.id === roomData.host.id && isStartButtonReady === true)
                 && (isDeckDixit || isDeckPeq) 
                 && (victoryConditions !== "") 
-                ? <StartButton isDeckDixit={isDeckDixit} isDeckPeq={isDeckPeq} victoryConditions={victoryConditions} /> 
+                ? <StartButton isDeckDixit={isDeckDixit} isDeckPeq={isDeckPeq} isDeckEuro={isDeckEuro} isDeckNude={isDeckNude} victoryConditions={victoryConditions} /> 
                 : null
                 }
                 <div className="leave-lobby" onClick={(e) => quitRoom(e)}><a>Sair da Sala</a></div>             
