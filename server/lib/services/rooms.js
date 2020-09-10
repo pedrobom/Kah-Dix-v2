@@ -144,11 +144,15 @@ module.exports = class Rooms {
       }        
     }
     if(isDeckEuro == true){
-      for (var i = 1; i <= 21; i++){
+      for (var i = 1; i <= 35; i++){
           let card = `Euro${i}`
           room.deck.push(card)    
       }
-    }       
+    }
+    room.isDeckDixit = isDeckDixit
+    room.isDeckEuro = isDeckEuro
+    room.isDeckNude = isDeckNude
+    room.isDeckPeq = isDeckPeq       
     room.victory = victoryCondition
     Rooms.dealInitCardsWithoutReposition(room);
     room.players = shuffle(room.players)
@@ -195,7 +199,8 @@ module.exports = class Rooms {
           selectedCard: room.state == Room.States.PICKING_PROMPT ? player.selectedCard : !!player.selectedCard,
           votedCard: room.state.PICKING_PROMPT ? player.votedCard : !!player.votedCard
         }
-      })
+      }),
+      winner: room.winner,
     }
   }
 
@@ -294,7 +299,7 @@ module.exports = class Rooms {
   }
 
   // Escolhendo a carta votada para um determinado usuário :)
-  static setVotedCardForUser = ({user, card, room}) => {
+  static setVotedCardForUser = ({user, card, room}, io) => {
     console.debug("Votando na carta [%s] para o usuário [%s] na sala [%s]", card, user.id, room.name)
     
     // Estado inválido para votar em cartas!
@@ -309,7 +314,7 @@ module.exports = class Rooms {
     }
   
     room.setVotedCardForUser(user, card)
-      
+    io.to(room.name).emit('message', { user: 'Andrétnik', text: `${user.name} votou!` });
     let totalVotedCards = room.getNumberOfVotedCards()
     console.debug("Carta [%s] votada para o jogador [%s] na sala [%s], agora temos um total de [%s] carta(s) e [%s] jogador(es)", card, user.id, room.name, totalVotedCards, room.players.length)
     //
@@ -317,25 +322,9 @@ module.exports = class Rooms {
     // Com isso devemos também garantir que todos os usuários tem 5 cartas e que temos cartas suficientes, ou acabar o jogo :)
     if (totalVotedCards >= room.players.length - 1) {
     console.info("Cartas suficientes votadas na sala [%s], vamos passar de estado!", room.name)
-  
-      // Temos cartas suficientes?
-      if (room.deck.length < room.players.length) {
-        if(room.victory == "deck-victory"){
-          room.victory 
-          room.state = Room.States.GAME_ENDED
-          return console.info("Não temos mais cartas suficientes no deck, o jogo mudou de estado para GAME_ENDED!")
-        }
-        else if (room.victory == "points-victory"){
-          /// 
-          ///  PRECISAMOS ADICIONAR MAIS CARTAS NO DECK 
-          /// 
-          ///  PRECISAMOS SABER QUAL O DECK DA PARTIDA
-          ///
-        }
-      }
       
-      console.info("temos mais cartas suficientes no deck, Vamos pro próximo!")
-      // Temos cartas suficientes então.. então hora de pontuar :)
+    console.info("Pontuando jogadores da rodada!")
+      // então hora de pontuar :)
       const currentPlayer = room.getCurrentPlayer()
       let numberOfCurrentPlayerCardVoted = 0
       room.players.forEach(player => {
@@ -355,6 +344,7 @@ module.exports = class Rooms {
       })
       if( (numberOfCurrentPlayerCardVoted < room.players.length -1) && (numberOfCurrentPlayerCardVoted > 0) ){
         currentPlayer.score += 3
+        currentPlayer.turnScore += 3
         room.players.forEach(player => {
           if(player.votedCard == currentPlayer.selectedCard){
             player.score += 3
@@ -370,6 +360,42 @@ module.exports = class Rooms {
 
           }         
         })        
+      }
+            // Temos cartas suficientes?
+      if (room.deck.length < room.players.length) {
+        if(room.victory == "deck-victory"){        
+          room.state = Room.States.GAME_ENDED
+          let Scores = []
+          room.players.map(player => {
+            Scores.push(player.score)
+          })
+          console.info("a array de Scores é :", Scores)
+
+          let highScore = Math.max.apply(Math, Scores)
+          console.info("a maior pontuação é :", highScore)
+
+          room.winner = room.players.find(player => player.score === highScore)
+          console.info('o vencedor no estilo deck-victory é [%s]', room.winner)
+          // DEFINIR UM VENCEDOR
+          return console.info("Não temos mais cartas suficientes no deck, o jogo mudou de estado para GAME_ENDED!")
+        }
+        else if (room.victory == "points-victory"){
+
+          room.morto.forEach(card => {
+            room.deck.push(card)
+          })
+          room.morto = []
+        }
+      }
+      if (room.victory == "points-victory"){
+        room.players.forEach(player => {
+          if(player.score >= 10) {              
+            room.winner = player
+            room.state = Room.States.GAME_ENDED
+            
+            return console.info('o jogador [%s] fez mais de trinta pontos, ele é o vencedor', player.user.name)
+          }
+        })
       }
       // Agora também precisamos distribuir mais cartas :)
       room.players.forEach( player => {
@@ -392,44 +418,52 @@ module.exports = class Rooms {
         turnPlayerCard: room.players[room.currentPlayerIndex].selectedCard,
         players: room.players.map((player) => { return {name: player.user.name, votedCard: player.votedCard, selectedCard: player.selectedCard, turnScore: player.turnScore}})}))
 
-      // LIMPANDO AS VARIÁVEIS PARA O PRÓXIMO TURNO 
-      room.selectedCardCount = 0
-      console.log('limpando contador de cartas selecionadas na sala para room.selectedCardCount',room.selectedCardCount)
-      room.mySelectedCard = null
-      console.log('limpando informação da carta selecionada do jogador room.mySelectedCard', room.mySelectedCard)
-      room.players.forEach(player => player.selectedCard = null)
-      console.log('limpando informação de cartas selecionadas da array room.players')
-      room.players.forEach(player => player.votedCard = null)
-      console.log('limpando informação de cartas votadas da array room.players')
-      room.players.forEach(player => player.turnScore = 0)
-      console.log('limpando informação de pontos de room.players')
+      if(room.state !== "GAME_ENDED"){
+        // LIMPANDO AS VARIÁVEIS PARA O PRÓXIMO TURNO 
+        room.selectedCardCount = 0
+        console.log('limpando contador de cartas selecionadas na sala para room.selectedCardCount',room.selectedCardCount)
+        room.mySelectedCard = null
+        console.log('limpando informação da carta selecionada do jogador room.mySelectedCard', room.mySelectedCard)
+        room.players.forEach(player => player.selectedCard = null)
+        console.log('limpando informação de cartas selecionadas da array room.players')
+        room.players.forEach(player => player.votedCard = null)
+        console.log('limpando informação de cartas votadas da array room.players')
+        room.players.forEach(player => player.turnScore = 0)
+        console.log('limpando informação de pontos de room.players')
 
-      // RODANDO O JOGADOR DA RODADA (currentPlayerIndex + 1)
-      if (room.currentPlayerIndex < room.players.length - 1){
-        room.currentPlayerIndex += 1
-        
+        // RODANDO O JOGADOR DA RODADA (currentPlayerIndex + 1)
+        if (room.currentPlayerIndex < room.players.length - 1){
+          room.currentPlayerIndex += 1
+          
+        }
+        else{
+          room.currentPlayerIndex = 0
+        }
+        room.turn++
+        console.log('avançando para o próximo turno [%s]', room.turn)
+        room.prompt = null
+        console.log('Passando a rodada de Picking Prompt para o jogador [%s]', room.players[room.currentPlayerIndex].user.name)
+        room.state = Room.States.PICKING_PROMPT
+        io.to(room.name).emit('message', { user: 'Andrétnik', text: `${room.players[room.currentPlayerIndex].user.name} é a sua vez de matutar a epígrafe!` });
       }
-      else{
-        room.currentPlayerIndex = 0
-      }
-      room.turn++
-      console.log('avançando para o próximo turno [%s]', room.turn)
-      room.prompt = null
-      console.log('Passando a rodada de Picking Prompt para o jogador [%s]', room.players[room.currentPlayerIndex].user.name)
-      room.state = Room.States.PICKING_PROMPT
     }
   
   }
-  static removePlayerFromRoom = (userRoom, user) => {
+  static removePlayerFromRoom = (userRoom, user, io) => {
 
     const player = userRoom.getPlayerForUser(user)
+
+    if (userRoom.currentPlayerIndex == userRoom.players.length - 1){
+      userRoom.currentPlayerIndex = 0
+    }    
     const userIndex = userRoom.players.indexOf(player)
     userRoom.players.splice(userIndex, 1)
     console.log('Agora temos [%s] usuários na sala', userRoom.players.length)
     if (player.user == userRoom.host){
       if(userRoom.players.length > 1){
         userRoom.host = userRoom.players[0].user
-        console.log('new host is: [%s]', userRoom.host)        
+        console.log('new host is: [%s]', userRoom.host)
+        io.to(userRoom.name).emit('message', { user: 'Andrétnik', text: `${userRoom.players[0].user.name} está decidindo as configurações de sala.` });    
       }
     }
     if(userRoom.players.length == 0) {
@@ -437,6 +471,7 @@ module.exports = class Rooms {
       console.log('Vamos deletar a sala [%s]', userRoom)
       this.removeRoom(userRoom)      
     }
+
 
      
   }

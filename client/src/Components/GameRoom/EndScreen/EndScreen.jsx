@@ -31,7 +31,7 @@ function EndScreen (){
         if(roomData){
             return roomData.players.map((player, index) => {
                 return(
-                    <h2 key={index}>{player.name}</h2>
+                    <h2 key={index}>{player.name} ({player.score} pontos)</h2>
                 )
             })             
         }
@@ -41,7 +41,8 @@ function EndScreen (){
         return (
             <div className="championBox">
                 <div class="wordart rainbow"><span class="text">PARABÉNS!</span></div>
-                <div class="wordart2 superhero"><span class="text">JOGADOR VITORIOSO</span></div>                
+                <div class="wordart2 superhero"><span class="text">{roomData.winner.user.name}</span></div> 
+                <div class="wordart3 tilt"><span class="text">Fez {roomData.winner.score} pontos!</span></div>               
             </div>
         )
     }
@@ -61,7 +62,7 @@ function EndScreen (){
             <div id="wrapper">
 
 
-                <div className="champion">{renderChampion()}</div> 
+                {(roomData.winner) ? <div className="champion">{renderChampion()}</div>: null }
 
                 {(session.user.id === roomData.host.id) 
                     ? (<>

@@ -12,7 +12,7 @@ export default function AllCards () {
             let card = {cardTitle: `Nude${i}`, src: require(`../assets/Cards/NudeDeck/Nude (${i}).jpg`)}
             Allcards.push(card)
         }
-        for (var i = 1; i <= 21; i++){
+        for (var i = 1; i <= 35; i++){
             let card = {cardTitle: `Euro${i}`, src: require(`../assets/Cards/EuroMuseumDeck/Euro (${i}).jpg`)}
             Allcards.push(card)
         }

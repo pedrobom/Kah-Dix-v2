@@ -27,10 +27,16 @@ module.exports = class Room {
         this.results = []
         this.victory = ""
         this.votingCardsTurn = []
-        this.victoryPlayer = []
+        this.winner = []
 
         // Populates the deck
         this.deck = []
+        this.morto = []
+        this.isDeckDixit = false
+        this.isDeckPeq = false
+        this.isDeckNude = false
+        this.isDeckEuro = false
+
     }
 
     isUserWithNameInRoom(name){
@@ -69,6 +75,7 @@ module.exports = class Room {
             player.selectedCard = card
             player.mySelectedCard = card
             player.hand.splice(player.hand.indexOf(card), 1)
+            this.morto.push(card)
             console.log('setSelectedCardforUser = card', card)
         }
     }

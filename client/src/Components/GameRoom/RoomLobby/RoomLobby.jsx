@@ -30,7 +30,7 @@ function RoomLobby (){
             else if (roomData.players.length < 2) {
                 setIsStartButtonReady(false)
             }
-    }, [])
+    }, [roomData])
 
     function renderIncommingPlayer(){
             return roomData.players.map((player, index) => {
@@ -135,12 +135,7 @@ function RoomLobby (){
                 (session.user.id === roomData.host.id && isStartButtonReady === true)
                 && (isDeckDixit || isDeckPeq || isDeckEuro || isDeckNude) 
                 && (victoryConditions !== "") 
-                ? <StartButton 
-                 isDeckDixit={isDeckDixit}
-                 isDeckPeq={isDeckPeq}
-                 isDeckEuro={isDeckEuro} 
-                 isDeckNude={isDeckNude} 
-                 victoryConditions={victoryConditions} /> 
+                ? <StartButton isDeckDixit={isDeckDixit} isDeckPeq={isDeckPeq} isDeckEuro={isDeckEuro} isDeckNude={isDeckNude} victoryConditions={victoryConditions} /> 
                 : null
                 }
                 <div className="leave-lobby" onClick={(e) => quitRoom(e)}><a>Sair da Sala</a></div>             

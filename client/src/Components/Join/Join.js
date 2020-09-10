@@ -33,7 +33,7 @@ const Join = () => {
     return (
         <div className="joinOuterContainer">
             <div className="joinInnerContainer">
-                <div class="wordart blues"><span class="text">Versão de Teste!</span></div>
+                <div class="wordartblues"><span class="text">Versão de Teste!</span></div>
                 <h1 className="heading">Seja Mau-Vindo!</h1>
                 
                 <div><input placeholder="Escreve um apelido maroto..." className="joinInput mt-20" type="text" onChange={(event) => setName(event.target.value)} /></div>

@@ -1,5 +1,6 @@
 import React from 'react'
 import './Artists.css'
+import peqPicture from '../../../assets/images/peq.png'
 
 function  Artists () {
     const expandArtists = e =>{
@@ -24,11 +25,25 @@ function  Artists () {
 
     return (
         <>
-        <a onClick={(e) => {expandArtists(e)}}>Sobre os Artistas</a>
-        <div className="background-artists-button">
+        <p onClick={(e) => {expandArtists(e)}}>Sobre os Artistas</p>
+        <div className="background-artists-button" >
             <div className="Artists-content">
-                    <a>SOBRE O PEQ</a>
-                    <button onClick={(e) => {closeArtists(e)}}>FECHAR</button>
+                    <div className="artist-info">
+                        <img className="artist-foto" src={peqPicture} alt="Peq"/>
+                        <h2 className="artist-name">PEQ</h2>
+                        <div className="artist-description">
+                            Ian Raposo<br/>
+                            Tamo Vivo - Rio de Janeiro<br/>
+                            Produção @_lakermesse<br/>
+                            O cara mais positivo que vc vai conhecer<br/>
+                            Trabalhos disponíveis.</div>
+                        <a className="artist-instagram" target='_blank' href="https://www.instagram.com/foda.se.o.peq/">@foda.se.o.peq</a>
+                    </div>
+                    <div className="be-part-info">
+                        <div className="be-part-text">Seja parte desse projeto. Fale com a gente!</div>
+
+                    </div>
+                    <button className="regras-button" onClick={(e) => {closeArtists(e)}}>FECHAR</button>
             </div>       
         </div>           
         </>

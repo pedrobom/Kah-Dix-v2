@@ -94,7 +94,6 @@ function Hand () {
                             alt={`Imagem da carta: ${cardInfo.cardTitle}`}
                         />                        
                     </div>
-
                 )            
             })              
         }

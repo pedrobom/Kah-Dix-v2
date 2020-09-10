@@ -229,14 +229,13 @@ io.on('connect', (socket) => {
 
     console.log("Usuário [%s] votando na carta [%s] na mesa [%s]", user.name, card, userRoom)
 
-    const error = Rooms.setVotedCardForUser({user, room: userRoom, card})
+    const error = Rooms.setVotedCardForUser({user, room: userRoom, card}, io)
     if (error) {
       console.error("Não foi possivel votar na carta [%s] do usuário [%s] na sala [%s]: [%s]", card, user.id,  userRoom.name, error)
       return callback(error)
     }
 
     Rooms.emitRoomDataForAll(userRoom, io)
-    io.to(userRoom.name).emit('message', { user: 'Andrétnik', text: `${user.name} votou!` });
     //callback(null, Rooms.getRoomDataForUser({user, room: userRoom}))
   })
 
@@ -254,7 +253,7 @@ io.on('connect', (socket) => {
 
   socket.on('leaveRoom', (callback) => {
     userRoom = Rooms.getRoomOfUser(user)
-    Rooms.removePlayerFromRoom(userRoom, user)
+    Rooms.removePlayerFromRoom(userRoom, user, io)
     Rooms.emitRoomDataForAll(userRoom, io)
     io.to(userRoom.name).emit('message', { user: 'Andrétnik', text: `${user.name} meteu o pé.` });
   })
@@ -287,7 +286,7 @@ io.on('connect', (socket) => {
       }
       // SE O USUARIO ESTIVER NO MEIO DO JOGO
       else if(user.socketIds.length == 0 && userRoom.state == "WAITING_FOR_PLAYERS" ) {
-        Rooms.removePlayerFromRoom(userRoom, user)
+        Rooms.removePlayerFromRoom(userRoom, user, io)
         io.to(userRoom.name).emit('message', { user: 'Andrétnik', text: `${user.name} meteu o pé.` })
         Rooms.emitRoomDataForAll(userRoom, io)
       }
@@ -297,6 +296,7 @@ io.on('connect', (socket) => {
         Rooms.removePlayerFromRoom(userRoom, user)
         Rooms.removeRoom(userRoom)
       }  
+
       // FALTA CRIAR ELIMINAR SALA ONDE TENHA JOGADORES MAS TODOS ESTÃO SEM SOCKETS   
     }
 
