@@ -40,7 +40,7 @@ function  Artists () {
                         <a className="artist-instagram" target='_blank' href="https://www.instagram.com/foda.se.o.peq/">@foda.se.o.peq</a>
                     </div>
                     <div className="be-part-info">
-                        <div className="be-part-text">Seja parte desse projeto. Fale com a gente!</div>
+                        <div className="be-part-text">Participe também!</div>
 
                     </div>
                     <button className="regras-button" onClick={(e) => {closeArtists(e)}}>FECHAR</button>

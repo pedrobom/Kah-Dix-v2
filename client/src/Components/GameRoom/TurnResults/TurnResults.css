@@ -37,18 +37,32 @@
 }
 .secondBox{
   display: flex;
-  flex-flow: column wrap;
+  flex-flow: column nowrap;
   min-width: 45vw;
+  min-height: 60vh;
   padding: 20px;
   background-color: darkslategray;
   border-radius: 20px;
   transition: 1s;
+  overflow: scroll;  
 }
 .otherPlayerResultsContainer {
   display: flex;
-  flex-direction: row;
+  flex-flow: row wrap;
   justify-content: space-around;
 
+
+
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+
+::-webkit-scrollbar-thumb {
+  background: rgba(52, 58, 116, 0.637);
+  border-radius: 20px;
 }
 
 .resultCards{

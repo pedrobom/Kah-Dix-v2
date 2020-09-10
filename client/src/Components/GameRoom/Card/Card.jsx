@@ -24,20 +24,22 @@ function Card (props) {
             id={props.id}
             onClick={e => {
                 e.preventDefault()
-                if (roomData.state === "VOTING" && props.class == 'votingCards' ){
-                    console.log('Jogador votou na carta: ', props.id)
+                console.log('props.alt = ', props.alt)
+                if (roomData.state === "VOTING" && props.class == `votingCards ${props.id}` ){
+                    console.log('Jogador tentou votar na carta: ', props.id)
+
+                        socket.emit('voteCard', props.id, (error) => {
+                            if(error !== "Carta Votada") {
+                               return alert(error) 
+                            } 
+                            else {
+                                let ele = document.querySelector(`.${props.id}`)
+                                if(ele !== null)                           
+                                ele.classList.add("votedCard")   
+                            }
+                        })
+                      
                     
-                    // if props.id IS NOT equal to selectedCard, do: ( !== )
-                    if( props.id !== roomData.mySelectedCard){
-                        console.log('props.id', props.id)
-                        console.log(roomData.mySelectedCard)
-                        socket.emit('voteCard', props.id, (error) => { 
-                            if(error) alert(error) 
-                        })                        
-                    }
-                    else{
-                        alert('Você não pode votar na sua própria carta! DUH')
-                    }
                 }
                 
             }} 

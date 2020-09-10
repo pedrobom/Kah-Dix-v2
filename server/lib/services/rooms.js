@@ -181,6 +181,7 @@ module.exports = class Rooms {
     return  {
       myUserName: player.user.name ,
       myHand: player.hand,
+      haveIVoted: player.votedCard,
       mySelectedCard: player.mySelectedCard,
       name: room.name,
       state: room.state,
@@ -291,7 +292,7 @@ module.exports = class Rooms {
       room.state = Room.States.VOTING
       room.votingCardsTurn =  room.players.map((player) => {return player.selectedCard})
       shuffle(room.votingCardsTurn)
-      io.to(room.name).emit('message', { user: 'Andrétnik', text: `Podem votar na carta ` });
+      io.to(room.name).emit('message', { user: 'Andrétnik', text: `Já podem votar na carta` });
     } else {
       room.selectedCardCount = totalSelectedCards
       console.log('selectedCardCount :', room.selectedCardCount)
@@ -313,8 +314,14 @@ module.exports = class Rooms {
       console.warn("Usuário [%s] tentando votar uma carta [%s] após já ter votado uma carta!", user, card)
       return ("Você já votou em uma carta!")
     }
+
+    if(card == room.getSelectedCardForUser(user)){
+      console.warn("Usuário [%s] tentando votar na própria carta [%s]", user, card)
+      return ("Você não pode votar na sua carta!")
+    }
   
     room.setVotedCardForUser(user, card)
+    
     io.to(room.name).emit('message', { user: 'Andrétnik', text: `${user.name} votou!` });
     let totalVotedCards = room.getNumberOfVotedCards()
     console.debug("Carta [%s] votada para o jogador [%s] na sala [%s], agora temos um total de [%s] carta(s) e [%s] jogador(es)", card, user.id, room.name, totalVotedCards, room.players.length)
@@ -374,10 +381,15 @@ module.exports = class Rooms {
 
           let highScore = Math.max.apply(Math, Scores)
           console.info("a maior pontuação é :", highScore)
-
-          room.winner = room.players.find(player => player.score === highScore)
-          console.info('o vencedor no estilo deck-victory é [%s]', room.winner)
           // DEFINIR UM VENCEDOR
+          room.players.forEach(player => {
+            if(player.score == highScore) {              
+              room.winner.push({name: player.user.name, score: player.score})              
+              return console.info('o jogador [%s] fez mais de trinta pontos, ele é o vencedor', player.user.name)
+            }
+          })
+          console.info('o vencedor no estilo deck-victory é [%s]', room.winner)
+
           return console.info("Não temos mais cartas suficientes no deck, o jogo mudou de estado para GAME_ENDED!")
         }
         else if (room.victory == "points-victory"){
@@ -391,13 +403,14 @@ module.exports = class Rooms {
       if (room.victory == "points-victory"){
         room.players.forEach(player => {
           if(player.score >= 10) {              
-            room.winner = player
+            room.winner.push({name: player.user.name, score: player.score})
             room.state = Room.States.GAME_ENDED
             
             return console.info('o jogador [%s] fez mais de trinta pontos, ele é o vencedor', player.user.name)
           }
         })
       }
+      if(room.state !== "GAME_ENDED"){
       // Agora também precisamos distribuir mais cartas :)
       room.players.forEach( player => {
         console.debug("Distribuindo uma nova carta para o jogador [%s]", player.user.name)
@@ -419,7 +432,6 @@ module.exports = class Rooms {
         turnPlayerCard: room.players[room.currentPlayerIndex].selectedCard,
         players: room.players.map((player) => { return {name: player.user.name, votedCard: player.votedCard, selectedCard: player.selectedCard, turnScore: player.turnScore}})}))
 
-      if(room.state !== "GAME_ENDED"){
         // LIMPANDO AS VARIÁVEIS PARA O PRÓXIMO TURNO 
         room.selectedCardCount = 0
         console.log('limpando contador de cartas selecionadas na sala para room.selectedCardCount',room.selectedCardCount)

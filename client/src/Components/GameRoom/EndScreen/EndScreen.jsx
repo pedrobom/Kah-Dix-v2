@@ -40,15 +40,18 @@ function EndScreen (){
     }
 
     const renderChampion = () => {
-        return (
-            <div className="championBox">
-                <img id="snades" src={snadesImg} alt="snades"/>           
-                <div class="wordart rainbow"><span class="text">PARABÉNS!</span></div>
-                <div class="wordart2 superhero"><span class="text">{roomData.winner.user.name}</span></div> 
-                <div class="wordart3 tilt"><span class="text">Fez {roomData.winner.score} pontos!</span></div>    
-                <img id="jonas" src={loadingImg} alt="Jonas"/>           
-            </div>
-        )
+        if(roomData.winnder !== [])
+        return roomData.players.map(player => {
+            return (
+                <div className="championBox">
+                    <img id="snades" src={snadesImg} alt="snades"/>           
+                    <div class="wordart rainbow"><span class="text">PARABÉNS!</span></div>
+                    <div class="wordart2 superhero"><span class="text">{player.name}</span></div> 
+                    <div class="wordart3 tilt"><span class="text">Fez {player.score} pontos!</span></div>    
+                    <img id="jonas" src={loadingImg} alt="Jonas"/>           
+                </div>
+            )            
+        })
     }
 
     const quitRoom = () => {
@@ -66,7 +69,13 @@ function EndScreen (){
             <div id="wrapper">
 
 
-                {(roomData.winner) ? <div className="champion">{renderChampion()}</div>: null }
+                {(roomData.winner) 
+                ? 
+
+                <div className="champion">{renderChampion()}</div>
+
+                
+                : null }
 
                 {(session.user.id === roomData.host.id) 
                     ? (<>

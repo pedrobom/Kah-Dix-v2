@@ -76,16 +76,13 @@ export default function Table() {
             return roomData.votingCardsTurn.map((card, index) => {
                 let cardInfo = getCardInfo(card)
                 return(
-                    <div className="votingCardAtTable">
                         <Card 
                             key={index} 
-                            class={'votingCards'}
+                            class={`votingCards ${cardInfo.cardTitle}`}
                             id={cardInfo.cardTitle}
                             src={cardInfo.src} 
-                            alt={`Imagem da carta: ${cardInfo.cardTitle}`}
+                            alt={`${cardInfo.cardTitle}`}
                         />                        
-                    </div>
-
                 )
             })                
         }
