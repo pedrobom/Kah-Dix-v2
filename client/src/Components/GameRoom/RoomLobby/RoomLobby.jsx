@@ -15,14 +15,21 @@ function RoomLobby (){
     const [isDeckNude, setDeckNude] = useState(false)
     const [isDeckEuro, setDeckEuro] = useState(false)
     const [victoryConditions, setVictory] = useState("")
-
+    const [numberOfCards, setnumberOfCards] = useState(0)
     const { session, setSession } = useContext(SessionContext)
 
-    console.log('isDeckDixit', isDeckDixit)
-    console.log('isDeckPeq', isDeckPeq)
-    console.log('victoryConditions', victoryConditions)
-    console.log('socket content', socket)
-
+    useEffect(() => {
+        let totalCards = 0
+        if(session.user.id === roomData.host.id){
+            if (isDeckDixit == true) totalCards += 257
+            if (isDeckEuro == true) totalCards += 35
+            if (isDeckPeq == true) totalCards += 21
+            if (isDeckNude == true) totalCards += 70
+            setnumberOfCards(totalCards)
+            if(totalCards >= 50) document.querySelector('.total-cartas').classList.add('total-ready')
+            if(totalCards < 50) document.querySelector('.total-cartas').classList.remove('total-ready')
+        }
+    }, [isDeckDixit, isDeckEuro, isDeckNude, isDeckPeq])
 
     useEffect(() => {
             if (roomData.players.length >= 3){  
@@ -95,7 +102,8 @@ function RoomLobby (){
                     onChange={(e) => {
                         let checked=e.target.checked;
                         setDeckDixit(checked)
-                    }}/><h3>Cartas de Dixit</h3></div> 
+                    }}/><h3>Cartas de Dixit</h3></div>
+                    <div className="total-cartas">{numberOfCards} cartas</div> 
                     </div>                       
                     <div id="victory-conditions">
                     <h2>Condições de vitória</h2>
@@ -135,7 +143,8 @@ function RoomLobby (){
                 {
                 (session.user.id === roomData.host.id && isStartButtonReady === true)
                 && (isDeckDixit || isDeckPeq || isDeckEuro || isDeckNude) 
-                && (victoryConditions !== "") 
+                && (victoryConditions !== "")
+                && (numberOfCards >= 50)
                 ? <StartButton isDeckDixit={isDeckDixit} isDeckPeq={isDeckPeq} isDeckEuro={isDeckEuro} isDeckNude={isDeckNude} victoryConditions={victoryConditions} /> 
                 : null
                 }

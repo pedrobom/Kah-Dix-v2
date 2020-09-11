@@ -39,6 +39,17 @@
   color:rgb(218, 207, 53);
 }
 
+.total-cartas{
+  align-self: center;
+  justify-self: center;
+  margin: 10px;
+  color: red;
+}
+
+.total-ready {
+  color: greenyellow;
+}
+
 .leave-lobby{
   display: flex;
   flex-flow: row nowrap;
