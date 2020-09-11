@@ -19,7 +19,7 @@ function Header () {
         socket.emit('quitRoom', (quit) => {
             if(quit){
             alert(quit)
-            window.location.reload()
+            window.location.replace("https://jonarius-test.netlify.app/");
             return false;
             }
         })

@@ -4,6 +4,7 @@ import { socket } from '../../socket'
 import { RoomContext } from '../GameRoom'
 import StartButton from './StartButton/StartButton'
 import SessionContext from "../../SessionContext"
+import { Redirect } from 'react-router'
 
 function RoomLobby (){
     console.log('renderizando Componente RoomLobby')
@@ -24,10 +25,10 @@ function RoomLobby (){
 
 
     useEffect(() => {
-            if (roomData.players.length >= 2){  
+            if (roomData.players.length >= 3){  
                 setIsStartButtonReady(true)
             }  
-            else if (roomData.players.length < 2) {
+            else if (roomData.players.length < 3) {
                 setIsStartButtonReady(false)
             }
     }, [roomData])
@@ -44,8 +45,8 @@ function RoomLobby (){
         socket.emit('quitRoom', (quit) => {
             if(quit){
             alert(quit)
-            window.location.reload()
-            return false;
+            window.location.replace("https://jonarius-test.netlify.app/");
+            console.log('Saindo da sala')
             } 
         })
     }

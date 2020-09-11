@@ -42,8 +42,8 @@ function EndScreen (){
     }
 
     const renderChampion = () => {
-        if(roomData.winnder !== [])
-        return roomData.players.map(player => {
+        if(roomData.winner !== [])
+        return roomData.winner.map(player => {
             return (
                 <div className="championBox">
                     <img id="snades" src={snadesImg} alt="snades"/>           
@@ -60,7 +60,7 @@ function EndScreen (){
         socket.emit('quitRoom', (quit) => {
             if(quit){
             alert(quit)
-            window.location.reload()
+            window.location.replace("https://jonarius-test.netlify.app/");
             return false;
             } 
         })
@@ -163,7 +163,7 @@ function EndScreen (){
                 } */}
                 {
                 (session.user.id === roomData.host.id && isStartButtonReady === true)
-                && (isDeckDixit || isDeckPeq) 
+                && (isDeckDixit || isDeckPeq || isDeckEuro || isDeckNude) 
                 && (victoryConditions !== "") 
                 ? <StartButton isDeckDixit={isDeckDixit} isDeckPeq={isDeckPeq} isDeckEuro={isDeckEuro} isDeckNude={isDeckNude} victoryConditions={victoryConditions} /> 
                 : null
