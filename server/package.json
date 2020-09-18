@@ -15,9 +15,12 @@
     "express": "^4.17.1",
     "express-session": "^1.17.1",
     "socket.io": "^2.2.0",
-    "uuid": "^8.3.0"
+    "uuid": "^8.3.0",
+    "mysql2": "^1.7.0",
+    "sequelize": "^5.18.1"
   },
   "devDependencies": {
-    "nodemon": "^2.0.4"
+    "nodemon": "^2.0.4",
+    "sequelize-cli": "5.5.1"
   }
 }
