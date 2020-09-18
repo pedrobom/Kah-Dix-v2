@@ -1,10 +1,10 @@
 const Sequelize = require('sequelize')
 const dbConfig = require('../config/database')
 
-const Post = require('../models/Post')
+const Room = require('../models/Room')
 
 const connection = new Sequelize(dbConfig)
 
-Post.init(connection)
+Room.init(connection)
 
 module.exports = connection
