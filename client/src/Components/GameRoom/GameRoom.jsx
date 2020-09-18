@@ -65,6 +65,9 @@ const GameRoom = ({ location }) => {
         return <Redirect to="/"/>
     }
     
+
+
+
     return (
             <RoomContext.Provider value={roomData}>
                 <Chat />

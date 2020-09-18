@@ -69,3 +69,18 @@ html, body {
   button:focus {
     outline: 0;
   }
+
+  .wordartblues {
+    font-family: Arial, sans-serif;
+    font-size: 4em;
+    font-weight: bold;
+
+  }
+  
+  .wordartblues .text {
+      font-family: Impact, sans-serif;
+      color: #24c0fd;
+      -webkit-text-stroke: 0.01em #0000aa;
+      filter: progid:DXImageTransform.Microsoft.Glow(Color=#0000aa,Strength=1);
+      text-shadow: 0.13em -0.13em 0px #0000aa;
+  }

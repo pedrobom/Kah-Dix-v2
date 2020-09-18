@@ -40,10 +40,11 @@ strong {
     margin-right: 100px;
     font-weight: 100;
     font-size: small;
+    transition: 0.5s;
     
 }
 
-.header-links a {
+.header-links p {
     cursor: pointer;
     margin-left: 15px;
     text-decoration: none;
@@ -52,14 +53,13 @@ strong {
     color: rgb(255, 255, 255);
 }
 
-.header-links a:hover{
+.header-links p:hover{
     background-color: rgb(77, 77, 77);
-    
-    
-
-    
+    transition: 0.5s;
 }
 
-.header-links a:active {
+.header-links p:active {
     transform: scale(0.8);
+    transition: 0.2s;
+
 }

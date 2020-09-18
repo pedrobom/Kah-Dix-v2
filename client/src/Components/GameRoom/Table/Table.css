@@ -5,14 +5,20 @@
     justify-content: center;
     align-items: center;
     border-radius: 20px;
-    background-color: rgb(243, 242, 235);
-
+    background-color: rgba(243, 242, 235, 0.356);
     border: 2px solid rgba(0,0,0,1);
 }
 
 .cardBackAtTable {
     margin: 1vw;
 }
-.votingCardsAtTable {
+.votingCards {
     margin-right: 1vw;
+
+}
+
+.votedCard {
+    border: 2px solid red;
+    border-color: crimson;
+    transform: scale(1.1);
 }

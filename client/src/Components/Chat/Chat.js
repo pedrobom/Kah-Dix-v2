@@ -13,9 +13,12 @@ const Chat = () => {
 
     useEffect(() => {
         socket.once('message', (message) => {
+            console.log('ouvindo mensagem / Recebendo mensagem', message)
             setMessages([...messages, message])
-        })   
-    }, [messages]);
+            })
+
+    }, [messages])
+
 
     const sendMessage = (event) => {
         event.preventDefault();
@@ -36,4 +39,4 @@ const Chat = () => {
           );
     }
 
-export default React.memo(Chat);
+export default Chat;

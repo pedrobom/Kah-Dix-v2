@@ -8,7 +8,7 @@
   gap: 20px;
   grid-template: 
   "he he he he he he he he he he" 40px
-  ". . p p p p p p m ." 10vh
+  ". X p p p p p p m ." 10vh
   ". d d d d d d d d ." 1fr
   ". d d d d d d d d ." 1fr
   ". s s ha ha ha ha c c c" 1fr 
@@ -65,6 +65,8 @@
     transform: rotate(360deg);
   }
 }
+
+
 
 /* 
 .game-room-title{

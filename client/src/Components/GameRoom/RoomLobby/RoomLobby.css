@@ -8,9 +8,9 @@
   top: 0;
   width: 100vw;
   height: 100vh;
-  background-color:#292929;
-  opacity: 90%;
+  background-color:#292929d2;
   font-family: 'Montserrat', sans-serif;
+  overflow: scroll;
 }
 #wrapper{
   width:100vw;
@@ -19,7 +19,7 @@
   display:flex;
   flex-direction: column;
   align-items:center;
-  justify-content:center;
+  justify-content: center;
 }
 
 #lobby-settings{
@@ -37,4 +37,85 @@
   margin: 10px;
   font-size: 28px;
   color:rgb(218, 207, 53);
+}
+
+.total-cartas{
+  align-self: center;
+  justify-self: center;
+  margin: 10px;
+  color: red;
+}
+
+.total-ready {
+  color: greenyellow;
+}
+
+.leave-lobby{
+  display: flex;
+  flex-flow: row nowrap;
+  align-content: center;
+  align-items: center;
+  justify-content: center;
+  background-color: #fff;
+  border-radius: 2000%;
+  width: 85px;
+  min-height: 60px;
+  margin-bottom: 40px;
+  color: gray;
+  font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+    margin-top: 10vh;
+  transition: 0.2s;
+}
+
+.leave-lobby:active{
+  transform: scale(0.8);
+}
+
+.leave-lobby:hover{
+  cursor: pointer;
+  background-color: rgb(129, 129, 129);
+  color: #fff;
+  transform: scale(0.9);
+}
+
+.leave-lobby a {
+  display: flex;
+  align-self: center;
+  justify-self: center;
+}
+
+#build-deck{
+  background-color: rgb(74, 97, 139);
+  width: 25vw;
+  display: flex;
+  flex-flow: column nowrap;
+  padding: 1vh;
+  border-radius: 10px;
+  font-size: small;
+  border-right-style: solid;
+  border-right: 10px
+}
+
+.deck-input{
+  display:flex;
+  flex-flow: row nowrap;
+  align-items: center;
+  margin: 4px
+}
+
+#victory-conditions{
+  background-color: darkcyan;
+  max-width: 25vw;
+  display: flex;
+  flex-flow: column nowrap;
+  padding: 1vh;
+  border-radius: 10px;
+  font-size: small;;
+}
+
+.victory-input{
+  display:flex;
+  flex-flow: row nowrap;
+  align-items: center;
+  margin: 4px
 }

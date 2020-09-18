@@ -1,6 +1,9 @@
 import React, { useContext } from 'react'
 import './Header.css'
 import { RoomContext } from '../GameRoom'
+import socket from '../../socket'
+import Regras from '../Regras/Regras'
+import Artists from '../Artists/Artists'
 
 
 function Header () {
@@ -11,26 +14,34 @@ function Header () {
         const resultsContainer = document.querySelector('.background-results')
         if(resultsContainer)resultsContainer.classList.toggle('results-hide')
     }
+    const quitRoom = () => {
+        if(window.confirm("você tem certeza? Não poderá voltar para essa partida."))
+        socket.emit('quitRoom', (quit) => {
+            if(quit){
+            alert(quit)
+            window.location.replace("https://jonarius-test.netlify.app/");
+            return false;
+            }
+        })
+    }
+
     return(  
-        <React.Fragment>
             <header className="header">
                 <div className="header-content-left">
                     <h3 className="logo">Jonarius-Dix!</h3>
                     <div className="header-links">
-                        <a>Regras do jogo</a>
-                        <a onClick={(e) => openResults(e)}>Último turno</a>             
+                        <p onClick={(e) => quitRoom(e)}>Sair da partida</p>
+                        <Regras />
+                        { (roomData.turn > 1) ? (<><p onClick={(e) => openResults(e)}>Último turno</p></>) : null}            
                     </div> 
                 </div>
                 <div className="header-content-right">
                     <div className="header-links">
-                        <a>Sobre os artistas</a>
-                        <a>Seja um Colaborador</a>
+                        <Artists />
+                        <p>Seja um Colaborador</p>
                     </div>
                 </div>
             </header>
-             
-        </React.Fragment>
- 
     )
 }
 

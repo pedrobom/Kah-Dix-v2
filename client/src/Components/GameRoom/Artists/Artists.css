@@ -1,0 +1,87 @@
+.background-artists-button{
+    display: none;
+    align-items: center;
+    justify-content: center;
+    margin:0;
+    padding:0;
+    position: fixed;
+    top: 0;
+    left:0;
+    width: 100vw;
+    height: 100vh;
+    background-color:#292929cb;
+    font-family: 'Montserrat', sans-serif;
+    transition: 0.5s;
+    z-index: 10;
+}
+.Artists-content {
+    display: flex;
+    position: fixed;
+    width: 40vw;
+    padding: 30px;
+
+    height: auto    ;
+    flex-flow: column wrap;
+    background-color: rgb(114, 118, 173);
+    border-radius: 20px;
+    transition: 0.5s;
+
+}
+
+.artist-info{
+    display:grid;
+    grid-template:
+    ". . . . . . . . . ." 20px
+    ". f f n n n n . . ." 30px
+    ". f f . d d d d d d" 1fr 
+    ". f f . . . . i i i" 1fr
+    / 20px 5vw 5vw 1fr 1fr 1fr 1fr 1fr 1fr 20px ;
+    background-color: aliceblue;
+    color: black;
+    border-radius: 20px;
+}
+
+.artist-foto {
+    grid-area: f;
+    width: 10vw;
+}
+
+.artist-name {
+    grid-area: n;
+}
+
+.artist-description {
+    grid-area: d;
+}
+
+.artist-instagram {
+    grid-area: i;
+    align-self: center;
+    color: black;
+    z-index: 1000;
+}
+
+.be-part-info{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: rgba(240, 248, 255, 0.212);
+    margin-top: 1%;
+    height: 10vh;
+    border: 1px dashed blue;
+    border-radius: 10px;
+}
+.be-part-text{
+}
+
+.hide {
+    display: none;
+    transition: 0.5s;
+
+}
+
+.show {
+    display: flex;
+    transition: 0.5s;
+
+}
