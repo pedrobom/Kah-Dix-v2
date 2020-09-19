@@ -1,9 +1,10 @@
-const express = require('express');
-const routes = require('./routes');
+import express, { Application } from 'express'
+import routes from './routes'
 
+// import './POSTGRESQL/database'
 require('./POSTGRESQL/database/index')
 
-const app = express();
+const app:Application = express();
 
 app.use(express.json())
 
