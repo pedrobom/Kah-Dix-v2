@@ -39,8 +39,6 @@ server.on('request', (req, res) => {
 // }
 
 // Outros modulos do servidor
-require('../src/DATABASE_TEST/database')
-app.use(express.json())
 app.use(cors());
 app.use(routes)
 
