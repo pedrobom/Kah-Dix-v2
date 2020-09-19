@@ -1,4 +1,4 @@
-import React, {useState, useEffect, useContext } from 'react'
+import React, { useState, useEffect, useContext } from 'react'
 import './RoomLobby.css'
 import { socket } from '../../socket'
 import { RoomContext } from '../GameRoom'
@@ -6,7 +6,7 @@ import StartButton from './StartButton/StartButton'
 import SessionContext from "../../SessionContext"
 import { Redirect } from 'react-router'
 
-function RoomLobby ({ navigation }){
+function RoomLobby() {
     console.log('renderizando Componente RoomLobby')
     const roomData = useContext(RoomContext)
     const [isStartButtonReady, setIsStartButtonReady] = useState(false)
@@ -55,21 +55,21 @@ function RoomLobby ({ navigation }){
 
     }, [roomData])
 
-    function renderIncommingPlayer(){
-            return roomData.players.map((player, index) => {
-                if(roomData.host.name == player.name) return (<h2 key={index}>{player.name} (Líder da presepada)</h2>)
-                return(
-                    <h2 key={index}>{player.name}</h2>
-                )
-            })             
+    function renderIncommingPlayer() {
+        return roomData.players.map((player, index) => {
+            if (roomData.host.name == player.name) return (<h2 key={index}>{player.name} (Líder da presepada)</h2>)
+            return (
+                <h2 key={index}>{player.name}</h2>
+            )
+        })
     }
     const quitRoom = () => {
         socket.emit('quitRoom', (quit) => {
-            if(quit){
-            alert(quit)
-            window.location.replace("https://jonarius-test.netlify.app/");
-            console.log('Saindo da sala')
-            } 
+            if (quit) {
+                alert(quit)
+                window.location.replace("https://jonarius-test.netlify.app/");
+                console.log('Saindo da sala')
+            }
         })
     }
 
@@ -83,7 +83,7 @@ function RoomLobby ({ navigation }){
         <div id="background-start-button">
             <div id="wrapper">
 
-                    {(session.user.id === roomData.host.id) 
+                {(session.user.id === roomData.host.id)
                     ? (<>
                     <div id="lobby-settings">
                     <div id="build-deck">
@@ -141,17 +141,17 @@ function RoomLobby ({ navigation }){
                         setVictory(value)                                
                         }
 
-                    }}/><h3>Corrida dos 30 pontos</h3></div>
-                    <div className="victory-input">
-                    <input
-                    name="victory"
-                    type="radio"
-                    value="deck-victory"
-                    onChange={(e) => {
-                        if(e.target.checked){
-                            const value = e.target.value
-                            setVictory(value)                                
-                            }
+                                        }} /><h3>Corrida dos 30 pontos</h3></div>
+                                <div className="victory-input">
+                                    <input
+                                        name="victory"
+                                        type="radio"
+                                        value="deck-victory"
+                                        onChange={(e) => {
+                                            if (e.target.checked) {
+                                                const value = e.target.value
+                                                setVictory(value)
+                                            }
 
                     }}/><h3>Jogar até o baralho acabar</h3></div>
                     </div>
@@ -190,20 +190,20 @@ function RoomLobby ({ navigation }){
                     ? <h1>Esperando a galera...</h1> 
                 : <h1>Esperando {roomData.host.name} iniciar a partida!</h1>
                 }
-                    {renderIncommingPlayer()}
+                {renderIncommingPlayer()}
                 {
-                (session.user.id === roomData.host.id && isStartButtonReady === true)
-                && (isDeckDixit || isDeckPeq || isDeckEuro || isDeckNude) 
-                && (victoryConditions !== "")
-                && (numberOfCards >= 50)
-                ? <StartButton isDeckDixit={isDeckDixit} isDeckPeq={isDeckPeq} isDeckEuro={isDeckEuro} isDeckNude={isDeckNude} victoryConditions={victoryConditions} /> 
-                : null
+                    (session.user.id === roomData.host.id && isStartButtonReady === true)
+                        && (isDeckDixit || isDeckPeq || isDeckEuro || isDeckNude)
+                        && (victoryConditions !== "")
+                        && (numberOfCards >= 50)
+                        ? <StartButton isDeckDixit={isDeckDixit} isDeckPeq={isDeckPeq} isDeckEuro={isDeckEuro} isDeckNude={isDeckNude} victoryConditions={victoryConditions} />
+                        : null
                 }
-                <div className="leave-lobby" onClick={(e) => quitRoom(e)}><a>Sair da Sala</a></div>             
+                <div className="leave-lobby" onClick={(e) => quitRoom(e)}><a>Sair da Sala</a></div>
 
             </div>
         </div>
-    )     
+    )
 }
 
 export default React.memo(RoomLobby)
