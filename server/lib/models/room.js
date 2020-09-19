@@ -25,7 +25,7 @@ module.exports = class Room {
         this.prompt = null
         this.selectedCardCount = 0
         this.results = []
-        this.victory = ""
+        this.victory = "points-victory"
         this.votingCardsTurn = []
         this.winner = []
 
