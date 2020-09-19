@@ -1,7 +1,9 @@
 const Sequelize = require('sequelize')
-const dbConfig = require('../config/database')
+const dbConfig = require('../config/config')
 
 const Room = require('../models/Room')
+
+require('dotenv').config()
 
 const connection = new Sequelize(dbConfig)
 

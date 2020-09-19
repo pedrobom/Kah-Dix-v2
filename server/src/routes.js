@@ -1,6 +1,6 @@
 const express = require("express");
 
-const RoomController = require('../src/DATABASE_TEST/controllers/RoomController')
+const RoomController = require('./POSTGRESQL/controllers/RoomController')
 const routes = express.Router();
 
 //#####TESTE DE POST (USANDO INSOMNIA)###

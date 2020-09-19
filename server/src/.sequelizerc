@@ -1,6 +1,9 @@
-const path = require('path')
+'use strict'
+
+require('dotenv').config()
+const path = require('path');
 
 module.exports = {
-    config: path.resolve(__dirname, 'DATABASE_TEST', 'config', 'database.js'),
-    'migrations-path': path.resolve(__dirname, 'DATABASE_TEST', 'database', 'migrations')
-}
+    "config": path.resolve(__dirname, 'POSTGRESQL', 'config', 'config.js'),
+    "migrations-path": path.resolve(__dirname, 'POSTGRESQL', 'database', 'migrations')
+};
