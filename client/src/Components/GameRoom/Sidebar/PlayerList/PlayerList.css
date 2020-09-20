@@ -29,6 +29,16 @@
     color: #ccde32;
 }
 
+.playerList .player .playerName .currentPlayerIcon {
+    color: #90dab1;
+    margin-right: 4px;
+    margin-left: 0;
+}
+.playerList .player .playerName .sessionPlayerIcon {
+    color: #898c8a;
+}
+
+
 /* ícones */
 .playerList .player .playerName .fas {
     margin-left: 4px;
