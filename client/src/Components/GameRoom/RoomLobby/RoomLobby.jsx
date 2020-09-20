@@ -22,7 +22,7 @@ function RoomLobby() {
         let totalCards = 0
         if(session.user.id === roomData.host.id){
             changeDeck()
-
+            
         }    
             if (isDeckDixit == true) totalCards += 257
             if (isDeckEuro == true) totalCards += 35

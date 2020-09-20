@@ -5,7 +5,7 @@ export default function AllCards () {
             Allcards.push(card)
         }
         for (var i = 1; i <= 257; i++){
-            let card = {cardTitle: `Dixit${i}`, src: require(`../assets/Cards/DixitDeck/Dixit (${i}).jpg`)}
+            let card = {cardTitle: `Dixit${i}`, src: require(`../assets/Cards/DixitDeck/dixit${i}.jpg`)}
             Allcards.push(card)
         }
         for (var i = 1; i <= 70; i++){

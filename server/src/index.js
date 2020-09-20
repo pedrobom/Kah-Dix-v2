@@ -131,6 +131,16 @@ io.on('connect', (socket) => {
   // MÉTODO GAMESTART - USUÁRIO COMEÇANDO UM JOGO - PRECISA SER HOST
   //
 
+  socket.on('loadGameRoom', (callback) =>{
+    let userRoom = Rooms.getRoomOfUser(user)
+    if(userRoom !== undefined) Rooms.emitRoomDataForAll(userRoom, io)
+
+    if(userRoom == undefined)
+    return callback('O servidor disse que você não está em nenhuma sala, voltando para o lobby.')
+
+
+  })
+
   socket.on('changeDeck', (isDeckDixit, isDeckEuro, isDeckNude, isDeckPeq) => {
     let userRoom = Rooms.getRoomOfUser(user)
     Rooms.setDeck(isDeckDixit, isDeckEuro, isDeckNude, isDeckPeq, userRoom)
@@ -144,17 +154,6 @@ io.on('connect', (socket) => {
     Rooms.emitRoomDataForAll(userRoom, io)
   })
 
-  socket.on('selectPeqDeck', newBool => {
-    let userRoom = Rooms.getRoomOfUser(user)
-    Rooms.selectPeqDeck(newBool, userRoom)
-    Rooms.emitRoomDataForAll(userRoom, io)
-  })
-
-  socket.on('selectEuroDeck', newBool => {
-    let userRoom = Rooms.getRoomOfUser(user)
-    Rooms.selectEuroDeck(newBool, userRoom)
-    Rooms.emitRoomDataForAll(userRoom, io)
-  })
 
   socket.on('gameStart', (isDeckDixit, isDeckPeq, isDeckEuro, isDeckNude, victoryCondition ,callback) =>{
     let userRoom = Rooms.getRoomOfUser(user)
@@ -272,8 +271,8 @@ io.on('connect', (socket) => {
 
   socket.on('sendMessage', (message, callback) => {
     userRoom = Rooms.getRoomOfUser(user)
-    if(userRoom != undefined )console.log('jogador [%s] está mandando mensagem [%s] na sala [%s]', user.name, message, userRoom.name)
-    io.to(userRoom.name).emit('message', { user: user.name, text: message });
+    if(userRoom != undefined ){console.log('jogador [%s] está mandando mensagem [%s] na sala [%s]', user.name, message, userRoom.name)
+    io.to(userRoom.name).emit('message', { user: user.name, text: message });}
 
     callback();
   });
