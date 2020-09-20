@@ -64,7 +64,11 @@ io.on('connect', (socket) => {
   // Vamos mandar esses dados para o usuário :)
   console.log("Enviando dados de sessão para o usuário [%s]", user)
   let userRoom = Rooms.getRoomOfUser(user)
+<<<<<<< HEAD
   if (userRoom !== undefined) socket.join(room.name)
+=======
+
+>>>>>>> consertando diconnect
   console.log('verificando se existem dados de partida para o usuário')
   let sessionData = {
     user: user,
@@ -72,6 +76,16 @@ io.on('connect', (socket) => {
   }
   socket.emit('sessionData', sessionData)
 
+  // Colocar o usuário no grupo de sockets da sala :)
+  if(userRoom !== undefined) {
+    socket.join(room.name)
+    // Um usuário que já tem sala e só tem esse socket é um usuário que havia caido!
+    if (user.socketIds.length == 1) {
+      console.debug("Enviando dados da sala para todos os usuários agora que um usuário voltou :)")
+      Rooms.emitRoomDataForAll(room, io)
+      Rooms.sendSystemMessageToRoom({userRoom: room, message: `${user.name} tá na área de novo :)`, io})
+    }
+  }
 
   //
   // MÉTODO JOIN - USUÁRIO ENTRANDO NA SALA A PARTIR DO INPUT JOIN.JSX
@@ -312,17 +326,6 @@ io.on('connect', (socket) => {
     userRoom = Rooms.getRoomOfUser(user)
 
     // SE O USUARIO ESTIVER EM UMA SALA
-<<<<<<< HEAD
-    if (userRoom !== undefined) {
-      // SE O USUARIO ESTIVER NO ROOMLOBBY
-      if (user.socketIds.length == 0 && userRoom.state !== "WAITING_FOR_PLAYERS") {
-        io.to(userRoom.name).emit('message', { user: 'Andrétnik', text: `Aí, se liga, ${user.name} caiu.` })
-        io.to(userRoom.name).emit('message', { user: 'Andrétnik', text: `Bora marcar um 10 (5min) e se não voltar a gente continua?` })
-        Rooms.emitRoomDataForAll(userRoom, io)
-      }
-      // SE O USUARIO ESTIVER NO MEIO DO JOGO
-      else if (user.socketIds.length == 0 && userRoom.state == "WAITING_FOR_PLAYERS") {
-=======
     if(userRoom !== undefined){
       // SE O USUARIO ESTIVER NO MEIO DO JOGO
       if(user.socketIds.length == 0 && userRoom.state !== "WAITING_FOR_PLAYERS" ) {
@@ -332,7 +335,6 @@ io.on('connect', (socket) => {
       }
       // SE O USUARIO ESTIVER NO ROOMLOBBY
       else if(user.socketIds.length == 0 && userRoom.state == "WAITING_FOR_PLAYERS" ) {
->>>>>>> Quase acabando o novo sidebar :)
         Rooms.removePlayerFromRoom(userRoom, user, io)
         Rooms.sendSystemMessageToRoom({io, message: `${user.name} meteu o pé.`, userRoom})
         Rooms.emitRoomDataForAll(userRoom, io)
