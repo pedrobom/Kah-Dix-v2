@@ -29,7 +29,7 @@ export default () => {
             gameStateClass = 'selectingCards'
             gameStateClass += ' iAmDone'
             // Já escolheu o carta ou nao esscolho essa!
-            if (amICurrentPlayer || myPlayer.selectedCard) {
+            if (myPlayer.selectedCard) {
                 gameStateHeader = 'Esperano o/as amiguinho/a </b>escolher as cartinha</b>'
             } 
             // Eu to escolhendo a carta!
