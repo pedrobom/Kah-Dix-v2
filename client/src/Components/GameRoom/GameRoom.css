@@ -33,8 +33,13 @@
 }
 
 .inside-room-loading-cointainer h1 {
-  color: rgb(59, 59, 56);
   font-size: 50px;
+  text-justify: center;
+  text-align: center;
+  margin-top: 30px;
+  font-family: 'Luckiest Guy';
+  color: rgb(255, 255, 255);
+  text-shadow: -4px 3px 2px rgb(0, 0, 0);
 }
 
 #loading-game-image {
@@ -60,16 +65,3 @@
     transform: rotate(360deg);
   }
 }
-
-
-
-/* 
-.game-room-title{
-  font-size: 50px;
-  text-justify: center;
-  text-align: center;
-  margin-top: 30px;
-  font-family: 'Luckiest Guy';
-  color: rgb(230, 106, 106);
-  text-shadow: -4px 3px 2px rgb(0, 0, 0);
-} */
