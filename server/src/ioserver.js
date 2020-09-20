@@ -2,7 +2,7 @@ const http = require('http');
 const express = require('express');
 const socketio = require('socket.io');
 const cors = require('cors');
-const router = require('./router');
+const routes = require('./routes');
 
 const app = express();
 const server = http.createServer(app)
@@ -12,10 +12,10 @@ const io = socketio(server);
 // Implementação de sessões no socket e no servidor express :)
 //
 const sessionMiddleware = require("express-session")({
-    secret: "agentequerboleteyesok123",
-    resave: true,
-    saveUninitialized: true
-  })
+  secret: "agentequerboleteyesok123",
+  resave: true,
+  saveUninitialized: true
+})
 
 // Gambiarra para colocar cookie de sessão no socketio
 // --------
@@ -40,7 +40,7 @@ server.on('request', (req, res) => {
 
 // Outros modulos do servidor
 app.use(cors());
-app.use(router)
+app.use(routes)
 
-module.exports = {io, server, app}
+module.exports = { io, server, app }
 
