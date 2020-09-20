@@ -200,9 +200,11 @@ module.exports = class Rooms {
       players: room.players.map((player) => {
         return {
           name: player.user.name,
+          id: player.user.id,
           score: player.score,
           selectedCard: room.state == Room.States.PICKING_PROMPT ? player.selectedCard : !!player.selectedCard,
-          votedCard: room.state.PICKING_PROMPT ? player.votedCard : !!player.votedCard
+          votedCard: room.state.PICKING_PROMPT ? player.votedCard : !!player.votedCard,
+          isDisconnected: !!player.user.socketIds.length
         }
       }),
       winner: room.winner,
@@ -302,7 +304,7 @@ module.exports = class Rooms {
     }
   
     room.setSelectedCardForUser(user, card)
-    io.to(room.name).emit('message', { user: 'Andrétnik', text: `${user.name} colocou uma carta na mesa!` });
+    Rooms.sendSystemMessageToRoom({io: io, userRoom: room, mesage: `${user.name} colocou uma carta na mesa!`})
 
     let totalSelectedCards = room.getNumberOfSelectedCards()
     console.debug("Carta [%s] escolhida para o jogador [%s] na sala [%s], agora temos um total de [%s] carta(s) e [%s] jogador(es)", card, user.id, room.name, totalSelectedCards, room.players.length)
@@ -314,7 +316,7 @@ module.exports = class Rooms {
       room.state = Room.States.VOTING
       room.votingCardsTurn =  room.players.map((player) => {return player.selectedCard})
       shuffle(room.votingCardsTurn)
-      io.to(room.name).emit('message', { user: 'Andrétnik', text: `Já podem votar na carta` });
+      Rooms.sendSystemMessageToRoom({io: io, userRoom: room, mesage: `Já podem votar na carta`})
     } else {
       room.selectedCardCount = totalSelectedCards
       console.log('selectedCardCount :', room.selectedCardCount)
@@ -344,7 +346,7 @@ module.exports = class Rooms {
   
     room.setVotedCardForUser(user, card)
     
-    io.to(room.name).emit('message', { user: 'Andrétnik', text: `${user.name} votou!` });
+    Rooms.sendSystemMessageToRoom({io: io, userRoom: room, mesage: `${user.name} votou!`})
     let totalVotedCards = room.getNumberOfVotedCards()
     console.debug("Carta [%s] votada para o jogador [%s] na sala [%s], agora temos um total de [%s] carta(s) e [%s] jogador(es)", card, user.id, room.name, totalVotedCards, room.players.length)
     //
@@ -479,11 +481,33 @@ module.exports = class Rooms {
         room.prompt = null
         console.log('Passando a rodada de Picking Prompt para o jogador [%s]', room.players[room.currentPlayerIndex].user.name)
         room.state = Room.States.PICKING_PROMPT
-        io.to(room.name).emit('message', { user: 'Andrétnik', text: `${room.players[room.currentPlayerIndex].user.name} é a sua vez de matutar a epígrafe!` });
+        Rooms.sendSystemMessageToRoom({io: io, userRoom: room, mesage: `${room.players[room.currentPlayerIndex].user.name} é a sua vez de matutar a epígrafe!`}) 
       }
     }
   
   }
+
+  static sendUserMessageToRoom = ({userRoom, user, message, io}) => {
+    console.trace("Enviando mensagem [%s] do usuário [%s] para a sala [%s]", message, user.id, userRoom.name)
+    io.to(userRoom.name).emit('message', { 
+      user: user.name, 
+      userId: user.id,
+      text: message,
+      systemMessage: false,
+      date: new Date().toISOString().replace(/T/, ' ').replace(/\..+/, '')
+    });
+  }
+
+  static sendSystemMessageToRoom = ({userRoom, message, io}) => {
+    console.info("Enviando mensagem do sistema [%s] para a sala [%s]", message, userRoom.name)
+    io.to(userRoom.name).emit('message', { 
+      user: 'Andrétnik', 
+      text: message,
+      systemMessage: true,
+      date: new Date().toISOString().replace(/T/, ' ').replace(/\..+/, '')
+    });
+  }
+
   static removePlayerFromRoom = (userRoom, user, io) => {
 
     const player = userRoom.getPlayerForUser(user)
@@ -498,7 +522,7 @@ module.exports = class Rooms {
       if(userRoom.players.length > 1){
         userRoom.host = userRoom.players[0].user
         console.log('new host is: [%s]', userRoom.host)
-        io.to(userRoom.name).emit('message', { user: 'Andrétnik', text: `${userRoom.players[0].user.name} está decidindo as configurações de sala.` });    
+        Rooms.sendSystemMessageToRoom({io: io, userRoom: room, mesage: `${userRoom.players[0].user.name} está decidindo as configurações de sala.`}) 
       }
     }
     if(userRoom.players.length == 0) {

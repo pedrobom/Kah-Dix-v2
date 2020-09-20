@@ -1,0 +1,62 @@
+.gameRoom .sidebar .playerList {
+    /* grid-area: playerList; */
+    background-color: rgba(0,0,0, 0.3);
+    max-height: 30vw;
+    overflow-y: auto;
+}
+
+.playerList > table {
+    width: 100%;
+}
+
+.playerList >table tr  {
+    background-color: rgba(255, 255, 255, 0.1);
+}
+.playerList >table tr td {
+    padding: 6px;
+}
+
+.playerList .player.thisIsMe .playerName {
+    font-weight: bold;
+}
+
+.playerList .player.disconnected .playerName .name {
+    opacity: 0.4;
+}
+
+.playerList .player .playerName .hostPlayerIcon {
+    color: #ccde32;
+}
+
+/* ícones */
+.playerList .player .playerName .fas {
+    margin-left: 4px;
+}
+.playerList .player .playerScore {
+    color:#fff;
+    text-align: center;
+}
+
+.playerList .player .playerStatus {
+    text-align: center;
+    color: #fff;
+}
+
+.playerList .player .playerStatus.votingCard, .playerList .player .playerStatus.selectingCard {
+    color: #37cbec;
+}
+
+
+.playerList .player .playerStatus.cardVoted, .playerList .player .playerStatus.cardSelected {
+    color: #43d663;
+}
+
+.playerList .player .playerName .playerDisconnectedIcon { 
+    animation: blinker 1.4s linear infinite;
+  }
+  
+@keyframes blinker {
+    50% {
+        opacity: 0.2;
+    }
+}

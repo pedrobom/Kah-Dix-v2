@@ -119,8 +119,7 @@ io.on('connect', (socket) => {
     console.info("Adicionando usuário [%s] para a sala [%s] no socket", user.id, room.name)
     socket.join(room.name);
 
-    io.to(room.name).emit('message', { user: 'Andrétnik', text: `${user.name} tá na área!` });
-
+    Rooms.sendSystemMessageToRoom({io, userRoom: room, message: `${user.name} tá na área!`})
     Rooms.emitRoomDataForAll(room, io)
 
     callback(null, Rooms.getRoomDataForUser({ user, room }))
@@ -169,10 +168,10 @@ io.on('connect', (socket) => {
       console.log("Não foi possível começar o jogo: %s", error)
       return callback(error)
     }
-
-    io.to(userRoom.name).emit('message', { user: 'Andrétnik', text: 'Tá valendo! A partida começou!' });
+    
+    Rooms.sendSystemMessageToRoom({io, userRoom: room, message: 'Tá valendo! A partida começou!'})
     Rooms.emitRoomDataForAll(userRoom, io)
-    io.to(userRoom.name).emit('message', { user: 'Andrétnik', text: `${userRoom.players[userRoom.currentPlayerIndex].user.name} tá matutando a epígrafe!` });
+    Rooms.sendSystemMessageToRoom({io, userRoom: room, message: `${userRoom.players[userRoom.currentPlayerIndex].user.name} tá matutando a epígrafe!`})
     //callback(null, Rooms.getRoomDataForUser({user, room: userRoom}))
   })
 
@@ -201,7 +200,7 @@ io.on('connect', (socket) => {
     // }
 
     Rooms.emitRoomDataForAll(userRoom, io)
-    io.to(userRoom.name).emit('message', { user: 'Andrétnik', text: 'Já podem escolher a cartinha!' });
+    Rooms.sendSystemMessageToRoom({io, userRoom: room, message: 'Já podem escolher a cartinha!'})
     console.log('Novo estado de Jogo : [%s]', userRoom.state)
     //CALLBACK COM PROBLEMA
     //callback(null, Rooms.getRoomDataForUser({user, room: userRoom}))
@@ -272,21 +271,38 @@ io.on('connect', (socket) => {
 
   socket.on('sendMessage', (message, callback) => {
     userRoom = Rooms.getRoomOfUser(user)
+<<<<<<< HEAD
     if (userRoom != undefined) console.log('jogador [%s] está mandando mensagem [%s] na sala [%s]', user.name, message, userRoom.name)
     io.to(userRoom.name).emit('message', { user: user.name, text: message });
+=======
+    if(!userRoom) {
+       console.warn('jogador [%s] sem sala está tentando mandar uma mensagem!', user)
+       return
+    }
+    Rooms.sendUserMessageToRoom({io, user, message, userRoom })
+>>>>>>> Quase acabando o novo sidebar :)
 
     callback();
   });
 
   socket.on('quitRoom', (callback) => {
     userRoom = Rooms.getRoomOfUser(user)
+<<<<<<< HEAD
     if (userRoom !== undefined) {
       io.to(userRoom.name).emit('message', { user: 'Andrétnik', text: `${user.name} meteu o pé.` })
       Rooms.removePlayerFromRoom(userRoom, user, io)
       Rooms.emitRoomDataForAll(userRoom, io)
       return callback(`Saindo da sala ${userRoom.name}`)
+=======
+    if(!userRoom){
+      console.info("Jogador [%s] tentando sair de uma sala, sem estar em qualquer sala", user)
+      return callback("Você não está nessa sala! Redirecionando para página principal")
+>>>>>>> Quase acabando o novo sidebar :)
     }
-    return callback("Você não está nessa sala! Redirecionando para página principal")
+    Rooms.sendSystemMessageToRoom({io, message: `${user.name} meteu o pé.`, userRoom})
+    Rooms.removePlayerFromRoom(userRoom, user, io)
+    Rooms.emitRoomDataForAll(userRoom, io)
+    return callback(`Saindo da sala ${userRoom.name}` )
   })
 
   socket.on('disconnect', () => {
@@ -296,6 +312,7 @@ io.on('connect', (socket) => {
     userRoom = Rooms.getRoomOfUser(user)
 
     // SE O USUARIO ESTIVER EM UMA SALA
+<<<<<<< HEAD
     if (userRoom !== undefined) {
       // SE O USUARIO ESTIVER NO ROOMLOBBY
       if (user.socketIds.length == 0 && userRoom.state !== "WAITING_FOR_PLAYERS") {
@@ -305,8 +322,19 @@ io.on('connect', (socket) => {
       }
       // SE O USUARIO ESTIVER NO MEIO DO JOGO
       else if (user.socketIds.length == 0 && userRoom.state == "WAITING_FOR_PLAYERS") {
+=======
+    if(userRoom !== undefined){
+      // SE O USUARIO ESTIVER NO MEIO DO JOGO
+      if(user.socketIds.length == 0 && userRoom.state !== "WAITING_FOR_PLAYERS" ) {
+        Rooms.sendSystemMessageToRoom({io, message: `Aí, se liga, ${user.name} caiu.`, userRoom})
+        Rooms.sendSystemMessageToRoom({io, message: `Bora marcar um 10 (5min) e se não voltar a gente continua?`, userRoom})
+        Rooms.emitRoomDataForAll(userRoom, io)
+      }
+      // SE O USUARIO ESTIVER NO ROOMLOBBY
+      else if(user.socketIds.length == 0 && userRoom.state == "WAITING_FOR_PLAYERS" ) {
+>>>>>>> Quase acabando o novo sidebar :)
         Rooms.removePlayerFromRoom(userRoom, user, io)
-        io.to(userRoom.name).emit('message', { user: 'Andrétnik', text: `${user.name} meteu o pé.` })
+        Rooms.sendSystemMessageToRoom({io, message: `${user.name} meteu o pé.`, userRoom})
         Rooms.emitRoomDataForAll(userRoom, io)
       }
 
