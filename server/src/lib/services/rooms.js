@@ -192,6 +192,10 @@ module.exports = class Rooms {
       selectedCardCount: room.selectedCardCount,
       results: room.results,
       victory: room.victory,
+      isDeckDixit: room.isDeckDixit,
+      isDeckEuro: room.isDeckEuro,
+      isDeckNude: room.isDeckNude,
+      isDeckPeq: room.isDeckPeq,
       votingCardsTurn: room.votingCardsTurn,
       players: room.players.map((player) => {
         return {
@@ -203,6 +207,24 @@ module.exports = class Rooms {
       }),
       winner: room.winner,
     }
+  }
+
+  static setVictory = (victoryCondition, room) => {
+    room.victory = victoryCondition
+  }
+  static setDeck = (isDeckDixit, isDeckEuro, isDeckNude, isDeckPeq, room) => {
+    room.isDeckDixit = isDeckDixit
+    room.isDeckEuro = isDeckEuro
+    room.isDeckNude = isDeckNude
+    room.isDeckPeq = isDeckPeq
+  }
+
+  static selectPeqDeck = (newValue, room) => {
+    room.isDeckPeq = newValue
+  }
+
+  static selectEuroDeck = (newValue, room) => {
+    room.isDeckEuro = newValue
   }
 
   static emitRoomDataForUserSocket = (room, user, socket) => {

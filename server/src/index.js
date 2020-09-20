@@ -132,7 +132,33 @@ io.on('connect', (socket) => {
   // MÉTODO GAMESTART - USUÁRIO COMEÇANDO UM JOGO - PRECISA SER HOST
   //
 
-  socket.on('gameStart', (isDeckDixit, isDeckPeq, isDeckEuro, isDeckNude, victoryCondition, callback) => {
+
+  socket.on('changeDeck', (isDeckDixit, isDeckEuro, isDeckNude, isDeckPeq) => {
+    let userRoom = Rooms.getRoomOfUser(user)
+    Rooms.setDeck(isDeckDixit, isDeckEuro, isDeckNude, isDeckPeq, userRoom)
+    Rooms.emitRoomDataForAll(userRoom, io)
+
+  })
+
+  socket.on('victoryChange', victoryCondition => {
+    let userRoom = Rooms.getRoomOfUser(user)
+    Rooms.setVictory(victoryCondition, userRoom)
+    Rooms.emitRoomDataForAll(userRoom, io)
+  })
+
+  socket.on('selectPeqDeck', newBool => {
+    let userRoom = Rooms.getRoomOfUser(user)
+    Rooms.selectPeqDeck(newBool, userRoom)
+    Rooms.emitRoomDataForAll(userRoom, io)
+  })
+
+  socket.on('selectEuroDeck', newBool => {
+    let userRoom = Rooms.getRoomOfUser(user)
+    Rooms.selectEuroDeck(newBool, userRoom)
+    Rooms.emitRoomDataForAll(userRoom, io)
+  })
+
+  socket.on('gameStart', (isDeckDixit, isDeckPeq, isDeckEuro, isDeckNude, victoryCondition ,callback) =>{
     let userRoom = Rooms.getRoomOfUser(user)
     if (!userRoom) {
       console.warn("Usuário [%s] tentando começar o jogo [%s] sem estar em um jogo!", user.id, card)
