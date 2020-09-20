@@ -19,7 +19,7 @@
 .votingCards, .votedCards {
     cursor: pointer;
 }
-.votingCards:active,, .votedCards:active {
+.votingCards:active, .votedCards:active {
     transform: scale(0.8);
 }
 

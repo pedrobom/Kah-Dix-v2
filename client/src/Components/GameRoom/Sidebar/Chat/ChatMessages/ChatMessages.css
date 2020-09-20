@@ -12,4 +12,5 @@
     padding: 6px;
     justify-content: flex-end;
     height: fit-content;
+    min-height: 100%;
   }
