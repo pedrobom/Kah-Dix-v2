@@ -158,7 +158,7 @@ io.on('connect', (socket) => {
   socket.on('gameStart', (isDeckDixit, isDeckPeq, isDeckEuro, isDeckNude, victoryCondition ,callback) =>{
     let userRoom = Rooms.getRoomOfUser(user)
     if (!userRoom) {
-      console.warn("Usuário [%s] tentando começar o jogo [%s] sem estar em um jogo!", user.id, card)
+      console.warn("Usuário [%s] tentando começar o jogo sem estar em um jogo!", user.id)
       return callback("Você precisa estar em um jogo para escolher uma carta!")
     }
     console.log('isDeckDixit no index. 78', isDeckDixit)
@@ -169,9 +169,9 @@ io.on('connect', (socket) => {
       return callback(error)
     }
     
-    Rooms.sendSystemMessageToRoom({io, userRoom: room, message: 'Tá valendo! A partida começou!'})
+    Rooms.sendSystemMessageToRoom({io, userRoom, message: 'Tá valendo! A partida começou!'})
     Rooms.emitRoomDataForAll(userRoom, io)
-    Rooms.sendSystemMessageToRoom({io, userRoom: room, message: `${userRoom.players[userRoom.currentPlayerIndex].user.name} tá matutando a epígrafe!`})
+    Rooms.sendSystemMessageToRoom({io, userRoom, message: `${userRoom.players[userRoom.currentPlayerIndex].user.name} tá matutando a epígrafe!`})
     //callback(null, Rooms.getRoomDataForUser({user, room: userRoom}))
   })
 
@@ -200,7 +200,7 @@ io.on('connect', (socket) => {
     // }
 
     Rooms.emitRoomDataForAll(userRoom, io)
-    Rooms.sendSystemMessageToRoom({io, userRoom: room, message: 'Já podem escolher a cartinha!'})
+    Rooms.sendSystemMessageToRoom({io, userRoom, message: 'Já podem escolher a cartinha!'})
     console.log('Novo estado de Jogo : [%s]', userRoom.state)
     //CALLBACK COM PROBLEMA
     //callback(null, Rooms.getRoomDataForUser({user, room: userRoom}))

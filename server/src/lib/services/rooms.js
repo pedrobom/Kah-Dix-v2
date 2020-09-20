@@ -204,7 +204,7 @@ module.exports = class Rooms {
           score: player.score,
           selectedCard: room.state == Room.States.PICKING_PROMPT ? player.selectedCard : !!player.selectedCard,
           votedCard: room.state.PICKING_PROMPT ? player.votedCard : !!player.votedCard,
-          isDisconnected: !!player.user.socketIds.length
+          isDisconnected: !player.user.socketIds.length
         }
       }),
       winner: room.winner,
@@ -522,7 +522,7 @@ module.exports = class Rooms {
       if(userRoom.players.length > 1){
         userRoom.host = userRoom.players[0].user
         console.log('new host is: [%s]', userRoom.host)
-        Rooms.sendSystemMessageToRoom({io: io, userRoom: room, mesage: `${userRoom.players[0].user.name} está decidindo as configurações de sala.`}) 
+        Rooms.sendSystemMessageToRoom({io: io, userRoom, mesage: `${userRoom.players[0].user.name} está decidindo as configurações de sala.`}) 
       }
     }
     if(userRoom.players.length == 0) {
