@@ -14,23 +14,12 @@ function Header () {
         const resultsContainer = document.querySelector('.background-results')
         if(resultsContainer)resultsContainer.classList.toggle('results-hide')
     }
-    const quitRoom = () => {
-        if(window.confirm("você tem certeza? Não poderá voltar para essa partida."))
-        socket.emit('quitRoom', (quit) => {
-            if(quit){
-            alert(quit)
-            window.location.replace("https://jonarius-test.netlify.app/");
-            return false;
-            }
-        })
-    }
 
     return(  
             <header className="header">
                 <div className="header-content-left">
                     <h3 className="logo">Jonarius-Dix!</h3>
                     <div className="header-links">
-                        <p onClick={(e) => quitRoom(e)}>Sair da partida</p>
                         <Regras />
                         { (roomData.turn > 1) ? (<><p onClick={(e) => openResults(e)}>Último turno</p></>) : null}            
                     </div> 

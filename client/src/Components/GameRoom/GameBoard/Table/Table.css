@@ -1,0 +1,79 @@
+.dealer-table {
+    grid-area: table;
+    display: flex;
+    flex-flow: row wrap;
+    justify-content: center;
+    align-items: center;
+    background-color: rgba(255,255,255, 0.2);
+    position: relative;
+}
+ 
+.dealer-table::before {
+    display: block;
+    position: absolute;
+    top: 2px;
+    left: 2px;
+    content: 'MESA';
+    font-weight: bold;
+    color: #1e2b24;
+    padding: 4px;
+    border-radius: 2px;
+    font-size: 0.8em;
+    background-color: rgba(0,0,0,0.05)
+  }
+
+.cardBackAtTable {
+    margin: 1vw;
+}
+.dealer-table .votingCards, .dealer-table .votedCards {
+    margin-right: 1vw;
+
+}
+
+.votedCard {
+    border: 2px solid red;
+    border-color: crimson;
+    transform: scale(1.1);
+}
+
+/* Usado para esconder o resto da mesa durante os resultados de votos */
+.gameVoteResultsOverlay {
+    position: absolute;
+    background-color: rgba(0,0,0,0.6);
+    top: 0;
+    bottom: 0;
+    right: 0;
+    left: 0;
+    z-index: 1000;
+}
+
+.cardVoteResultsContainer {
+    position: relative;
+    font-family: 'Roboto';
+    z-index: 1500;
+    text-align: center;
+}
+
+.cardVoteResultsContainer .cardVoteDetails {
+    color: #fff;
+    font-size: 0.8em;
+    line-height: 1.5em;
+    text-align: left;
+    position: absolute;
+}
+
+.cardVoteDetails .cardOwner {
+    text-align: center;;
+}
+
+.cardVoteDetails .cardOwnerName {
+    font-size: 1.6em;
+    margin-left: 0.2em;
+    font-weight: bold;
+}
+
+.cardVoteDetails .playerScoreAddedAmount {
+    font-size: 1.3em;
+    color: #4bbb7e;
+    font-weight: normal;
+}

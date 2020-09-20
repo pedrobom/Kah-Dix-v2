@@ -304,7 +304,7 @@ module.exports = class Rooms {
     }
   
     room.setSelectedCardForUser(user, card)
-    Rooms.sendSystemMessageToRoom({io: io, userRoom: room, mesage: `${user.name} colocou uma carta na mesa!`})
+    Rooms.sendSystemMessageToRoom({io: io, userRoom: room, message: `${user.name} colocou uma carta na mesa!`})
 
     let totalSelectedCards = room.getNumberOfSelectedCards()
     console.debug("Carta [%s] escolhida para o jogador [%s] na sala [%s], agora temos um total de [%s] carta(s) e [%s] jogador(es)", card, user.id, room.name, totalSelectedCards, room.players.length)
@@ -316,7 +316,7 @@ module.exports = class Rooms {
       room.state = Room.States.VOTING
       room.votingCardsTurn =  room.players.map((player) => {return player.selectedCard})
       shuffle(room.votingCardsTurn)
-      Rooms.sendSystemMessageToRoom({io: io, userRoom: room, mesage: `Já podem votar na carta`})
+      Rooms.sendSystemMessageToRoom({io: io, userRoom: room, message: `Já podem votar na carta`})
     } else {
       room.selectedCardCount = totalSelectedCards
       console.log('selectedCardCount :', room.selectedCardCount)
@@ -346,7 +346,7 @@ module.exports = class Rooms {
   
     room.setVotedCardForUser(user, card)
     
-    Rooms.sendSystemMessageToRoom({io: io, userRoom: room, mesage: `${user.name} votou!`})
+    Rooms.sendSystemMessageToRoom({io: io, userRoom: room, message: `${user.name} votou!`})
     let totalVotedCards = room.getNumberOfVotedCards()
     console.debug("Carta [%s] votada para o jogador [%s] na sala [%s], agora temos um total de [%s] carta(s) e [%s] jogador(es)", card, user.id, room.name, totalVotedCards, room.players.length)
     //
@@ -481,7 +481,7 @@ module.exports = class Rooms {
         room.prompt = null
         console.log('Passando a rodada de Picking Prompt para o jogador [%s]', room.players[room.currentPlayerIndex].user.name)
         room.state = Room.States.PICKING_PROMPT
-        Rooms.sendSystemMessageToRoom({io: io, userRoom: room, mesage: `${room.players[room.currentPlayerIndex].user.name} é a sua vez de matutar a epígrafe!`}) 
+        Rooms.sendSystemMessageToRoom({io: io, userRoom: room, message: `${room.players[room.currentPlayerIndex].user.name} é a sua vez de matutar a epígrafe!`}) 
       }
     }
   
@@ -522,7 +522,7 @@ module.exports = class Rooms {
       if(userRoom.players.length > 1){
         userRoom.host = userRoom.players[0].user
         console.log('new host is: [%s]', userRoom.host)
-        Rooms.sendSystemMessageToRoom({io: io, userRoom, mesage: `${userRoom.players[0].user.name} está decidindo as configurações de sala.`}) 
+        Rooms.sendSystemMessageToRoom({io: io, userRoom, message: `${userRoom.players[0].user.name} está decidindo as configurações de sala.`}) 
       }
     }
     if(userRoom.players.length == 0) {

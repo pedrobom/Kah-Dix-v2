@@ -1,0 +1,56 @@
+.card {
+    transition: 0.2s;
+    /* width: 230px;
+    height: 300px; */
+    max-height: 28vh;
+    /* object-fit: cover; */
+    position: relative;
+
+}
+
+.selectingCards{
+    cursor: grab
+}
+
+.onMouseDown{
+    cursor: grabbing;
+}
+
+.votingCards, .votedCards {
+    cursor: pointer;
+}
+.votingCards:active,, .votedCards:active {
+    transform: scale(0.8);
+}
+
+.card:hover {
+    z-index: 5000;
+    /* filter:grayscale(50%); */
+    -webkit-box-shadow: 0px 0px 40px -4px rgba(255,255,255,0.34);
+    -moz-box-shadow: 0px 0px 40px -4px rgba(255,255,255,0.34);
+    box-shadow: 0px 0px 40px -4px rgba(255,255,255,0.34);
+    box-shadow: blanchedalmond;
+}
+
+.player-hand .card:hover {
+    transform:scale(1.5);
+    transform-origin: bottom;
+}
+
+.dealer-table .cardBackAtTable .card:hover {
+    transform: none;
+    transform:scale(1.1);
+}
+
+.card.votingCards:hover {
+    transform:scale(1.5);
+}
+
+.card.votedCards:hover {
+    transform:scale(1.2);
+    transform-origin: bottom;
+}
+
+.card.votedCards {
+    z-index: 1500;
+}

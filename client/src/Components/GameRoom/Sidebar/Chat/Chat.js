@@ -24,6 +24,38 @@ const Chat = () => {
             user: 'eu_mesmo',
             text: 'rsrs oioi',
             systemMessage: false
+        },
+        {
+            user: 'Andrétnik',
+            text: 'A partida começou!',
+            systemMessage: true
+        },
+        {
+            user: 'pimpo',
+            userId: '1',
+            text: 'Oi galere :)',
+            systemMessage: false
+        },
+        {
+            user: 'eu_mesmo',
+            text: 'rsrs oioi',
+            systemMessage: false
+        },
+        {
+            user: 'Andrétnik',
+            text: 'A partida começou!',
+            systemMessage: true
+        },
+        {
+            user: 'pimpo',
+            userId: '1',
+            text: 'Oi galere :)',
+            systemMessage: false
+        },
+        {
+            user: 'eu_mesmo',
+            text: 'rsrs oioi',
+            systemMessage: false
         }
     ]);
 

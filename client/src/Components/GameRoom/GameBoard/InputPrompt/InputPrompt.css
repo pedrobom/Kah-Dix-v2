@@ -25,6 +25,62 @@
     opacity: 90%;
 } */
 
+.gamePromptInputContainer {
+  position: absolute;
+  display: flex;
+  align-items: top;
+  justify-content: center;
+  padding-top: 2%;
+  top: 0;
+  left: 0;
+  background-color: rgba(0,0,0,0.7);
+  right: 0;
+  bottom: 0;
+  z-index: 20000;
+}
+
+
+.gamePromptInputBox {
+  height: fit-content;
+  background-color: rgba(255,255,255,0.95);
+  box-sizing: border-box;;
+  padding: 5%;  
+}
+
+.gamePromptInputMensagem {
+  font-weight: 300;
+  font-size: 2em; 
+  text-align: justify;
+  line-height: 1.5em;
+  margin-bottom: 3%;
+}
+.gamePromptInputBox form {
+  text-align: right;
+
+}
+
+.gamePromptInputBox form input {
+  background-color: #0001;
+  border: 0;
+  font-family: 'Roboto';
+  font-size: 2em;
+  padding: 2%;
+  width: 100%;
+  color: #4c675c;
+  outline-color: #3b655444;
+  font-weight: 300;
+}
+
+.gamePromptInputBox form button {
+  margin-top: 3%;
+  background-color: #3b6554;
+  font-family: 'Roboto';
+  border: 0;
+  font-size: 2em;
+  font-weight: 300;
+  color: #fff;
+  padding: 1%;
+}
 .in-game-form{
     /* z-index: 1000;
     position: fixed;

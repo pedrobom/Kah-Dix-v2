@@ -19,7 +19,8 @@ export default (props) => {
         console.log("Escutando mudanças da minha sessão!")
         let onSessionData = (sessionData) => {
             console.log("Dados de sessão atualizados!", sessionData)
-            setSession(sessionData || {})
+              setSession(sessionData || {})
+            // setSession({ "user": { "createdAt": "2020-09-19T22:18:39.173Z", "id": "1", "name": "pipo", "socketIds": ["c0CxjqD75Bkn009XAACT"] }, "roomData": null })
         }
 
         socket.on('sessionData', onSessionData)
@@ -28,6 +29,12 @@ export default (props) => {
         //     socket.removeListener('sessionData', onSessionData)
         // }
     }, [])
+
+    // Esperar a sessão carregar para mostrar o jogo
+    // TODO: fazer uma tela de carregar!
+    // if (!session || !session.user) {
+        // return null
+    // }
 
     return <SessionContext.Provider value={value}>
         <Router>

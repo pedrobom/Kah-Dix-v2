@@ -3,9 +3,10 @@
   display: flex;
   flex: 1;
   flex-direction: column;
-  justify-content: space-between;
   z-index: 1000;
   background-color: rgba(0,0,0,0.3);
+  justify-content: flex-end;;
+  overflow: hidden;
 }
 
 .chat .container {

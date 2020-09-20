@@ -1,7 +1,7 @@
 import React, { useEffect, useContext } from 'react'
-import{ RoomContext } from '../GameRoom'
+import{ RoomContext } from '../../GameRoom'
 import './Card.css'
-import { socket } from '../../socket'
+import { socket } from '../../../socket'
 
 function Card (props) {
     const roomData = useContext(RoomContext)

@@ -2,6 +2,7 @@
     /* grid-area: playerList; */
     background-color: rgba(0,0,0, 0.3);
     max-height: 30vw;
+    min-height: 100px;
     overflow-y: auto;
 }
 

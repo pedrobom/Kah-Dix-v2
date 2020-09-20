@@ -2,7 +2,7 @@ import React, { useContext } from 'react'
 import './TurnResults.css'
 import { RoomContext } from '../GameRoom'
 import AllCards from '../../allCards'
-import Card from '../Card/Card'
+import Card from '../GameBoard/Card/Card'
 
 function TurnResults (){
     console.log('renderizando Componente TurnResults')
