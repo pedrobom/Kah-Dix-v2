@@ -6,9 +6,9 @@ module.exports = {
         console.debug("\n############ POST REQUEST: START ##############")
         try {
             console.debug('Trying to POST new room!')
-            const { host } = req.body
+            const { host, roomName } = req.body
             console.debug('Destructure req.body\nAwaiting connection with database...')
-            const room = await Room.create({ host })
+            const room = await Room.create({ host, roomName })
 
             console.debug("############ POST REQUEST: FINISHED ##############\n")
             return res.json(room)

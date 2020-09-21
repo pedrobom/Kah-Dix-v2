@@ -14,6 +14,10 @@ module.exports = {
         type: Sequelize.STRING,
         allowNull: true
       },
+      roomName: {
+        type: Sequelize.STRING,
+        allowNull: true
+      },
       createdAt: {
         type: Sequelize.DATE,
         allowNull: false

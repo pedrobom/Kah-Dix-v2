@@ -47,4 +47,4 @@ async function pipeline(){
         .catch(console.log)
 }
 
-export default pipeline
+pipeline()
