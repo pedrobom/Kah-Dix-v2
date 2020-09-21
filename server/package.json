@@ -6,7 +6,7 @@
   "scripts": {
     "start": "nodemon src/index.js",
     "dev:start": "nodemon --exec ts-node tests/server.ts",
-    "dev:test": "cd tests/tasks && gulp",
+    "dev:test": "cd tests/ && npx ts-node runTest.ts",
     "dev:db:migrate": "cd tests/ && npx dotenv -e ../.env sequelize db:migrate",
     "dev:db:migrate:undo": "cd tests/ && npx dotenv -e ../.env sequelize db:migrate:undo"
   },

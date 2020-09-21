@@ -4,6 +4,7 @@ import socketio from 'socket.io'
 import routes from './routes'
 
 import dotenv from 'dotenv'
+import { disconnect } from 'process'
 dotenv.config()
 
 interface IData {
@@ -31,7 +32,7 @@ io.on('connection', (socket:any):void => {
     })
 
     socket.on('disconnect', ():void => {
-        console.log("A use has disconnected...")
+        console.log("A user has disconnected...")
     })
 })
 

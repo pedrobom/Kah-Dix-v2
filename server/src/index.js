@@ -4,7 +4,6 @@ const { io, app, server } = require('./ioserver')
 
 const Users = require('./lib/services/users');
 const Rooms = require('./lib/services/rooms');
-const { start } = require('repl');
 
 io.on('connect', (socket) => {
 

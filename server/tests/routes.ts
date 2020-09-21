@@ -7,6 +7,7 @@ const routes: Router = express.Router();
 
 routes.post('/rooms', RoomController.store)
 routes.get('/rooms', RoomController.list)
+routes.get('/rooms/:id', RoomController.getOne)
 
 routes.post('/users', UserController.store)
 routes.get('/users', UserController.list)
