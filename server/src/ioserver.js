@@ -14,7 +14,11 @@ const io = socketio(server);
 const sessionMiddleware = require("express-session")({
   secret: "agentequerboleteyesok123",
   resave: true,
-  saveUninitialized: true
+  saveUninitialized: true,
+  cookie: {
+    sameSite: 'none'
+  }
+  
 })
 
 // Gambiarra para colocar cookie de sessão no socketio
