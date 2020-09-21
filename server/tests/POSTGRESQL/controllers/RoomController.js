@@ -2,21 +2,29 @@ const Room = require('../models/Room')
 
 module.exports = {
 
-    async store(req, res) {
+    async store(data) {
         console.debug("\n############ POST REQUEST: START ##############")
         try {
-            console.debug('Trying to POST new room!')
-            const { host, roomName } = req.body
-            console.debug('Destructure req.body\nAwaiting connection with database...')
-            const room = await Room.create({ host, roomName })
+            const { host, roomName } = data
+            console.debug('Checking if room alread exists:')
+            const existingRoom = await Room.findOne({ where: { roomName: roomName } })
+            if (!existingRoom) {
+                console.debug('Checking if user alread in room')
+                console.debug('Trying to POST new room!')
+                console.debug('Destructure req.body\nAwaiting connection with database...')
+                console.debug({ host, roomName })
+                await Room.create({ host, roomName })
 
-            console.debug("############ POST REQUEST: FINISHED ##############\n")
-            return res.json(room)
+                console.debug("############ POST REQUEST: FINISHED ##############\n")
+            } else {
+                console.debug("Room [%s] alread exists!", existingRoom)
+                console.debug("############ POST REQUEST: FINISHED ##############\n")
+            }
 
         } catch (ex) {
             console.log("Error: ", ex.message)
+            console.debug("############ POST REQUEST: FINISHED ############\n")
         }
-        console.debug("############ POST REQUEST: FINISHED ############\n")
     },
 
     async list(req, res) {

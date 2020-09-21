@@ -12,11 +12,11 @@ module.exports = {
       },
       host: {
         type: Sequelize.STRING,
-        allowNull: true
+        allowNull: false
       },
       roomName: {
         type: Sequelize.STRING,
-        allowNull: true
+        allowNull: false
       },
       createdAt: {
         type: Sequelize.DATE,

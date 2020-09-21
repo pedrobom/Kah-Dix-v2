@@ -1,9 +1,9 @@
 import io from 'socket.io-client'
 
-const socketA:SocketIOClient.Socket = io.connect("http://localhost:9000/")
+const socket:SocketIOClient.Socket = io.connect("http://localhost:9000/")
 
 interface IData {
-    name:string
+    host:string
     roomName:string
 }
 
@@ -13,7 +13,7 @@ const connectionTaskSocketA = (event:string, data:IData):Promise<string> => {
 
     return new Promise((resolve, reject) => {
         try{
-            socketA.emit(event, data)
+            socket.emit(event, data)
             resolve(`Socket emit event ${event}!`)
         } catch {
             reject('Something went wrong on connecting socketA')
@@ -26,7 +26,7 @@ const socketADisconnect = ():Promise<string> => {
         try {
             // force socket to disconnect after 4 seconds!
             setTimeout(()=> {
-                socketA.disconnect()
+                socket.disconnect()
                 resolve('Socket A disconnescted!')
             }, 4000)
         } catch {
@@ -36,7 +36,7 @@ const socketADisconnect = ():Promise<string> => {
 }
 
 async function pipeline(){
-    const data:IData = {name: "Socket A", roomName: "Room A"}
+    const data:IData = {host: "Socket B", roomName: "Room B"}
 
     await connectionTaskSocketA('join', data)
         .then(console.log)

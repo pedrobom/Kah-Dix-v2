@@ -8,11 +8,10 @@ dotenv.config()
 const testPort = process.env.TEST_PORT
 
 const Subject = require('./POSTGRESQL/db_interface/Subject')
-const requestObserver = require('./POSTGRESQL/db_interface/requestObserver')
-const baseUrl = `http://localhost:${process.env.testPort}`
+const RoomController = require('./POSTGRESQL/controllers/RoomController')
 
 interface IData {
-    name: string
+    host: string
     roomName:string
 }
 
@@ -28,10 +27,11 @@ app.use(routes)
 io.on('connection', (socket:any):void => {
     console.log('A user has connected with socket id: [%s]', socket.id)
     
-    socket.on('join', (data:IData):void =>{
-        console.log("Usuário [%s] tentando entrar com nome [%s] na sala com nome [%s]", socket.id, data.name, data.roomName)
-        Subject.subscribe(() => requestObserver(`${baseUrl}/rooms`, 'POST', {host: socket.id, roomName: data.roomName}))
-        Subject.trigger()
+    socket.on('join', (data:IData):void => {
+        console.log("Usuário [%s] tentando entrar com nome [%s] na sala com nome [%s]", socket.id, data.host, data.roomName)
+        console.log(data)
+        
+        RoomController.store(data)
     })
 
     socket.on('disconnect', ():void => {
