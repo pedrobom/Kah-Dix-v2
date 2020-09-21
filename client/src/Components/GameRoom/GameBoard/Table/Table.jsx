@@ -15,6 +15,11 @@ export default function Table() {
     const {session} = useContext(SessionContext)
     const cardsArray = AllCards()
     
+    // TODO consertar isso
+    if (!session || !session.user) {
+        return;   
+    }
+
     var myPlayer = roomData.players.find((player) => player.id == session.user.id)
     var currentPlayer = roomData.players[roomData.currentPlayerIndex]
     var amICurrentPlayer = currentPlayer.id == myPlayer.id
