@@ -20,7 +20,7 @@ export default (props) => {
         let onSessionData = (sessionData) => {
             console.log("Dados de sessão atualizados!", sessionData)
               setSession(sessionData || {})
-            // setSession({ "user": { "createdAt": "2020-09-19T22:18:39.173Z", "id": "1", "name": "pipo", "socketIds": ["c0CxjqD75Bkn009XAACT"] }, "roomData": null })
+            //  setSession({ "user": null, "roomData": null })
         }
 
         socket.on('sessionData', onSessionData)
