@@ -3,7 +3,7 @@ import './Hand.css'
 import { useState, useEffect } from 'react'
 import Card from '../Card/Card'
 import AllCards from '../../../allCards' 
-import { useContext } from 'react'
+import { useContext, useMemo } from 'react'
 import{ RoomContext } from '../../GameRoom'
 import SessionContext from '../../../SessionContext'
 import Constants from '../../../../Constants'
@@ -16,14 +16,9 @@ function Hand () {
     const {session} = useContext(SessionContext)
     const cardsArray = AllCards()
 
-    // TODO consertar isso
-    if (!session || !session.user ) {
-        return;   
-    }
-
-    var myPlayer = roomData.players.find((player) => player.id == session.user.id)
-    var currentPlayer = roomData.players[roomData.currentPlayerIndex]
-    var amICurrentPlayer = currentPlayer.id == myPlayer.id
+    var myPlayer = useMemo(() => roomData.players.find((player) => player.id == session.user.id))
+    var currentPlayer = useMemo(() => roomData.players[roomData.currentPlayerIndex])
+    var amICurrentPlayer = useMemo(() => currentPlayer.id == myPlayer.id)
 
 
     useEffect(() => {

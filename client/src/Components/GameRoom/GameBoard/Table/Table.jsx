@@ -1,4 +1,4 @@
-import React, {useEffect, useState, useContext } from 'react'
+import React, {useMemo, useEffect, useState, useContext } from 'react'
 import './Table.css'
 import { socket } from '../../../socket'
 import{ RoomContext } from '../../GameRoom'
@@ -14,15 +14,10 @@ export default function Table() {
     const roomData = useContext(RoomContext)
     const {session} = useContext(SessionContext)
     const cardsArray = AllCards()
-    
-    // TODO consertar isso
-    if (!session || !session.user) {
-        return;   
-    }
 
-    var myPlayer = roomData.players.find((player) => player.id == session.user.id)
-    var currentPlayer = roomData.players[roomData.currentPlayerIndex]
-    var amICurrentPlayer = currentPlayer.id == myPlayer.id
+    var myPlayer = useMemo(() => roomData.players.find((player) => player.id == session.user.id))
+    var currentPlayer = useMemo(() => roomData.players[roomData.currentPlayerIndex])
+    var amICurrentPlayer = useMemo(() => currentPlayer.id == myPlayer.id)
 
     // Escutando drag/drop de cartas!
     useEffect(() => {
