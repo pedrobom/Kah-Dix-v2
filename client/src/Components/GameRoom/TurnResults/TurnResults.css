@@ -1,12 +1,23 @@
 @import url('https://fonts.googleapis.com/css?family=Montserrat:900');
 
 .closeResultsButton{
-  width: 10vw;
-  height: 40px;
-  margin-top: 3vh;
+  margin-top: 3em;
   align-self: center;
-  border-radius: 4px;
-  background-color: rgb(153, 166, 202);
+  border: 0;
+  text-transform: uppercase;
+  background-color: rgb(255, 255, 255);
+  padding: 1em;
+  cursor: pointer;
+}
+
+.closeResultsButton:hover {
+  opacity: 0.9;
+}
+
+.closeResultsButton:active {
+  position: relative;
+  top:1px;
+  left:1px;
 }
 
 .background-results{
@@ -27,8 +38,6 @@
 }
 .turnResultsBox {
     z-index:  30;
-    width: 80vw;
-    height: 80vh;
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
@@ -81,17 +90,20 @@
 }
 
 .playerName{
+  margin-top: 0.5em;
   color: aliceblue;
 
 }
 
 .PlayerScore{
-  color: aliceblue;
+  margin-top: 0.5em;
+  color: #1ca254;
   font-weight: 1000;
 }
 
 .VotedPlayers{
-  color: aliceblue;
+  margin-top: 0.5em;
+  color: #4081a0;
 }
 
 .turnPlayerResult {
