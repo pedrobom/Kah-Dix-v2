@@ -1,6 +1,7 @@
 import io from 'socket.io-client'
 
-const socket:SocketIOClient.Socket = io.connect("http://localhost:9000/")
+const socketA:SocketIOClient.Socket = io.connect("http://localhost:9000/")
+const socketB:SocketIOClient.Socket = io.connect("http://localhost:9000/")
 
 interface IData {
     name:string
@@ -8,41 +9,65 @@ interface IData {
 }
 
 
-const connectionTaskSocketA = (event:string, data:IData):Promise<string> => {
-    console.log('Initializing connection for socketA')
+const connectionTaskSocketA = (event:string, data:IData, latency:number):Promise<string> => {
+    console.log('Initializing connection for socketA ---> waiting %s ms', latency)
 
     return new Promise((resolve, reject) => {
         try{
-            socket.emit(event, data)
-            resolve(`Socket emit event ${event}!`)
+            setTimeout(() => {
+                socketA.emit(event, data)
+                resolve(`socketA emit event ${event}!`)
+            }, latency);
         } catch {
             reject('Something went wrong on connecting socketA')
         }
     })
 }
 
-const socketADisconnect = ():Promise<string> => {
+const connectionTaskSocketB = (event:string, data:IData, latency:number):Promise<string> => {
+    console.log('Initializing connection for socketB ---> waiting %s ms', latency)
+
     return new Promise((resolve, reject) => {
-        try {
-            // force socket to disconnect after 4 seconds!
+        try{         
             setTimeout(()=> {
-                socket.disconnect()
-                resolve('Socket A disconnescted!')
-            }, 4000)
+                socketB.emit(event, data)
+                resolve(`socketB emit event ${event}!`)
+            }, latency)
         } catch {
-            reject('Somethig went wrong on disconnection Socket A')
+            reject('Something went wrong on connecting socketB')
         }
     })
 }
 
-async function pipeline(){
-    const data:IData = {name: "Socket B", roomName: "Room B"}
+const disconnectAllSockets = ():Promise<string> => {
+    return new Promise((resolve, reject) => {
+        try {
+            // force socket to disconnect after 5 seconds!
+            setTimeout(()=> {
+                socketA.disconnect()
+                socketB.disconnect()
+                resolve('All Socket Disconnectes!')
+            }, 5000)
+        } catch {
+            reject('Somethig went wrong on disconnecting sockets')
+        }
+    })
+}
 
-    await connectionTaskSocketA('join', data)
+
+async function pipeline(){
+    const dataA:IData = {name: "Socket A", roomName: "Sala Teste"}
+    const dataB:IData = {name: "Socket B", roomName: "Sala Teste"}
+
+    await connectionTaskSocketA('join', dataA, 3000)
+        .then(console.log)
+        .catch(console.log)
+
+    await connectionTaskSocketB('join', dataB, 3000)
         .then(console.log)
         .catch(console.log)
     
-    await socketADisconnect()
+    await disconnectAllSockets()
         .then(console.log)
         .catch(console.log)
 }

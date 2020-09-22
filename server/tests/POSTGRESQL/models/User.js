@@ -10,6 +10,11 @@ class User extends Model {
             tableName: 'users'
         })
     }
+
+    static associate(models) {
+        this.belongsTo(models, { foreignKey: 'roomId', as: 'player' })
+        this.hasOne(models, { foreignKey: 'hostId' })
+    }
 }
 
 module.exports = User

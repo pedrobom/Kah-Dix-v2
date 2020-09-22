@@ -9,6 +9,11 @@ class Room extends Model {
             tableName: 'rooms'
         })
     }
+
+    static associate(models) {
+        this.hasMany(models, { foreignKey: 'roomId', as: 'players' })
+        this.belongsTo(models, { foreignKey: 'hostId' })
+    }
 }
 
 module.exports = Room

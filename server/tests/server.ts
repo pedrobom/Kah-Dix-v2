@@ -30,18 +30,16 @@ io.on('connection', (socket:any):void => {
     console.log('A user has connected with socket id: [%s]', socket.id)
 
     
-    socket.on('join', (data:IData):void => {
-        console.log("User [%s] trying to JOIN with name [%s] on room [%s]", socket.id, data.name, data.roomName)
+    socket.on('join', async (data:IData):Promise<void> => {
+        console.log("\nUser [%s] trying to JOIN with name [%s] on room [%s]", 
+            socket.id, 
+            data.name, 
+            data.roomName
+        )
         
-        new Promise( resolver => {
-            resolver()
-        })
-            .then( () => UserController.createUser({ name: data.name,  socketId: `${socket.id}`}) )
-            .then( () => RoomController.createRoom({roomName: data.roomName}) )
-            .catch(console.log)
-        
+        await UserController.createUser({name: data.name, socketId: socket.id})
+        await RoomController.init({roomName: data.roomName, socketId: socket.id})
 
-        
     })
 
     socket.on('disconnect', ():void => {

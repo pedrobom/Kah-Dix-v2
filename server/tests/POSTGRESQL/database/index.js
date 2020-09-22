@@ -8,7 +8,10 @@ require('dotenv').config()
 
 const connection = new Sequelize(dbConfig)
 
-Room.init(connection)
 User.init(connection)
+Room.init(connection)
+
+User.associate(Room)
+Room.associate(User)
 
 module.exports = connection
