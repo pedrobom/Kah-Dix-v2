@@ -1,0 +1,44 @@
+.player-hand {
+  grid-area: hand;
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: space-between;
+  align-items: center;
+  background-color: rgba(255,255,255, 0.2);
+  width: 80%;
+  margin: 0 auto;
+  position: relative;
+  padding: 30px 20px 5px 20px;
+}
+
+.player-hand.iAmPickingPrompt {
+  z-index: 20000;
+
+  background-color: rgba(255,255,255, 1);
+}
+
+.player-hand::before {
+  display: block;
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  content: 'SUA MÃO';
+  font-weight: bold;
+  color: #1e2b24;
+  padding: 4px;
+  border-radius: 2px;
+  font-size: 0.8em;
+  background-color: rgba(0,0,0,0.05)
+}
+
+.player-hand.iAmPickingPrompt::before {
+  color: #000a;
+  content: 'SUA MÃO (você escolhe a carta depois)';
+  background-color: rgba(0,0,0,0.25)
+}
+
+.CardsInHand {
+  z-index: 200;
+  align-self: center;
+  justify-self: center;
+}

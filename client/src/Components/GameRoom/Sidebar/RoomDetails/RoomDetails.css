@@ -1,0 +1,28 @@
+.gameRoom .sidebar .roomDetails {
+    display: flex;
+    /* grid-area: roomDetails; */
+    color: #fff;
+    padding: 6px;
+    font-weight: 300;
+    background-color: rgba(0,0,0, 0.3);
+}
+
+.roomDetails .roomName {
+    width: 100%;
+}
+
+.roomDetails .roomName span {
+    font-weight: bold;
+    margin-left: 4px;
+    font-size: 1.2em;
+}
+
+.roomDetails .roomControls {
+    text-align: right;
+    font-size: 0.8em;
+    vertical-align: top;;
+}
+
+.roomDetails .roomControls a {
+    text-decoration: underline;
+}

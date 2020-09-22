@@ -2,7 +2,7 @@ import React, { useContext } from 'react'
 import './TurnResults.css'
 import { RoomContext } from '../GameRoom'
 import AllCards from '../../allCards'
-import Card from '../Card/Card'
+import Card from '../GameBoard/Card/Card'
 
 function TurnResults (){
     console.log('renderizando Componente TurnResults')
@@ -39,8 +39,8 @@ function TurnResults (){
                                 src={playerCard.src} 
                                 alt={`Imagem da carta: ${playerCard.cardTitle}`}
                             />                                
-                            <div className="playerName">Cartinha do {player.name}</div>
-                            <div className="PlayerScore">{player.name} fez {player.turnScore} {player.turnScore == 1 ? "pontinho!" : "pontos!"} </div>
+                            <div className="playerName">Cartinha do <b>{player.name}</b></div>
+                            <div className="PlayerScore"><b>{player.name}</b> fez {player.turnScore} {player.turnScore == 1 ? "pontinho!" : "pontos!"} </div>
                             <div className="VotedPlayers">
                                 <ul>
                                     {!votes ? 'Não engana ninguém!' : (<>Batutinha(s) iludide(s): <br />{votes.map(player => {return <li>{player.name}</li>})}</>)}

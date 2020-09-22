@@ -5,16 +5,11 @@
   display: grid;
   height: 100vh;
   width: 100vw;
-  gap: 20px;
+  gap: 0;
   grid-template: 
-  "he he he he he he he he he he" 40px
-  ". X p p p p p p m ." 10vh
-  ". d d d d d d d d ." 1fr
-  ". d d d d d d d d ." 1fr
-  ". s s ha ha ha ha c c c" 1fr 
-  ". s s ha ha ha ha c c c" 1fr
-  ". . . . . . . . . ." 40px
-  / 2vw 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 2vw;
+  "header header" 40px
+  "gameboard sidebar" 1fr
+  / 0.75fr minmax(300px, 0.25fr)
 
   /* flex-direction: column;
   justify-content: center;
@@ -38,8 +33,13 @@
 }
 
 .inside-room-loading-cointainer h1 {
-  color: rgb(59, 59, 56);
   font-size: 50px;
+  text-justify: center;
+  text-align: center;
+  margin-top: 30px;
+  font-family: 'Luckiest Guy';
+  color: rgb(255, 255, 255);
+  text-shadow: -4px 3px 2px rgb(0, 0, 0);
 }
 
 #loading-game-image {
@@ -65,16 +65,3 @@
     transform: rotate(360deg);
   }
 }
-
-
-
-/* 
-.game-room-title{
-  font-size: 50px;
-  text-justify: center;
-  text-align: center;
-  margin-top: 30px;
-  font-family: 'Luckiest Guy';
-  color: rgb(230, 106, 106);
-  text-shadow: -4px 3px 2px rgb(0, 0, 0);
-} */

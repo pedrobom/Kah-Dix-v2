@@ -1,0 +1,19 @@
+.gameRoom .sidebar {
+    grid-area: sidebar;
+    padding: 6px;
+    display: flex;
+    box-sizing: border-box;;
+    gap: 4px;
+    --gap: 4px;
+    flex-direction: column;
+    height: 100%;
+    overflow: hidden;
+    /* grid-template: 
+    "roomDetails" 60px
+    "." 4px
+    "playerList" 0.4fr
+    "." 4px
+    "chat" 0.6fr
+    / 1fr */
+    z-index: 1500;
+}

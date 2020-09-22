@@ -11,6 +11,7 @@
   background-color:#292929d2;
   font-family: 'Montserrat', sans-serif;
   overflow: scroll;
+  z-index: 2000;
 }
 #wrapper{
   width:100vw;

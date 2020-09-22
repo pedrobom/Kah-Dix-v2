@@ -1,0 +1,19 @@
+.gameRoom .gameBoard {
+    display: grid;
+    height: 100%;
+    width: 100%;
+    gap: 0;
+    grid-template: 
+    "header" 94px
+    "table" 1fr
+    "hand" 1fr
+    / 1fr;
+    padding: 10px;
+    gap: 4px;
+    --gap: 4px;
+    position: relative;
+  
+    /* flex-direction: column;
+    justify-content: center;
+    align-items: center; */
+  }

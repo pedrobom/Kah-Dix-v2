@@ -1,0 +1,36 @@
+.chat-form {
+  display: flex;
+  border-top: 4px solid rgba(255,255,255,0.1);
+}
+  
+.chat-form .input {
+  border: none;
+  color: #fff;
+  border-radius: 0;
+  padding: 4%;
+  width: 80%;
+  font-size: 1em;
+  font-weight: 300;
+  box-sizing: content-box;
+  background-color: rgba(0,0,0,0.5)
+}
+  
+.chat-form input:focus, textarea:focus, select:focus{
+  outline: none;
+}
+  
+.chat-form .sendButton {
+  color: #fff !important;
+  text-transform: uppercase;
+  text-decoration: none;
+  background: #275d47;
+  padding: 10px;
+  display: inline-block;
+  border: none;
+  width: 20%;
+  box-sizing: content-box;
+}
+
+.chat-form.hide {
+  display: none;
+}

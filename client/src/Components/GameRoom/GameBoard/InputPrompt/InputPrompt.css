@@ -1,0 +1,145 @@
+@import url('https://fonts.googleapis.com/css?family=Fjalla+One&display=swap');
+
+:root {
+    --form-bg:#f8f4e5;
+    --form-shadow: #ffa580;
+    --form-primary-highlight: #95a4ff;
+    --form-secondary-highlight: #ffc8ff;
+    --font-size: 30px;
+    --font-face: 'Fjalla One';
+    --font-color: #2A293E;
+    --form-width: 800px;
+    --form-height:250px;
+    z-index: 10;
+}
+
+/* .background-shadow-form {
+    margin:0;
+    padding:0;
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color:#292929;
+    opacity: 90%;
+} */
+
+.gamePromptInputContainer {
+  position: absolute;
+  display: flex;
+  align-items: top;
+  justify-content: center;
+  padding-top: 2%;
+  top: 0;
+  left: 0;
+  background-color: rgba(0,0,0,0.7);
+  right: 0;
+  bottom: 0;
+  z-index: 20000;
+}
+
+
+.gamePromptInputBox {
+  height: fit-content;
+  background-color: rgba(255,255,255,0.95);
+  box-sizing: border-box;;
+  padding: 5%;  
+}
+
+.gamePromptInputMensagem {
+  font-weight: 300;
+  font-size: 2em; 
+  text-align: justify;
+  line-height: 1.5em;
+  margin-bottom: 3%;
+}
+.gamePromptInputBox form {
+  text-align: right;
+
+}
+
+.gamePromptInputBox form input {
+  background-color: #0001;
+  border: 0;
+  font-family: 'Roboto';
+  font-size: 2em;
+  padding: 2%;
+  width: 100%;
+  color: #4c675c;
+  outline-color: #3b655444;
+  font-weight: 300;
+}
+
+.gamePromptInputBox form button {
+  margin-top: 3%;
+  background-color: #3b6554;
+  font-family: 'Roboto';
+  border: 0;
+  font-size: 2em;
+  font-weight: 300;
+  color: #fff;
+  padding: 1%;
+}
+.in-game-form{
+    /* z-index: 1000;
+    position: fixed;
+    width: var(--form-width);
+    height: var(--form-height);
+    left: calc(50% - 400px);
+    top:  calc(50% - 125px); */
+    /* background: var(--form-bg); */
+    background: rgb(250, 250, 193);
+    padding: 50px 100px;
+    border: 5px solid #848684;
+    /* box-shadow: 15px 15px 1px var(--form-shadow), 15px 15px 1px 2px rgba(0,0,0,1); */
+}
+
+.in-game-form input {
+    margin: 20px;
+  display: block;
+  width: 100%;
+  font-size: var(--font-size);
+  line-height: var(--font-size * 2);
+  font-family: var(--font-face);
+  margin-bottom: var(--font-size * 2);
+  border: none;
+  border-bottom: 5px solid rgba(0,0,0,1);
+  /* background: var(--form-bg); */
+  background: rgb(250, 250, 193);
+  min-width: 250px;
+  padding-left: 5px;
+  outline: none;
+  color: rgba(0,0,0,1);
+}
+
+.in-game-form input:focus{
+  border-bottom: 5px solid var(--form-shadow);
+}
+
+.in-game-form button{
+    cursor: pointer;
+  display: block;
+  margin: 0 auto;
+  width: 200px;
+  height: 50px;
+  font-size: 20px;
+  font-weight: 770;
+  line-height: var(--font-size * 2);
+  padding: 0 20px;
+  background: var(--form-shadow);
+  letter-spacing: 10px;
+  transition: 0.2s all ease-in-out;
+  outline: none;
+  border: 1px solid rgba(0,0,0,1);
+  box-shadow: 3px 3px 1px var(--form-primary-highlight), 3px 3px 1px 1px rgba(0,0,0,1);
+}
+.in-game-form button:hover{
+    background: rgba(0,0,0,1);
+    color: white;
+    border: 1px solid rgba(0,0,0,1);
+}
+
+::selection { 
+  background: var(--form-secondary-highlight);
+}

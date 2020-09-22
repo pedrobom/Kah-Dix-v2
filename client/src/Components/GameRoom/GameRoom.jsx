@@ -1,14 +1,10 @@
 import React, { useState, useEffect, useContext, useMemo } from "react";
 
 import Header from './Header/Header'
-import Prompt from './Prompt/Prompt'
-import Chat from '../Chat/Chat'
 import RoomLobby from './RoomLobby/RoomLobby'
 import EndScreen from "./EndScreen/EndScreen";
-import Hand from './Hand/Hand'
-import Table from './Table/Table'
-import Score from './Score/Score'
-import Menu from './Menu/Menu'
+import GameBoard from "./GameBoard/GameBoard";
+import Sidebar from "./Sidebar/Sidebar";
 import LoadingImg from '../../assets/images/loadingImg'
 import carinha from '../../assets/images/carinha'
 import './GameRoom.css'
@@ -18,6 +14,8 @@ import TurnResults from "./TurnResults/TurnResults";
 import { Redirect } from "react-router";
 import SessionContext from "../SessionContext"
 
+// Simple mock data for testing :)
+import mock from '../../game-room-tests'
 
 // import io from 'socket.io-client'
 // let socket;
@@ -25,10 +23,10 @@ import SessionContext from "../SessionContext"
 export const RoomContext = React.createContext()
 
 
-const GameRoom = ({ location }) => {   
+export default ({ location }) => {   
     const { session } = useContext(SessionContext)
     const [roomDataFromEvent, setRoomDataFromEvent] = useState()
-    const roomData = useMemo(() => roomDataFromEvent || (session && session.roomData), [session, roomDataFromEvent]);
+    const roomData = useMemo(() => mock['_3players_vote_results'] || roomDataFromEvent || (session && session.roomData), [session, roomDataFromEvent]);
 
     console.log("OUTSIDE %s", location)
 
@@ -52,7 +50,8 @@ const GameRoom = ({ location }) => {
 
     }, [])
 
-    if (!session) {
+    // Esperando o servidor mandar dados :)
+    if (!session || !session.user) {
         console.log("Ainda carregando dados da sala!")
         return <div className="inside-room-loading-cointainer">
             <h1 className="game-room-title">Carregando Partida</h1>
@@ -60,6 +59,7 @@ const GameRoom = ({ location }) => {
         </div>
     } 
 
+    // Não existe sala para nós, então não podemos estar no GameRoom!
     if (!roomData) {
         console.log("Não estamos em uma sala! Vamos voltar para a lobby :)", roomData)
         return <Redirect to="/"/>
@@ -67,32 +67,19 @@ const GameRoom = ({ location }) => {
     
 
 
-
     return (
             <RoomContext.Provider value={roomData}>
-                <Chat />
                 { roomData.state === "WAITING_FOR_PLAYERS" && <RoomLobby />}
-                <div className="gameRoom">
+                <div className={"gameRoom "+ roomData.state}>
                     <Header />   
-                    <Menu />                 
-                    {roomData.prompt !== null
-                    ? <Prompt prompt={`${roomData.players[roomData.currentPlayerIndex].name} diz: ${roomData.prompt}`} />
-                    : <Prompt prompt={`Esperando ${roomData.players[roomData.currentPlayerIndex].name} mandar aquele bordão solerte`} 
-                    />}
-                    {/* LOBBY ATIVO NA TELA DE TODOS OS JOGADORES DA SALA*/}
-                    {/* { roomData.state === "PICKING_PROMPT" && <InputPrompt /> }             */}
-                    <Table canDrop={"true"}/>
-                    <Score />
-                    <Hand />
-                    <img id="carinha-image" src={carinha} />
+                    <Sidebar></Sidebar>
+                    <GameBoard/>
+                    {/* <img id="carinha-image" src={carinha} /> */}
                 </div>
-                    {(roomData.state === "PICKING_PROMPT" && roomData.turn > 1) && <TurnResults />}
-                    { roomData.state === "GAME_ENDED" && <EndScreen />}
+                { roomData.state === "GAME_ENDED" && <EndScreen />}
                     
             </RoomContext.Provider>
     )        
 
 
 }
-
-export default GameRoom

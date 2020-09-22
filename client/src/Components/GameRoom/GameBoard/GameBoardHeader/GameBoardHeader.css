@@ -1,0 +1,57 @@
+.gameBoardHeader {
+    grid-area: header;
+    height: 94px;
+}
+
+
+.gameBoardHeader .gameStateHeader {
+    color: #fff;
+}
+
+/* Frase acima do prompt, quando usuários estao votando ou escolhendo cartas */
+.gameBoardHeader.votingCards .gameStateHeader, .gameBoardHeader.selectingCards .gameStateHeader {
+    text-transform: uppercase;
+    font-size: 0.8em;
+    margin-top: 10px;
+    margin-bottom: 4px;
+    color: #759081;
+}
+
+.gameBoardHeader.votingCards.iAmDone .gameStateHeader, .gameBoardHeader.selectingCards.iAmDone .gameStateHeader {
+    color: #d7e4dd
+}
+
+/* Frase quando o jogador do turno está escolhendo o prompt */
+.gameBoardHeader.pickingPrompt .gameStateHeader {
+    text-transform: uppercase;
+    font-size: 1.5em;
+    text-align: center;
+    /* background-color: rgba(255,255,255,0.4); */
+    padding: 10px;
+    margin-top: 0;
+    font-weight: 300;
+    color: #fff;
+    height: 100%;
+}
+
+/* Prompt escolhido :) */
+.gameBoardHeader .gamePrompt {
+    background-color: rgba(255,255,255,0.4);
+    padding: 10px;
+    margin-top: 0;
+}
+
+.gamePrompt .promptUserName {
+    font-size: 0.8em;
+    text-transform: uppercase;;
+}
+
+.promptUserName .userName {
+    font-weight: bold;
+}
+
+.gamePrompt .promptText { 
+    font-size: 1.4em;
+    font-weight: bold;
+    margin: 4px 0px 0 8px;
+}

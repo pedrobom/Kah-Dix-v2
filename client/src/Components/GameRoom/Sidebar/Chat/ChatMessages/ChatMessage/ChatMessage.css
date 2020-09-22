@@ -1,0 +1,55 @@
+.chatMessage {
+  font-size: 0.9em;
+  opacity: 1;
+}
+
+.chatMessage > * {
+  margin-bottom: 2px;
+}
+
+.chatMessage .messageText {
+  background-color: blanchedalmond;;
+  padding: 6px;
+  border-radius: 4px;
+  display: inline-block;
+  box-sizing: border-box;
+}
+
+/* Mensagens do systema */
+.chatMessage.systemMessage .messageText {
+  background-color: #668a76cc;
+  color: #fff;
+}
+
+/* Minhas proprias mensagens */
+.chatMessage.myMessage .messageText {
+  background-color: #4081c3cc;
+  color: #fff;
+}
+.chatMessage.myMessage {
+  text-align: right;
+}
+.chatMessage.myMessage .userName {
+  display: none;
+}
+
+/*  Mensagens de outros usuarios :) */
+.chatMessage.otherMessage .messageText {
+  background-color: #a2a2a2cc;
+  color: #fff;
+}
+
+.chatMessage .messageText > * {
+  vertical-align: middle;
+
+}
+
+.chatMessage .userName {
+  color: #fff6;
+  font-size: 0.8em;
+  padding: 0 4px 4px 4px;
+}
+
+.chatMessage .userName > i {
+  margin: 0 4px;
+}
