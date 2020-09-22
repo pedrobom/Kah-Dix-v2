@@ -11,8 +11,8 @@ class Room extends Model {
     }
 
     static associate(models) {
-        this.belongsTo(models.User, { foreignKey: 'hostId', as: 'owner' })
-        // this.hasMany(models.User, { foreignKey: 'playersId', as: 'players' })
+        this.hasMany(models, { foreignKey: 'roomId', as: 'players' })
+        this.belongsTo(models, { foreignKey: 'hostId' })
     }
 }
 

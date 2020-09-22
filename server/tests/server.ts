@@ -31,17 +31,14 @@ io.on('connection', (socket:any):void => {
 
     
     socket.on('join', async (data:IData):Promise<void> => {
-        console.log("User [%s] trying to JOIN with name [%s] on room [%s]", 
+        console.log("\nUser [%s] trying to JOIN with name [%s] on room [%s]", 
             socket.id, 
             data.name, 
             data.roomName
         )
         
-        // Checar se a sala já existe:
-        // ---> se existir, JOIN ROOM
-        // ---> se não existir, CREATE ROOM && JOIN ROOM 
         await UserController.createUser({name: data.name, socketId: socket.id})
-        await RoomController.createRoom({roomName: data.roomName, socketId: socket.id})
+        await RoomController.init({roomName: data.roomName, socketId: socket.id})
 
     })
 

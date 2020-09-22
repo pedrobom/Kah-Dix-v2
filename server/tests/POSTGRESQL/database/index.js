@@ -11,6 +11,7 @@ const connection = new Sequelize(dbConfig)
 User.init(connection)
 Room.init(connection)
 
-Room.associate(connection.models)
+User.associate(Room)
+Room.associate(User)
 
 module.exports = connection
