@@ -1,4 +1,5 @@
 const User = require('../models/User')
+const Room = require('../models/Room')
 
 module.exports = {
 
@@ -23,30 +24,5 @@ module.exports = {
             console.log("Error: ", ex.message)
             console.debug("############ NEW USER REQUEST: FINISHED ############\n")
         }
-    },
-
-    async list(req, res) {
-        console.debug("\n############ GET REQUEST: START ##############")
-        try {
-            console.debug('Trying to GET rooms!')
-            console.debug('Awaiting connection with database...')
-            const users = await User.findAll()
-
-            console.debug(rooms)
-            console.debug("############ GET REQUEST: FINISHED ############\n")
-            return res.status(200).json(users)
-
-        } catch (ex) {
-            console.log('Status 500: ', ex.message)
-            console.debug("############ POST REQUEST: FINISHED ##############\n")
-            return res.status(500).send(ex.message)
-        }
-    },
-
-    async getOne(req, res) { },
-
-
-    async put(req, res) { },
-
-    async delete(req, res) { }
+    }
 }
