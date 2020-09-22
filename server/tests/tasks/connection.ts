@@ -3,7 +3,7 @@ import io from 'socket.io-client'
 const socket:SocketIOClient.Socket = io.connect("http://localhost:9000/")
 
 interface IData {
-    host:string
+    name:string
     roomName:string
 }
 
@@ -36,7 +36,7 @@ const socketADisconnect = ():Promise<string> => {
 }
 
 async function pipeline(){
-    const data:IData = {host: "Socket B", roomName: "Room B"}
+    const data:IData = {name: "Socket B", roomName: "Room B"}
 
     await connectionTaskSocketA('join', data)
         .then(console.log)

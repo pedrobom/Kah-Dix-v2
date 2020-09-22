@@ -1,34 +1,35 @@
 const Room = require('../models/Room')
+const User = require('../models/User')
 
 module.exports = {
 
-    async store(data) {
-        console.debug("\n############ POST REQUEST: START ##############")
+    async createRoom(data) {
+        console.debug("\n############ NEW ROOM REQUEST: START ##############")
         try {
-            const { host, roomName } = data
+            const { roomName } = data
             console.debug('Checking if room alread exists:')
             const existingRoom = await Room.findOne({ where: { roomName: roomName } })
             if (!existingRoom) {
                 console.debug('Checking if user alread in room')
                 console.debug('Trying to POST new room!')
                 console.debug('Destructure req.body\nAwaiting connection with database...')
-                console.debug({ host, roomName })
-                await Room.create({ host, roomName })
+                console.debug({ roomName })
+                await Room.create({ roomName })
 
-                console.debug("############ POST REQUEST: FINISHED ##############\n")
+                console.debug("############ NEW ROOM REQUEST: FINISHED ##############\n")
             } else {
                 console.debug("Room [%s] alread exists!", existingRoom)
-                console.debug("############ POST REQUEST: FINISHED ##############\n")
+                console.debug("############ NEW ROOM REQUEST: FINISHED ##############\n")
             }
 
         } catch (ex) {
             console.log("Error: ", ex.message)
-            console.debug("############ POST REQUEST: FINISHED ############\n")
+            console.debug("############ NEW ROOM REQUEST: FINISHED ############\n")
         }
     },
 
-    async list(req, res) {
-        console.debug("\n############ GET REQUEST: START ##############")
+    async getRooms() {
+        console.debug("\n############ GET ALL ROOMS: START ##############")
         try {
             console.debug('Trying to GET rooms!')
             console.debug('Awaiting connection with database...')
@@ -36,32 +37,31 @@ module.exports = {
             const rooms = await Room.findAll()
 
             console.debug(rooms)
-            console.debug("############ GET REQUEST: FINISHED ############\n")
+            console.debug("############ GET ALL ROOMS: FINISHED ############\n")
             return res.status(200).json(rooms)
 
         } catch (ex) {
             console.log('Status 500: ', ex.message)
-            console.debug("############ GET REQUEST: FINISHED ##############\n")
+            console.debug("############ GET ALL ROOMS: FINISHED ##############\n")
             return res.status(500).send(ex.message)
         }
     },
 
-    async getOne(req, res) {
-        console.debug("\n############ GET REQUEST: START ##############")
+    async getRoom(roomName) {
+        console.debug("\n############ GET ROOM BY ID: START ##############")
         try {
-            console.debug('Trying to GET room by id!')
+            console.debug('Trying to GET room by NAME!')
             console.debug('Awaiting connection with database...')
 
-            const roomId = req.params.id
-            const room = await Room.findOne({ where: { id: roomId } })
+            const room = await Room.findByPk({ where: {} })
 
             console.debug(room)
-            console.debug("############ GET REQUEST: FINISHED ############\n")
-            return res.status(200).json(room)
+            console.debug("############ GET ROOM BY ID: FINISHED ############\n")
+            return room
 
         } catch (ex) {
             console.log('Status 500: ', ex.message)
-            console.debug("############ GET REQUEST: FINISHED ##############\n")
+            console.debug("############ GET ROOM BY ID: FINISHED ##############\n")
             return res.status(500).send(ex.message)
         }
     },

@@ -4,14 +4,16 @@ import socketio from 'socket.io'
 import routes from './routes'
 
 import dotenv from 'dotenv'
+import { resolve } from 'path'
 dotenv.config()
 const testPort = process.env.TEST_PORT
 
-const Subject = require('./POSTGRESQL/db_interface/Subject')
+const Subject = require('./observer_interface/Subject')
 const RoomController = require('./POSTGRESQL/controllers/RoomController')
+const UserController = require('./POSTGRESQL/controllers/UserController')
 
 interface IData {
-    host: string
+    name: string
     roomName:string
 }
 
@@ -26,12 +28,20 @@ app.use(routes)
 
 io.on('connection', (socket:any):void => {
     console.log('A user has connected with socket id: [%s]', socket.id)
+
     
     socket.on('join', (data:IData):void => {
-        console.log("Usuário [%s] tentando entrar com nome [%s] na sala com nome [%s]", socket.id, data.host, data.roomName)
-        console.log(data)
+        console.log("User [%s] trying to JOIN with name [%s] on room [%s]", socket.id, data.name, data.roomName)
         
-        RoomController.store(data)
+        new Promise( resolver => {
+            resolver()
+        })
+            .then( () => UserController.createUser({ name: data.name,  socketId: `${socket.id}`}) )
+            .then( () => RoomController.createRoom({roomName: data.roomName}) )
+            .catch(console.log)
+        
+
+        
     })
 
     socket.on('disconnect', ():void => {

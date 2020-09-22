@@ -10,10 +10,13 @@ module.exports = {
         autoIncrement: true,
         allowNull: false
       },
-      host: {
-        type: Sequelize.STRING,
-        allowNull: false
-      },
+      // hostId: {
+      //   type: Sequelize.INTEGER,
+      //   allowNull: false,
+      //   references: { model: 'users', key: 'id' },
+      //   onUpdate: 'CASCADE',
+      //   onDelete: 'CASCADE'
+      // },
       roomName: {
         type: Sequelize.STRING,
         allowNull: false

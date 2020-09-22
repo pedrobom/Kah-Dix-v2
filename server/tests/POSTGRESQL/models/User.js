@@ -4,6 +4,7 @@ class User extends Model {
     static init(sequelize) {
         super.init({
             name: DataTypes.STRING,
+            socketId: DataTypes.STRING
         }, {
             sequelize,
             tableName: 'users'
