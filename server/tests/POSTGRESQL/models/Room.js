@@ -3,7 +3,7 @@ const { Model, DataTypes } = require('sequelize')
 class Room extends Model {
     static init(sequelize) {
         super.init({
-            host: DataTypes.STRING
+            roomName: DataTypes.STRING,
         }, {
             sequelize,
             tableName: 'rooms'
