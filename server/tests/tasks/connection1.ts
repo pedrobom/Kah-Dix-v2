@@ -12,10 +12,10 @@ const socketD:SocketIOClient.Socket = io.connect(`http://localhost:${testPort}/`
 // Switch "coupled" for selecting witch actions should be applied to all sockets
 // in a bundle:
 const socketsArray = [
-    {socket: socketA, coupled: true}, 
-    {socket: socketB, coupled: true}, 
-    {socket: socketC, coupled: true}, 
-    {socket: socketD, coupled: false}
+    {socket: socketA, isCoupled: true}, 
+    {socket: socketB, isCoupled: true}, 
+    {socket: socketC, isCoupled: true}, 
+    {socket: socketD, isCoupled: true}
 ]
 
 
@@ -91,7 +91,7 @@ const disconnectAllCoupledSockets = ():Promise<string> => {
             // force socket to disconnect after 5 seconds!
             setTimeout(()=> {
                 socketsArray.forEach(socketObject => {
-                    if(socketObject.coupled === true){
+                    if(socketObject.isCoupled === true){
                         socketObject.socket.disconnect()
                     }
                 })
@@ -108,6 +108,7 @@ async function pipeline(){
     const dataA:IData = {name: "Socket A", roomName: "Sala Azul"}
     const dataB:IData = {name: "Socket B", roomName: "Sala Verde"}
     const dataC:IData = {name: "Socket C", roomName: "Sala Azul"}
+    // const dataD:IData = {name: "Socket D", roomName: "Sala Vermelha"}
 
     await connectionTaskSocketA('join', dataA, 3000)
         .then(console.log)
@@ -120,6 +121,10 @@ async function pipeline(){
     await connectionTaskSocketC('join', dataC, 3000)
         .then(console.log)
         .catch(console.log)
+    
+    // await connectionTaskSocketC('join', dataD, 3000)
+    //     .then(console.log)
+    //     .catch(console.log)
     
     await disconnectAllCoupledSockets()
         .then(console.log)

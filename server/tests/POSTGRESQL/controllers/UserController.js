@@ -28,6 +28,7 @@ module.exports = {
                 console.log("Socket table updated with user of id ", user["id"])
             }
             console.debug("############ NEW USER REQUEST: FINISHED ############\n")
+            return user
 
             // console.debug("User [%s] alread exists!", existingRoom)
             // console.debug("############ NEW USER REQUEST: FINISHED ##############\n")
@@ -42,7 +43,7 @@ module.exports = {
         console.debug("\n############ NAME USER REQUEST: START ##############")
 
         const { name, socketId } = data
-        console.debug('Trying to UPDATE user name!')
+        console.debug('Trying to UPDATE name of user of socketId [%s] to: [%s]', socketId, name)
         console.debug('Destructure input\nAwaiting connection with database...')
 
         await User.update(

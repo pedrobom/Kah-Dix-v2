@@ -7,6 +7,8 @@ import dotenv from 'dotenv'
 dotenv.config()
 const testPort = process.env.TEST_PORT || 9000
 
+const SocketEmitter = require('./SocketEmitter')
+
 const RoomController = require('./POSTGRESQL/controllers/RoomController')
 const UserController = require('./POSTGRESQL/controllers/UserController')
 const SocketController = require('./POSTGRESQL/controllers/SocketController')
@@ -35,15 +37,17 @@ io.on('connection', async (socket:any):Promise<void> => {
     
     socket.on('join', async (data:IData):Promise<void> => {
         console.log("\nUser [%s] trying to JOIN with name [%s] on room [%s]", 
-        socket.id, 
-        data.name, 
-        data.roomName
+            socket.id, 
+            data.name, 
+            data.roomName
         )
-        
 
-        await UserController.nameUser({name: data.name, socketId: socket.id})
-        await RoomController.init({roomName: data.roomName, socketId: socket.id})
+        const user = await UserController.nameUser({name: data.name, socketId: socket.id})
+        const room = await RoomController.init({roomName: data.roomName, socketId: socket.id})
 
+        // await SocketEmitter.emitRoomDataForPlayer('ping', socket.id, room)
+
+        SocketEmitter.emitRoomDataForPlayer('roomData', io, socket.id, room)
     })
 
     socket.on('disconnect', ():void => {

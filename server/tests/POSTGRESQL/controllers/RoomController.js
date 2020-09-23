@@ -42,6 +42,7 @@ module.exports = {
                     }
                 )
                 console.debug("############ NEW ROOM REQUEST: FINISHED #############\n")
+                return newRoom
 
             } else {
 
@@ -56,7 +57,7 @@ module.exports = {
                     }
                 )
                 console.debug("############ NEW ROOM REQUEST: FINISHED #############\n")
-
+                return existingRoom
             }
 
         } catch (ex) {
