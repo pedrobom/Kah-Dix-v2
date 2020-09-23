@@ -2,7 +2,7 @@ import io from 'socket.io-client'
 import dotenv from 'dotenv'
 dotenv.config()
 
-const testPort = process.env.TEST_PORT
+const testPort = process.env.TEST_PORT || 9000
 
 const socketA:SocketIOClient.Socket = io.connect(`http://localhost:${testPort}/`)
 const socketB:SocketIOClient.Socket = io.connect(`http://localhost:${testPort}/`)

@@ -1,12 +1,12 @@
 const { Model, DataTypes } = require('sequelize')
 
 class User extends Model {
-    static init(sequelize) {
+    static init(connection) {
         super.init({
             name: DataTypes.STRING,
             socketId: DataTypes.STRING
         }, {
-            sequelize,
+            sequelize: connection,
             tableName: 'users'
         })
     }
