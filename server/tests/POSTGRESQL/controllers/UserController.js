@@ -15,7 +15,7 @@ module.exports = {
             console.debug('Checking for user in table sockets\nAwaiting connection with database')
             const socket = await Socket.findOne({ where: { socketId: socketId } })
             if (socket === null) {
-                // EXPLORAR HIPÓTESE >>>
+                // EXPLORAR HIPÓTESES >>> (...)
             } else {
                 await Socket.update(
                     {

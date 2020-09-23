@@ -1,17 +1,17 @@
 const { Model, DataTypes } = require('sequelize')
 
 class Socket extends Model {
-    static init(sequelize) {
+    static init(connection) {
         super.init({
             socketId: DataTypes.STRING,
         }, {
-            sequelize,
+            sequelize: connection,
             tableName: 'sockets'
         })
     }
 
     static associate(models) {
-        this.belongsTo(models, { foreignKey: 'userId', as: 'socket' })
+        this.belongsTo(models.User, { foreignKey: 'userId', as: 'socket' })
     }
 }
 
