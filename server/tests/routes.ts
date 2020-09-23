@@ -1,7 +1,5 @@
 import express, { Router, Request, Response } from 'express'
 
-const RoomController = require('./POSTGRESQL/controllers/RoomController')
-const UserController = require('./POSTGRESQL/controllers/UserController')
 const routes: Router = express.Router();
 
 routes.get("/", (req: Request, res: Response):void => {

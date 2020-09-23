@@ -26,7 +26,7 @@ module.exports = {
             if (existingRoom === null) {
                 // console.debug('Checking if user alread in room')
                 console.debug('Room does not exist yet!\nTrying to POST new room!')
-                console.debug('Destructure req.body\nAwaiting connection with database...')
+                console.debug('Destructure input\nAwaiting connection with database...')
 
                 console.log("Passing data to create room: ", { roomName: roomName, hostId: userId })
                 console.debug("Pushing user of socket.id [%s] as host", socketId)

@@ -1,7 +1,12 @@
 import io from 'socket.io-client'
+import dotenv from 'dotenv'
+dotenv.config()
 
-const socketA:SocketIOClient.Socket = io.connect("http://localhost:9000/")
-const socketB:SocketIOClient.Socket = io.connect("http://localhost:9000/")
+const testPort = process.env.TEST_PORT
+
+const socketA:SocketIOClient.Socket = io.connect(`http://localhost:${testPort}/`)
+const socketB:SocketIOClient.Socket = io.connect(`http://localhost:${testPort}/`)
+const socketC:SocketIOClient.Socket = io.connect(`http://localhost:${testPort}/`)
 
 interface IData {
     name:string
@@ -39,6 +44,21 @@ const connectionTaskSocketB = (event:string, data:IData, latency:number):Promise
     })
 }
 
+const connectionTaskSocketC = (event:string, data:IData, latency:number):Promise<string> => {
+    console.log('Initializing connection for socketB ---> waiting %s ms', latency)
+
+    return new Promise((resolve, reject) => {
+        try{         
+            setTimeout(()=> {
+                socketC.emit(event, data)
+                resolve(`socketC emit event ${event}!`)
+            }, latency)
+        } catch {
+            reject('Something went wrong on connecting socketC')
+        }
+    })
+}
+
 const disconnectAllSockets = ():Promise<string> => {
     return new Promise((resolve, reject) => {
         try {
@@ -46,24 +66,30 @@ const disconnectAllSockets = ():Promise<string> => {
             setTimeout(()=> {
                 socketA.disconnect()
                 socketB.disconnect()
-                resolve('All Socket Disconnectes!')
+                socketC.disconnect()
+                resolve('All Socket Disconnected!')
             }, 5000)
         } catch {
-            reject('Somethig went wrong on disconnecting sockets')
+            reject('Something went wrong on disconnecting sockets')
         }
     })
 }
 
 
 async function pipeline(){
-    const dataA:IData = {name: "Socket A", roomName: "Sala Teste"}
-    const dataB:IData = {name: "Socket B", roomName: "Sala Teste"}
+    const dataA:IData = {name: "Socket A", roomName: "Sala Azul"}
+    const dataB:IData = {name: "Socket B", roomName: "Sala Verde"}
+    const dataC:IData = {name: "Socket C", roomName: "Sala Azul"}
 
     await connectionTaskSocketA('join', dataA, 3000)
         .then(console.log)
         .catch(console.log)
 
     await connectionTaskSocketB('join', dataB, 3000)
+        .then(console.log)
+        .catch(console.log)
+    
+    await connectionTaskSocketC('join', dataC, 3000)
         .then(console.log)
         .catch(console.log)
     

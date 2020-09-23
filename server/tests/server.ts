@@ -8,9 +8,9 @@ import { resolve } from 'path'
 dotenv.config()
 const testPort = process.env.TEST_PORT
 
-const Subject = require('./observer_interface/Subject')
 const RoomController = require('./POSTGRESQL/controllers/RoomController')
 const UserController = require('./POSTGRESQL/controllers/UserController')
+const SocketController = require('./POSTGRESQL/controllers/SocketController')
 
 interface IData {
     name: string
@@ -26,9 +26,9 @@ const io: SocketIO.Server = socketio(server);
 app.use(express.json())
 app.use(routes)
 
-io.on('connection', (socket:any):void => {
+io.on('connection', async (socket:any):Promise<void> => {
     console.log('A user has connected with socket id: [%s]', socket.id)
-
+    await SocketController.createSocketRow()
     
     socket.on('join', async (data:IData):Promise<void> => {
         console.log("\nUser [%s] trying to JOIN with name [%s] on room [%s]", 
@@ -44,13 +44,26 @@ io.on('connection', (socket:any):void => {
 
     socket.on('disconnect', ():void => {
         console.log("A user has disconnected...")
+
+        // FAZER A LIMPEZA DOS SOCKETS NO DATABASE ---> precisa deixar o cookie!
     })
 })
 
 server.listen(testPort, () => {
-    console.log('######################################')
-    console.log('######## SERVER UP: PORT %s ########\n', testPort)
-    console.log('THIS IS A SERVER FOR TESTS\nFeel free to Overdue stuff!')
-    console.log('\n######################################')
-    console.log('######################################\n')
+
+    console.log(`
+    ██████████████████████████████╗
+    ╚══██╔══██╔════██╔════╚══██╔══╝
+       ██║  █████╗ ███████╗  ██║   
+       ██║  ██╔══╝ ╚════██║  ██║   
+       ██║  ██████████████║  ██║   
+       ╚═╝  ╚══════╚══════╝  ╚═╝
+       ██████╗██╗   █████╗   █████╗   ███████████████╗ 
+       ██╔══████║   ██████╗  ██████╗  ████╔════██╔══██╗
+       ██████╔██║   ████╔██╗ ████╔██╗ ███████╗ ██████╔╝
+       ██╔══████║   ████║╚██╗████║╚██╗████╔══╝ ██╔══██╗
+       ██║  ██╚██████╔██║ ╚██████║ ╚█████████████║  ██║
+       ╚═╝  ╚═╝╚═════╝╚═╝  ╚═══╚═╝  ╚═══╚══════╚═╝  ╚═╝ \n`)
+
+       console.log('      ######### Server running on port: [%s] #########\n', testPort)
 })

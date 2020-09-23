@@ -1,5 +1,5 @@
 const User = require('../models/User')
-const Room = require('../models/Room')
+const Socket = require('../models/Socket')
 
 module.exports = {
 
@@ -7,14 +7,26 @@ module.exports = {
         console.debug("\n############ NEW USER REQUEST: START ##############")
         try {
             const { name, socketId } = data
-            // console.debug('Checking if user alread exists:')
-            // DEPOIS CHECAR SE O USER JÁ TEM OS SOCKETS.IDS DENTRO DO ARRAY DE SOCKET!!!!
 
             console.debug('Trying to POST new user!')
-            console.debug('Destructure req.body\nAwaiting connection with database...')
+            console.debug('Destructure input\nAwaiting connection with database...')
             console.debug({ name, socketId })
-            await User.create({ name, socketId })
-
+            const user = await User.create({ name, socketId })
+            console.debug('Checking for user in table sockets\nAwaiting connection with database')
+            const socket = await Socket.findOne({ where: { socketId: socketId } })
+            if (socket === null) {
+                // EXPLORAR HIPÓTESE >>>
+            } else {
+                await Socket.update(
+                    {
+                        userId: user["id"]
+                    },
+                    {
+                        where: { socketId: socketId }
+                    }
+                )
+                console.log("Socket table updated with user of id ", user["id"])
+            }
             console.debug("############ NEW USER REQUEST: FINISHED ##############\n")
 
             // console.debug("User [%s] alread exists!", existingRoom)
