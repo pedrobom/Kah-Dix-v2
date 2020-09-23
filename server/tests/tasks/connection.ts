@@ -7,15 +7,26 @@ const testPort = process.env.TEST_PORT || 9000
 const socketA:SocketIOClient.Socket = io.connect(`http://localhost:${testPort}/`)
 const socketB:SocketIOClient.Socket = io.connect(`http://localhost:${testPort}/`)
 const socketC:SocketIOClient.Socket = io.connect(`http://localhost:${testPort}/`)
+const socketD:SocketIOClient.Socket = io.connect(`http://localhost:${testPort}/`)
+
+// Switch "coupled" for selecting witch actions should be applied to all sockets
+// in a bundle:
+const socketsArray = [
+    {socket: socketA, coupled: true}, 
+    {socket: socketB, coupled: true}, 
+    {socket: socketC, coupled: true}, 
+    {socket: socketD, coupled: false}
+]
+
 
 interface IData {
-    name:string
-    roomName:string
+    name?:string
+    roomName?:string
 }
 
 
 const connectionTaskSocketA = (event:string, data:IData, latency:number):Promise<string> => {
-    console.log('Initializing connection for socketA ---> waiting %s ms', latency)
+    console.log('Initializing connection for socketA:\n---> waiting %s ms', latency)
 
     return new Promise((resolve, reject) => {
         try{
@@ -30,7 +41,7 @@ const connectionTaskSocketA = (event:string, data:IData, latency:number):Promise
 }
 
 const connectionTaskSocketB = (event:string, data:IData, latency:number):Promise<string> => {
-    console.log('Initializing connection for socketB ---> waiting %s ms', latency)
+    console.log('Initializing connection for socketB:\n---> waiting %s ms', latency)
 
     return new Promise((resolve, reject) => {
         try{         
@@ -45,7 +56,7 @@ const connectionTaskSocketB = (event:string, data:IData, latency:number):Promise
 }
 
 const connectionTaskSocketC = (event:string, data:IData, latency:number):Promise<string> => {
-    console.log('Initializing connection for socketB ---> waiting %s ms', latency)
+    console.log('Initializing connection for socketC:\n---> waiting %s ms', latency)
 
     return new Promise((resolve, reject) => {
         try{         
@@ -59,15 +70,32 @@ const connectionTaskSocketC = (event:string, data:IData, latency:number):Promise
     })
 }
 
-const disconnectAllSockets = ():Promise<string> => {
+const connectionTaskSocketD = (event:string, data:IData, latency:number):Promise<string> => {
+    console.log('Initializing connection for socketD:\n---> waiting %s ms', latency)
+
+    return new Promise((resolve, reject) => {
+        try{         
+            setTimeout(()=> {
+                socketD.emit(event, data)
+                resolve(`socketD emit event ${event}!`)
+            }, latency)
+        } catch {
+            reject('Something went wrong on connecting socketD')
+        }
+    })
+}
+
+const disconnectAllCoupledSockets = ():Promise<string> => {
     return new Promise((resolve, reject) => {
         try {
             // force socket to disconnect after 5 seconds!
             setTimeout(()=> {
-                socketA.disconnect()
-                socketB.disconnect()
-                socketC.disconnect()
-                resolve('All Socket Disconnected!')
+                socketsArray.forEach(socketObject => {
+                    if(socketObject.coupled === true){
+                        socketObject.socket.disconnect()
+                    }
+                })
+                resolve('All Coupled Sockets hava been Disconnected!')
             }, 5000)
         } catch {
             reject('Something went wrong on disconnecting sockets')
@@ -93,7 +121,7 @@ async function pipeline(){
         .then(console.log)
         .catch(console.log)
     
-    await disconnectAllSockets()
+    await disconnectAllCoupledSockets()
         .then(console.log)
         .catch(console.log)
 }

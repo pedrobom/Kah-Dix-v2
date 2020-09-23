@@ -12,8 +12,9 @@ const UserController = require('./POSTGRESQL/controllers/UserController')
 const SocketController = require('./POSTGRESQL/controllers/SocketController')
 
 interface IData {
-    name:string
-    roomName:string
+    name?:string
+    roomName?:string
+    socketId?:string
 }
 
 require('./POSTGRESQL/database/index')
@@ -27,17 +28,20 @@ app.use(routes)
 
 io.on('connection', async (socket:any):Promise<void> => {
     console.log('A user has connected with socket id: [%s]', socket.id)
+    const socketData:IData = {socketId: socket.id}
 
-    await SocketController.createSocketRow({socketId: socket.id})
+    await SocketController.createSocketRow(socketData)
+    await UserController.createUser(socketData)
     
     socket.on('join', async (data:IData):Promise<void> => {
         console.log("\nUser [%s] trying to JOIN with name [%s] on room [%s]", 
-            socket.id, 
-            data.name, 
-            data.roomName
+        socket.id, 
+        data.name, 
+        data.roomName
         )
         
-        await UserController.createUser({name: data.name, socketId: socket.id})
+
+        await UserController.nameUser({name: data.name, socketId: socket.id})
         await RoomController.init({roomName: data.roomName, socketId: socket.id})
 
     })
