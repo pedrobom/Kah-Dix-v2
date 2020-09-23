@@ -50,11 +50,6 @@ io.on('connection', async (socket:any):Promise<void> => {
 })
 
 server.listen(testPort, () => {
-    // console.log('######################################')
-    // console.log('######## SERVER UP: PORT %s ########\n', testPort)
-    // console.log('THIS IS A SERVER FOR TESTS\nFeel free to Overdue stuff!')
-    // console.log('\n######################################')
-    // console.log('######################################\n')
 
     console.log(`
     ██████████████████████████████╗
