@@ -33,7 +33,7 @@ io.on('connection', async (socket:any):Promise<void> => {
     const socketData:IData = {socketId: socket.id}
 
     await SocketController.createSocketRow(socketData)
-    await UserController.createUser(socketData)
+    const user = await UserController.createUser(socketData)
     
     socket.on('join', async (data:IData):Promise<void> => {
         console.log("\nUser [%s] trying to JOIN with name [%s] on room [%s]", 
@@ -42,14 +42,42 @@ io.on('connection', async (socket:any):Promise<void> => {
             data.roomName
         )
 
-        const user = await UserController.nameUser({name: data.name, socketId: socket.id})
+        await UserController.nameUser({name: data.name, socketId: socket.id})
         const room = await RoomController.init({roomName: data.roomName, socketId: socket.id})
+        
+        const players = await RoomController.getPlayersInRoom({roomName: data.roomName})
 
-        // await SocketEmitter.emitRoomDataForPlayer('ping', socket.id, room)
-
-        SocketEmitter.emitRoomDataForPlayer('roomData', io, socket.id, room)
+        SocketEmitter.emitDataForAll('roomData', players, io, {user, room})
     })
 
+    // GAME STATES \\
+    socket.on('changeDeck', () => {    
+    })
+    socket.on('victoryChange', () => {
+    })
+    socket.on('selectPeqDeck', () => {
+    })
+    socket.on('selectEuroDeck', () => {
+    })
+    socket.on('gameStart', () => {
+    })
+    socket.on('selectCard', () => {
+    })
+    socket.on('voteCard', () => {
+    })
+    // GAME STATES \\
+
+
+    socket.on('sendMessage', async (message:string) => {
+        const userRoom = await RoomController.getRoomOfUser(user)
+        SocketEmitter.emitData('message', io, userRoom["roomName"], {
+            user: user["name"],
+            userId: user["id"],
+            text: message,
+            systemMessage: false,
+            date: new Date().toISOString().replace(/T/, ' ').replace(/\..+/, '')
+        })
+    })
     socket.on('disconnect', ():void => {
         console.log("A user has disconnected...")
 

@@ -1,5 +1,6 @@
 const Room = require('../models/Room')
 const User = require('../models/User')
+const Socket = require('../models/Socket')
 
 module.exports = {
 
@@ -68,7 +69,65 @@ module.exports = {
         }
     },
 
-    async listUsersInRoom(data) {
+    async getPlayersInRoom(data) {
+        console.debug("\n######## GET PLAYERS IN ROOM REQUEST: START #########")
+
+        try {
+
+            const { roomName } = data
+            console.log("Data received ", { roomName })
+            console.debug("Trying to get players from room [%s] ", roomName)
+
+            const roomId = await Room.findOne({
+                where: { roomName: roomName },
+                attributes: ['id']
+            }).then(id => id.get('id'))
+
+            const room = await Room.findByPk(roomId, {
+                include: { association: 'players' }
+            })
+            console.debug("Players in room [%s]: ", roomName)
+            console.debug(JSON.parse(JSON.stringify(room["players"])))
+
+            console.debug("\n######## GET PLAYERS IN ROOM REQUEST: FINISHED ###")
+            return JSON.parse(JSON.stringify(room["players"]))
+
+        } catch (ex) {
+            console.log("Error: ", ex.message)
+            console.debug("\n######## GET PLAYERS IN ROOM REQUEST: FINISHED ###")
+        }
+    },
+
+    async getRoomOfUser(data) {
+        console.debug("\n######## GET PLAYER IN ROOM REQUEST: START #########")
+
+        try {
+
+            const { socketId } = data
+            console.log("Data received ", { socketId })
+            console.debug("Trying to get id of the USER who have this socket!")
+            const userId = await Socket.findOne({
+                where: { socketId: socketId },
+                attributes: ['userId']
+            }).then(userId => userId.get('id'))
+            console.debug('Id of User: ', userId)
+
+            console.debug("Trying to get ROOM of the User ", userId)
+            const roomId = await User.findByPk(userId)['roomId']
+            if (roomId) {
+                const room = await Room.findByPk(roomId)
+                console.log(JSON.parse(JSON.stringify(room)))
+                console.debug("\n######## GET PLAYER IN ROOM REQUEST: FINISHED ######")
+                return JSON.parse(JSON.stringify(room))
+            } else {
+                console.warn("User without room trying to send message!")
+                return
+            }
+
+        } catch (ex) {
+            console.log("Error: ", ex.message)
+            console.debug("\n######## GET PLAYER IN ROOM REQUEST: FINISHED ######")
+        }
 
     }
 }

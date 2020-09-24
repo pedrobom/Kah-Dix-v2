@@ -26,9 +26,11 @@ module.exports = {
                     }
                 )
                 console.log("Socket table updated with user of id ", user["id"])
+                console.log(JSON.parse(JSON.stringify(user)))
+                return JSON.parse(JSON.stringify(user))
             }
             console.debug("############ NEW USER REQUEST: FINISHED ############\n")
-            return user
+
 
             // console.debug("User [%s] alread exists!", existingRoom)
             // console.debug("############ NEW USER REQUEST: FINISHED ##############\n")
@@ -40,13 +42,13 @@ module.exports = {
     },
 
     async nameUser(data) {
-        console.debug("\n############ NAME USER REQUEST: START ##############")
+        console.debug("\n############ UPDATE NAME OF USER REQUEST: START ##############")
 
         const { name, socketId } = data
         console.debug('Trying to UPDATE name of user of socketId [%s] to: [%s]', socketId, name)
         console.debug('Destructure input\nAwaiting connection with database...')
 
-        await User.update(
+        const user = await User.update(
             {
                 name: name
             },
@@ -54,8 +56,9 @@ module.exports = {
                 where: { socketId: socketId }
             }
         )
-
-        console.debug("\n############ NAME USER REQUEST: FINISHED ###########")
+        console.debug("User name updated:")
+        console.log(JSON.parse(JSON.stringify(user)))
+        console.debug("\n############ UPDATE NAME OF USER REQUEST: FINISHED ##########")
 
     }
 }
