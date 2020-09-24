@@ -3,46 +3,32 @@
 module.exports = {
   up: (queryInterface, Sequelize) => {
 
-    return queryInterface.createTable('rooms', {
+    return queryInterface.createTable('results', {
       id: {
         type: Sequelize.INTEGER,
         primaryKey: true,
         autoIncrement: true,
         allowNull: false
       },
-      state: {
-        type: Sequelize.STRING,
-        allowNull: false,
-        defaultValue: "WAITING_FOR_PLAYERS"
-      },
-      roomName: {
-        type: Sequelize.STRING,
-        unique: true,
-        allowNull: false
-      },
       turn: {
         type: Sequelize.INTEGER,
-        allowNull: false
+        allowNull: false,
       },
-      currentPlayerIndex: {
-        type: Sequelize.INTEGER,
-        allowNull: false
-      },
-      prompt: {
+      turnPlayer: {
         type: Sequelize.STRING,
         allowNull: false
       },
-      selectedCardCount: {
-        type: Sequelize.INTEGER,
+      turnPrompt: {
+        type: Sequelize.STRING,
         allowNull: false
       },
-      victory: {
-        type: Sequelize.INTEGER,
-        allowNull: true
+      turnPlayerCard: {
+        type: Sequelize.STRING,
+        allowNull: false
       },
-      isWinner: {
-        type: Sequelize.BOOLEAN,
-        allowNull: true
+      turnPlayerScore: {
+        type: Sequelize.INTEGER,
+        allowNull: false
       },
       createdAt: {
         type: Sequelize.DATE,
@@ -58,7 +44,7 @@ module.exports = {
 
   down: (queryInterface, Sequelize) => {
 
-    return queryInterface.dropTable('rooms');
+    return queryInterface.dropTable('results');
 
   }
 };
