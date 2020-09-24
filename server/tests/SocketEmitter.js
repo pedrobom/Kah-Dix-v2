@@ -5,7 +5,7 @@ module.exports = class SocketEmitter {
 
     static emitDataForAll(event, players, io, data) {
         players.forEach(player => {
-            SocketEmitter.emitDataForPlayer(event, io, player["socketId"], data)
+            SocketEmitter.emitData(event, io, player["socketId"], data)
         })
     }
 }

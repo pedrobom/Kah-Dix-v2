@@ -1,6 +1,7 @@
 const Room = require('../models/Room')
 const User = require('../models/User')
 const Socket = require('../models/Socket')
+const { getRoomDataForPlayer } = require('../../../src/lib/services/rooms')
 
 module.exports = {
 
@@ -129,5 +130,41 @@ module.exports = {
             console.debug("\n######## GET PLAYER IN ROOM REQUEST: FINISHED ######")
         }
 
+    },
+
+    async getRoomData(data) {
+        const { room, player } = data
+
+        // const roomData = {
+        //     myUserName: player.user.name ,
+        //     myHand: player.hand,
+        //     haveIVoted: player.votedCard,
+        //     mySelectedCard: player.mySelectedCard,
+        //     name: room.name,
+        //     state: room.state,
+        //     turn: room.turn,
+        //     currentPlayerIndex: room.currentPlayerIndex,
+        //     host: room.host,
+        //     prompt: room.prompt,
+        //     selectedCardCount: room.selectedCardCount,
+        //     results: room.results,
+        //     victory: room.victory,
+        //     isDeckDixit: room.isDeckDixit,
+        //     isDeckEuro: room.isDeckEuro,
+        //     isDeckNude: room.isDeckNude,
+        //     isDeckPeq: room.isDeckPeq,
+        //     votingCardsTurn: room.votingCardsTurn,
+        //     players: room.players.map((player) => {
+        //       return {
+        //         name: player.user.name,
+        //         id: player.user.id,
+        //         score: player.score,
+        //         selectedCard: room.state == Room.States.PICKING_PROMPT ? player.selectedCard : !!player.selectedCard,
+        //         votedCard: room.state.PICKING_PROMPT ? player.votedCard : !!player.votedCard,
+        //         isDisconnected: !player.user.socketIds.length
+        //       }
+        //     }),
+        //     winner: room.winner,
+        //   }
     }
 }
