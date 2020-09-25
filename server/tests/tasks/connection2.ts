@@ -86,8 +86,8 @@ const disconnectAllCoupledSockets = ():Promise<string> => {
 
 
 async function pipeline(){
-    const dataA:IData = {name: "Socket Bombabdo", roomName: "Sala FUMEGANTE"}
-    const dataB:IData = {name: "Socket Maratonado", roomName: "Sala FUMEGANTE"}
+    const dataA:IData = {name: "Socket Bombabdo", roomName: "Sala DO TEMPO"}
+    const dataB:IData = {name: "Socket Maratonado", roomName: "Sala DO TEMPO"}
 
     await socketAEmits('join', dataA, 3000)
         .then(console.log)

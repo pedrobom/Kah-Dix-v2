@@ -12,6 +12,7 @@ class Socket extends Model {
 
     static associate(models) {
         this.belongsTo(models.User, { foreignKey: 'userId', as: 'socket' })
+        this.belongsTo(models.Room, { foreignKey: 'roomId' })
     }
 }
 

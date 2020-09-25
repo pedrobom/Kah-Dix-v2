@@ -4,7 +4,6 @@ class User extends Model {
     static init(connection) {
         super.init({
             name: DataTypes.STRING,
-            socketId: DataTypes.STRING
         }, {
             sequelize: connection,
             tableName: 'users'
@@ -12,8 +11,8 @@ class User extends Model {
     }
 
     static associate(models) {
-        this.belongsTo(models.Room, { foreignKey: 'roomId', as: 'player' })
-        this.hasOne(models.Room, { foreignKey: 'hostId' })
+        this.hasOne(models.RoomPlayer, { foreignKey: 'userId', as: 'player' })
+        this.hasOne(models.Room, { foreignKey: 'hostId', as: 'host' })
         this.hasMany(models.Socket, { foreignKey: 'userId', as: 'sockets' })
     }
 }

@@ -3,12 +3,30 @@ const { Model, DataTypes } = require('sequelize')
 class RoomPlayer extends Model {
     static init(connection) {
         super.init({
-            turnScore: DataTypes.INTEGER,
-            hand: DataTypes.ARRAY(DataTypes.STRING),
-            turn: DataTypes.INTEGER,
-            mySelectedCard: DataTypes.STRING,
-            selectedCard: DataTypes.STRING,
-            votedCard: DataTypes.STRING,
+            score: {
+                type: DataTypes.INTEGER,
+                defaultValue: 0
+            },
+            turnScore: {
+                type: DataTypes.INTEGER,
+                defaultValue: 0
+            },
+            hand: {
+                type: DataTypes.ARRAY(DataTypes.STRING),
+                defaultValue: []
+            },
+            mySelectedCard: {
+                type: DataTypes.STRING,
+                defaultValue: null
+            },
+            selectedCard: {
+                type: DataTypes.STRING,
+                defaultValue: null
+            },
+            votedCard: {
+                type: DataTypes.STRING,
+                defaultValue: null
+            },
         }, {
             sequelize: connection,
             tableName: 'roomPlayers'
@@ -16,6 +34,8 @@ class RoomPlayer extends Model {
     }
 
     static associate(models) {
+        this.belongsTo(models.User, { foreignKey: 'userId' })
+        this.belongsTo(models.Room, { foreignKey: 'roomId' })
     }
 }
 

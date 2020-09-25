@@ -3,10 +3,19 @@ const { Model, DataTypes } = require('sequelize')
 class Room extends Model {
     static init(connection) {
         super.init({
-            state: DataTypes.STRING,
+            state: {
+                type: DataTypes.STRING,
+                defaultValue: "WAITING_FOR_PLAYERS"
+            },
             roomName: DataTypes.STRING,
-            turn: DataTypes.INTEGER,
-            currentPlayerIndex: DataTypes.INTEGER,
+            turn: {
+                type: DataTypes.INTEGER,
+                defaultValue: 1
+            },
+            currentPlayerIndex: {
+                type: DataTypes.INTEGER,
+                defaultValue: 0
+            },
             prompt: DataTypes.STRING,
             selectedCardCount: DataTypes.STRING,
             victory: DataTypes.STRING,
@@ -17,7 +26,8 @@ class Room extends Model {
     }
 
     static associate(models) {
-        this.hasMany(models.User, { foreignKey: 'roomId', as: 'players' })
+        this.hasMany(models.RoomPlayer, { foreignKey: 'roomId', as: 'players' })
+        this.hasMany(models.Socket, { foreignKey: 'roomId', as: 'socketsIds' })
         this.belongsTo(models.User, { foreignKey: 'hostId' })
     }
 }
