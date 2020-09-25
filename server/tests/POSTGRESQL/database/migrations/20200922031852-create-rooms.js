@@ -30,11 +30,11 @@ module.exports = {
       },
       prompt: {
         type: Sequelize.STRING,
-        allowNull: false
+        allowNull: true
       },
       selectedCardCount: {
         type: Sequelize.INTEGER,
-        allowNull: false
+        allowNull: true
       },
       victory: {
         type: Sequelize.INTEGER,

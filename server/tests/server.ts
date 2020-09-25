@@ -13,10 +13,18 @@ const RoomController = require('./POSTGRESQL/controllers/RoomController')
 const UserController = require('./POSTGRESQL/controllers/UserController')
 const SocketController = require('./POSTGRESQL/controllers/SocketController')
 
+
 interface IData {
     name?:string
     roomName?:string
     socketId?:string
+}
+interface IGameConditions {
+    isDeckDixit:boolean
+    isDeckEuro:boolean
+    isDeckNude:boolean
+    isDeckPeq:boolean
+    victoryCondition?:string
 }
 
 require('./POSTGRESQL/database/index')
@@ -27,6 +35,7 @@ const io: SocketIO.Server = socketio(server);
 
 app.use(express.json())
 app.use(routes)
+
 
 io.on('connection', async (socket:any):Promise<void> => {
     console.log('A user has connected with socket id: [%s]', socket.id)
@@ -43,27 +52,51 @@ io.on('connection', async (socket:any):Promise<void> => {
         )
 
         await UserController.nameUser({name: data.name, socketId: socket.id})
-        const room = await RoomController.init({roomName: data.roomName, socketId: socket.id})
+        await RoomController.init({roomName: data.roomName, socketId: socket.id})
         
-        const players = await RoomController.getPlayersInRoom({roomName: data.roomName})
+        const userRoom = await RoomController.getRoomOfUser(user)
+        const roomPlayers = userRoom.players 
+        // const roomData = await RoomController.getRoomData('ROOM DATA')
 
-        SocketEmitter.emitDataForAll('roomData', players, io, {user, room})
+        SocketEmitter.emitDataForAll('roomData', roomPlayers, io, userRoom)
     })
 
     // GAME STATES \\
-    socket.on('changeDeck', () => {    
+    socket.on('changeDeck', async (decks:IGameConditions):Promise<void> => { 
+        const userRoom = await RoomController.getRoomOfUser(user)
+        const roomPlayers = userRoom.players
+        const roomData = await RoomController.getRoomData('ROOM DATA')
+        SocketEmitter.emitDataForAll('roomData', roomPlayers, io, roomData)  
     })
-    socket.on('victoryChange', () => {
+
+    socket.on('victoryChange', async (victoryCondition:string):Promise<void> => {
+        const userRoom = await RoomController.getRoomOfUser(user)
+        const roomPlayers = userRoom.players
+        const roomData = await RoomController.getRoomData('ROOM DATA')
+        SocketEmitter.emitDataForAll('roomData', roomPlayers, io, roomData)  
     })
-    socket.on('selectPeqDeck', () => {
+
+    socket.on('selectPeqDeck', async (newBool:boolean):Promise<void> => {
+        const userRoom = await RoomController.getRoomOfUser(user)
+        const roomPlayers = userRoom.players
+        const roomData = await RoomController.getRoomData('ROOM DATA')
+        SocketEmitter.emitDataForAll('roomData', roomPlayers, io, roomData)  
     })
-    socket.on('selectEuroDeck', () => {
+
+    socket.on('selectEuroDeck', async (newBool:boolean):Promise<void> => {
+        const userRoom = await RoomController.getRoomOfUser(user)
+        const roomPlayers = userRoom.players
+        const roomData = await RoomController.getRoomData('ROOM DATA')
+        SocketEmitter.emitDataForAll('roomData', roomPlayers, io, roomData)  
     })
-    socket.on('gameStart', () => {
+
+    socket.on('gameStart', async ():Promise<void> => {
     })
-    socket.on('selectCard', () => {
+    socket.on('pickPrompt', async (prompt:string):Promise<void> => {
     })
-    socket.on('voteCard', () => {
+    socket.on('selectCard', async (card:string):Promise<void> => {
+    })
+    socket.on('voteCard', async (card:string):Promise<void> => {
     })
     // GAME STATES \\
 
@@ -78,6 +111,10 @@ io.on('connection', async (socket:any):Promise<void> => {
             date: new Date().toISOString().replace(/T/, ' ').replace(/\..+/, '')
         })
     })
+
+    socket.on('quitRoom', async ():Promise<void> => {
+    })
+
     socket.on('disconnect', ():void => {
         console.log("A user has disconnected...")
 
