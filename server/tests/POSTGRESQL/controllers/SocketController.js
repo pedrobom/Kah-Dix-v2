@@ -2,13 +2,12 @@ const Socket = require('../models/Socket')
 
 module.exports = {
 
-    async createSocketRow(data) {
+    async createSocketRowAsync(socketId) {
         try {
-            const { socketId } = data
 
             console.debug('Storing NEW socket id to database:')
-            console.debug({ socketId })
-            await Socket.create({ socketId })
+            console.debug(socketId)
+            await Socket.create({ socketId: socketId })
 
         } catch (ex) {
             console.log("Error: ", ex.message)
