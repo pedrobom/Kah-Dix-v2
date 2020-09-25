@@ -1,10 +1,11 @@
 const Room = require('../models/Room')
 const User = require('../models/User')
 const RoomPlayer = require('../models/RoomPlayer')
+const Socket = require('../models/Socket')
 
 module.exports = {
 
-    async initAsync(roomName, user) {
+    async initAsync(roomName, user, socketId) {
 
         console.debug("\n############ NEW ROOM REQUEST: START ##############")
 
@@ -25,6 +26,14 @@ module.exports = {
                 console.log("Passing data to create room: ", { roomName: roomName, hostId: userId })
                 console.debug("Pushing user of id [%s] as host of [%s]", userId, roomName)
                 const newRoom = await Room.create({ roomName: roomName, hostId: userId })
+                await Socket.update(
+                    {
+                        roomId: newRoom.id
+                    },
+                    {
+                        where: { socketId: socketId }
+                    }
+                )
 
                 console.debug("Creating roomPlayer and pushing roomId to it")
                 const newPlayer = await RoomPlayer.create({
@@ -41,8 +50,16 @@ module.exports = {
                 console.debug("Creating roomPlayer and pushing roomId to it")
                 const newPlayer = await RoomPlayer.create({
                     userId: userId,
-                    roomId: newRoom.id
+                    roomId: existingRoom.id
                 })
+                await Socket.update(
+                    {
+                        roomId: existingRoom.id
+                    },
+                    {
+                        where: { socketId: socketId }
+                    }
+                )
                 console.info('New Player Created: ', JSON.parse(JSON.stringify(newPlayer)))
                 console.debug("############ NEW ROOM REQUEST: FINISHED #############\n")
                 return existingRoom
@@ -65,11 +82,11 @@ module.exports = {
             const userId = user.id
 
             console.debug("Trying to get ROOM of the User ", userId)
-            const user = await User.findByPk(userId, {
+            const userInRoom = await User.findByPk(userId, {
                 include: { association: 'player' }
             })
 
-            const roomId = user.player.roomId
+            const roomId = userInRoom.player.roomId
 
             if (roomId) {
                 const room = await Room.findByPk(roomId, {
@@ -124,6 +141,23 @@ module.exports = {
         //     }),
         //     winner: room.winner,
         //   }
+    },
+
+    async getSocketsOfRoom(room) {
+        console.debug("\n######## GET SOCKETS IDS OF ROOM REQUEST: START #########")
+        try {
+
+            const roomOfSockets = await Room.findByPk(room.id, {
+                include: { association: 'socketsIds' }
+            })
+            const socketsIds = roomOfSockets.socketsIds
+            console.debug("\n######## GET SOCKETS IDS OF ROOM REQUEST: FINISHED ######")
+            return JSON.parse(JSON.stringify(socketsIds))
+
+        } catch (ex) {
+            console.log("Error: ", ex.message)
+            console.debug("\n######## GET SOCKETS IDS OF ROOM REQUEST: FINISHED ######")
+        }
     },
 
     async startGameAsync(data) {

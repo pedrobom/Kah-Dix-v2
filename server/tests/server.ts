@@ -53,13 +53,15 @@ io.on('connection', async (socket:any):Promise<void> => {
         )
 
         await UserController.nameUserAsync(user, data.name)
-        await RoomController.initAsync(data.roomName, user)
+        await RoomController.initAsync(data.roomName, user, socket.id)
         
         const userRoom = await RoomController.getRoomOfUserAsync(user)
-        const roomPlayers = userRoom.players 
-        // const roomData = await RoomController.getRoomDataAsync('ROOM DATA')
+        const socketsArray = await RoomController.getSocketsOfRoom(userRoom)
 
-        SocketEmitter.emitDataForAll('roomData', roomPlayers, io, userRoom)
+        // const roomData = await RoomController.getRoomDataAsync('ROOM DATA')
+        // SocketEmitter.emitData('roomData', io, userRoom.roomName, 'OLÁ')
+
+        SocketEmitter.emitDataForAll('roomData', socketsArray, io, userRoom)
     })
 
     // GAME STATES \\
