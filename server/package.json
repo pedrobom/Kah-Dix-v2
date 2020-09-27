@@ -5,8 +5,11 @@
   "main": "src/index.js",
   "scripts": {
     "start": "nodemon src/index.js",
-    "dev:start": "nodemon --exec ts-node tests/server.ts",
-    "dev:test": "cd tests/tasks && npx ts-node connection2.ts",
+    "migrate": "cd src/ && npx dotenv -e ../.env sequelize db:migrate",
+    "migrate:undo": "cd src/ && npx dotenv -e ../.env sequelize db:migrate:undo",
+    "migrate:undo:all": "cd src/ && npx dotenv -e ../.env sequelize db:migrate:undo:all",
+    "dev:start": "nodemon --exec ts-node tests/server.ts --ignore __tests__",
+    "dev:test": "cd tests/tasks && npx ts-node client2.ts",
     "dev:db:migrate": "cd tests/ && npx dotenv -e ../.env sequelize db:migrate",
     "dev:db:migrate:undo": "cd tests/ && npx dotenv -e ../.env sequelize db:migrate:undo"
   },
@@ -16,7 +19,6 @@
   "dependencies": {
     "@types/socket.io": "^2.1.11",
     "@types/socket.io-client": "^1.4.33",
-    "@types/uuid": "^8.3.0",
     "async": "^3.2.0",
     "cors": "^2.8.5",
     "dotenv": "^8.2.0",
@@ -35,8 +37,6 @@
     "@types/node": "^14.11.1",
     "@types/sequelize": "^4.28.9",
     "dotenv-cli": "^4.0.0",
-    "gulp": "^4.0.2",
-    "gulp-cli": "^2.3.0",
     "nodemon": "^2.0.4",
     "sequelize-cli": "^6.2.0",
     "ts-node": "^9.0.0",
