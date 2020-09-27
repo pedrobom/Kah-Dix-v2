@@ -15,6 +15,14 @@ class User extends Model {
         this.hasOne(models.Room, { foreignKey: 'hostId', as: 'host' })
         this.hasMany(models.Socket, { foreignKey: 'userId', as: 'sockets' })
     }
+
+    // hasSocket(id) {
+    //     return this.hasSockets()
+    // }
+
+    toString() {
+        return this.id
+    }
 }
 
 module.exports = User
