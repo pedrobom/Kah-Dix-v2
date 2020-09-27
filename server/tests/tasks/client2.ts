@@ -86,26 +86,28 @@ const disconnectAllCoupledSockets = ():Promise<string> => {
 
 
 async function pipeline(){
-    const dataA:IData = {name: "Socket Bombabdo", roomName: "Sala DO TEMPO"}
-    const dataB:IData = {name: "Socket Maratonado", roomName: "Sala DO TEMPO"}
+    const dataA:IData = {name: "Socket Bombabdo", roomName: "Sala DO PIPO"}
+    const dataB:IData = {name: "Socket Maratonado", roomName: "Sala DO PIPÃO"}
 
     await socketAEmits('join', dataA, 3000)
         .then(console.log)
         .catch(console.log)
     
-    socketAListens('roomData')
-
-
     await socketBEmits('join', dataB, 3000)
-        .then(console.log)
-        .catch(console.log)
-
-    socketBListens('roomData')
-
-
+    .then(console.log)
+    .catch(console.log)
+    
+    
     await disconnectAllCoupledSockets()
-        .then(console.log)
-        .catch(console.log)
+    .then(console.log)
+    .catch(console.log)
 }
+    
+// pipeline()
 
-pipeline()
+socketA.on('connect', ():void => {
+    pipeline()
+})
+
+socketAListens('roomData')
+socketBListens('roomData')

@@ -2,10 +2,9 @@ import express, { Application } from 'express'
 import http, { Server } from 'http'
 import socketio from 'socket.io'
 import routes from './routes'
-import fs from 'fs'
 
-import dotenv from 'dotenv'
-dotenv.config()
+require('dotenv').config()
+
 const testPort = process.env.TEST_PORT || 9000
 
 const SocketEmitter = require('./SocketEmitter')
@@ -13,7 +12,6 @@ const SocketEmitter = require('./SocketEmitter')
 const RoomController = require('./POSTGRESQL/controllers/RoomController')
 const UserController = require('./POSTGRESQL/controllers/UserController')
 const SocketController = require('./POSTGRESQL/controllers/SocketController')
-const RoomPlayerController = require('./POSTGRESQL/controllers/RoomPlayerController')
 
 
 interface IData {
@@ -40,10 +38,10 @@ app.use(routes)
 
 
 io.on('connection', async (socket:any):Promise<void> => {
-    console.log('A user has connected with socket id: [%s]', socket.id)
 
-    await SocketController.createSocketRowAsync(socket.id)
-    const user = await UserController.createUserAsync(socket.id)
+    console.log('A user has connected with socket id: [%s]', socket.id)
+    const socketObject = await SocketController.createSocketAsync(socket.id)
+    const user = await UserController.createUserAsync(socketObject)
     
     socket.on('join', async (data:IData):Promise<void> => {
         console.log("\nUser [%s] trying to JOIN with name [%s] on room [%s]", 
@@ -53,52 +51,59 @@ io.on('connection', async (socket:any):Promise<void> => {
         )
 
         await UserController.nameUserAsync(user, data.name)
-        await RoomController.initAsync(data.roomName, user, socket.id)
-        
+        await RoomController.initAsync(data.roomName, user, socket.id)        
         const userRoom = await RoomController.getRoomOfUserAsync(user)
-        const socketsArray = await RoomController.getSocketsOfRoom(userRoom)
+        
+        // const socketsArray = await RoomController.getSocketsOfRoom(userRoom)
 
         // const roomData = await RoomController.getRoomDataAsync('ROOM DATA')
-        // SocketEmitter.emitData('roomData', io, userRoom.roomName, 'OLÁ')
-
-        SocketEmitter.emitDataForAll('roomData', socketsArray, io, userRoom)
+        // SocketEmitter.emitDataForAll('roomData', socketsArray, io, roomData)
     })
+
 
     // GAME STATES \\
     socket.on('changeDeck', async (decks:IGameConditions):Promise<void> => { 
         const userRoom = await RoomController.getRoomOfUserAsync(user)
-        const roomPlayers = userRoom.players
+        const socketsArray = await RoomController.getSocketsOfRoom(userRoom)
+        await RoomController.setDeckAsync(decks)
+
         const roomData = await RoomController.getRoomDataAsync('ROOM DATA')
-        SocketEmitter.emitDataForAll('roomData', roomPlayers, io, roomData)  
+        SocketEmitter.emitDataForAll('roomData', socketsArray, io, roomData)  
     })
 
     socket.on('victoryChange', async (victoryCondition:string):Promise<void> => {
         const userRoom = await RoomController.getRoomOfUserAsync(user)
-        const roomPlayers = userRoom.players
+        const socketsArray = await RoomController.getSocketsOfRoom(userRoom)
+        await RoomController.setVictoryAsync(victoryCondition)
+
         const roomData = await RoomController.getRoomDataAsync('ROOM DATA')
-        SocketEmitter.emitDataForAll('roomData', roomPlayers, io, roomData)  
+        SocketEmitter.emitDataForAll('roomData', socketsArray, io, roomData) 
     })
 
     socket.on('selectPeqDeck', async (newBool:boolean):Promise<void> => {
         const userRoom = await RoomController.getRoomOfUserAsync(user)
-        const roomPlayers = userRoom.players
+        const socketsArray = await RoomController.getSocketsOfRoom(userRoom)
+        await RoomController.selectPeqDeck(newBool)
+
         const roomData = await RoomController.getRoomDataAsync('ROOM DATA')
-        SocketEmitter.emitDataForAll('roomData', roomPlayers, io, roomData)  
+        SocketEmitter.emitDataForAll('roomData', socketsArray, io, roomData) 
     })
 
     socket.on('selectEuroDeck', async (newBool:boolean):Promise<void> => {
         const userRoom = await RoomController.getRoomOfUserAsync(user)
-        const roomPlayers = userRoom.players
+        const socketsArray = await RoomController.getSocketsOfRoom(userRoom)
+        await RoomController.selectEuroDeck(newBool)
+        
         const roomData = await RoomController.getRoomDataAsync('ROOM DATA')
-        SocketEmitter.emitDataForAll('roomData', roomPlayers, io, roomData)  
+        SocketEmitter.emitDataForAll('roomData', socketsArray, io, roomData) 
     })
 
     socket.on('gameStart', async ():Promise<void> => {
         const userRoom = await RoomController.getRoomOfUserAsync(user)
         const roomPlayers = userRoom.players
-        const roomData = await RoomController.getRoomDataAsync('ROOM DATA')
+        const socketsArray = await RoomController.getSocketsOfRoom(userRoom)
 
-        const { error } = await RoomController.startGameAsync('START GAME!!!')
+        await RoomController.startGameAsync('START GAME!!!')
 
         SocketEmitter.emitData('message', io, userRoom.roomName, {
             user: user["name"],
@@ -108,7 +113,8 @@ io.on('connection', async (socket:any):Promise<void> => {
             date: new Date().toISOString().replace(/T/, ' ').replace(/\..+/, '')
         })
 
-        SocketEmitter.emitDataForAll('roomData', roomPlayers, io, roomData)  
+        const roomData = await RoomController.getRoomDataAsync('ROOM DATA')
+        SocketEmitter.emitDataForAll('roomData', socketsArray, io, roomData)  
 
         SocketEmitter.emitData('message', io, userRoom.roomName, {
             user: user["name"],
@@ -121,10 +127,42 @@ io.on('connection', async (socket:any):Promise<void> => {
 
     })
     socket.on('pickPrompt', async (prompt:string):Promise<void> => {
+        const userRoom = await RoomController.getRoomOfUserAsync(user)
+        const socketsArray = await RoomController.getSocketsOfRoom(userRoom)
+        const roomData = await RoomController.getRoomDataAsync('ROOM DATA')
+
+        await RoomController.setPromptForUserAsync(prompt)
+
+        SocketEmitter.emitDataForAll('roomData', socketsArray, io, roomData) 
+        
+        SocketEmitter.emitData('message', io, userRoom.roomName, {
+            user: user["name"],
+            userId: user["id"],
+            text: 'Já podem escolher a cartinha!',
+            systemMessage: true,
+            date: new Date().toISOString().replace(/T/, ' ').replace(/\..+/, '')
+        })
     })
+
     socket.on('selectCard', async (card:string):Promise<void> => {
+        const userRoom = await RoomController.getRoomOfUserAsync(user)
+        const socketsArray = await RoomController.getSocketsOfRoom(userRoom)
+        const roomData = await RoomController.getRoomDataAsync('ROOM DATA')
+
+        await RoomController.setSelectedCardForUserAsync(card)
+
+        SocketEmitter.emitDataForAll('roomData', socketsArray, io, roomData) 
+
     })
+
     socket.on('voteCard', async (card:string):Promise<void> => {
+        const userRoom = await RoomController.getRoomOfUserAsync(user)
+        const socketsArray = await RoomController.getSocketsOfRoom(userRoom)
+        const roomData = await RoomController.getRoomDataAsync('ROOM DATA')
+
+        await RoomController.setVotedCardForUserAsync(card)
+
+        SocketEmitter.emitDataForAll('roomData', socketsArray, io, roomData) 
     })
     // GAME STATES \\
 
