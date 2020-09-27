@@ -1,5 +1,3 @@
-const { env } = require('process')
-
 require('dotenv').config()
 
 module.exports = {

@@ -1,11 +1,11 @@
 module.exports = {
 
     // Para onde vamos nos conectar?
-    //apiAddress: 'http://localhost:5000/',
-    apiAddress: 'https://jonarius-test-app.herokuapp.com/',
+    apiAddress: 'http://localhost:5000/',
+    // apiAddress: 'https://jonarius-test-app.herokuapp.com/',
 
     // Isso define os possiveis estados de um jogo / sala
-    RoomStates : {
+    RoomStates: {
         WAITING_FOR_PLAYERS: "WAITING_FOR_PLAYERS",
         ONGOING_GAME: "ONGOING_GAME",
         PICKING_PROMPT: "PICKING_PROMPT",

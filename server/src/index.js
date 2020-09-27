@@ -5,8 +5,14 @@ const { io, app, server } = require('./ioserver')
 const Users = require('./lib/services/users');
 const Rooms = require('./lib/services/rooms');
 
-io.on('connect', (socket) => {
+const SocketDB = require('./db/models/Socket')
+const UserDB = require('./db/models/User')
 
+require('./db/database/index')
+
+io.on('connect', async (socket) => {
+
+  const socketDb = await SocketDB.create({ socketId: socket.id })
   const session = socket.request.session
 
   console.log("[io.on('connect') - Nova socket conectada com id [%s]", socket.id)
@@ -24,7 +30,9 @@ io.on('connect', (socket) => {
 
   // Essa socket já tem um usuário conectado!
   if (session && session.userId) {
-    user = Users.getUser(session.userId)
+    // user = Users.getUser(session.userId)
+    user = await UserDB.findByPk(session.userId)
+
     if (!user) {
       console.error("Não foi possivel encontrar o usuário do socket [%s], com ID [%s]", socket.id, session.userId)
       socket.disconnect(true)
@@ -41,7 +49,7 @@ io.on('connect', (socket) => {
   // Ou então é um novo usuário, que será gravado no socket!
   else {
     console.log("A socket com id [%s] é um novo usuário, criando novo usuário!", socket.id)
-    var { error, user } = Users.createUser();
+    var { error, user } = await Users.createUser();
     if (error) {
       console.error("Não foi possível criar o usuário! [%s]", error)
       socket.disconnect(true)
@@ -54,7 +62,7 @@ io.on('connect', (socket) => {
 
   // Neste ponto já temos um usuário, entõa vamos associar a socket a ele :)
   // ASSOCIAR SOCKET AO USUÁRIO (para saber quais sockets )
-  Users.linkSocketToUser({ socket, user })
+  await Users.linkSocketToUser({ socket: socketDb, user })
 
   // 
   // SESSÃO DO USUÁRIO - ASSIM QUE CONECTA, ENVIAMOS OS DADOS
@@ -302,9 +310,10 @@ io.on('connect', (socket) => {
     return callback(`Saindo da sala ${userRoom.name}`)
   })
 
-  socket.on('disconnect', () => {
+  socket.on('disconnect', async () => {
     console.log("Usuário [%s] com socket [%s] desconectou do servidor", user.id, socket.id)
-    Users.removeSocketFromUser({ user, socket })
+    // await Users.removeSocketFromUser({ user, socket: socketDb })
+    await socketDb.destroy()
 
     userRoom = Rooms.getRoomOfUser(user)
 
