@@ -1,15 +1,20 @@
 const uuid = require('uuid')
 const User = require('../models/user')
+const UserDB = require('../../db/models/User')
+const SocketDB = require('../../db/models/Socket');
+const { some } = require('sequelize/lib/promise');
 const users = [];
 
 module.exports = class Users {
 
-  static createUser = () => {
+  static createUser = async () => {
     console.debug("Criando um novo usuário!")
 
     const userId = uuid.v4()
 
-    const user = new User({ id: userId, name: "Usuário ainda sem nome" });
+    // const user = new User({ id: userId, name: "Usuário ainda sem nome" });
+    const user = await UserDB.create()
+    console.log(user)
 
     users.push(user);
     console.debug("Novo usuário criado: %s", user)
@@ -18,26 +23,29 @@ module.exports = class Users {
     return { user };
   }
 
-  static linkSocketToUser = ({socket, user}) => {
-    console.info("Ligando o usuário [%s] ao socket [%s]", user, socket.id)
-    if (user.hasSocket(socket.id)) {
+  static linkSocketToUser = async ({ socket, user }) => {
+    console.info("Ligando o usuário [%s] ao socket [%s]", user.id, socket.id)
+    if (await user.hasSockets(socket)) {
       console.warn("Usuário [%s] já está ligado ao socket [%s], ignorando!", user, socket.id)
       return
     }
 
-    user.socketIds.push(socket.id)
-    console.debug("Usuário [%s] ligado ao socket [%s], agora ele tem [%s] socket(s)", user, socket.id, user.socketIds.length)
+    await user.addSockets(socket)
+
+    console.debug("Usuário [%s] ligado ao socket [%s], agora ele tem [%s] socket(s)", user, socket.id, await user.countSockets())
   }
 
-  static removeSocketFromUser = ({socket, user}) => {
+  static removeSocketFromUser = async ({ socket, user }) => {
     console.info("Removendo a socket [%s] do usuário [%s]", socket.id, user)
-    if (!user.hasSocket(socket.id)) {
+    if (! await user.hasSocket(socket)) {
       console.warn("Usuário [%s] não está ligado ao socket [%s], ignorando!", user, socket.id)
       return
     }
 
-    user.socketIds.splice(user.socketIds.indexOf(socket.id), 1)
-    console.debug("Usuário [%s] desligado do socket [%s], agora ele tem [%s] socket(s)", user, socket.id, user.socketIds.length)
+    // user.socketIds.splice(user.socketIds.indexOf(socket.id), 1)
+    await user.removeSocket(socket)
+
+    console.debug("Usuário [%s] desligado do socket [%s], agora ele tem [%s] socket(s)", user, socket.id, await user.countSockets())
   }
 
   // const addUser = ({ id, name, room }) => {
@@ -70,7 +78,7 @@ module.exports = class Users {
     console.info("Removendo usuário com socket.id = [%s]", id)
     const index = users.findIndex((user) => user.id === id);
 
-    if(index !== -1) return users.splice(index, 1)[0] ;
+    if (index !== -1) return users.splice(index, 1)[0];
   }
 
   static getUser = (id) => {
@@ -80,10 +88,10 @@ module.exports = class Users {
   }
   // Pedro diz: acho que essa função tá desatualizada, não funcional.
   // porque não existe user.room
-  static getUsersInRoom = (room) => { 
+  static getUsersInRoom = (room) => {
     console.debug("Buscando usuários da sala [%s]", room)
     return users.filter((user) => user.room === room);
-  } 
+  }
 
 
 
