@@ -25,6 +25,10 @@ module.exports = class Users {
 
   static linkSocketToUser = async ({ socket, user }) => {
     console.info("Ligando o usuário [%s] ao socket [%s]", user.id, socket.id)
+    // if (await user.hasSocket(socket.id)) {
+    //   console.warn("Usuário [%s] já está ligado ao socket [%s], ignorando!", user, socket.id)
+    //   return
+    // }
     if (await user.hasSockets(socket)) {
       console.warn("Usuário [%s] já está ligado ao socket [%s], ignorando!", user, socket.id)
       return

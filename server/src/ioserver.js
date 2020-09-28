@@ -16,7 +16,8 @@ const sessionMiddleware = require("express-session")({
   resave: true,
   saveUninitialized: true,
   // cookie: {
-  //   sameSite: 'none'
+  //   SameSite: 'none',
+  //   secure: true,
   // }
 
 })
@@ -48,6 +49,9 @@ app.use('/', express.static('../client/build'))
 // Outros modulos do servidor
 app.use(cors());
 app.use(routes)
+
+// Client
+app.use(express.static('client'))
 
 module.exports = { io, server, app }
 

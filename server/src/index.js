@@ -320,6 +320,7 @@ io.on('connect', async (socket) => {
     // SE O USUARIO ESTIVER EM UMA SALA
     if (userRoom !== undefined) {
       // SE O USUARIO ESTIVER NO MEIO DO JOGO
+      
       if (user.socketIds.length == 0 && userRoom.state !== "WAITING_FOR_PLAYERS") {
         Rooms.sendSystemMessageToRoom({ io, message: `Aí, se liga, ${user.name} caiu.`, userRoom })
         Rooms.sendSystemMessageToRoom({ io, message: `Bora marcar um 10 (5min) e se não voltar a gente continua?`, userRoom })
