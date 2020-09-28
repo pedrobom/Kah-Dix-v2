@@ -19,8 +19,10 @@ module.exports = {
 
         PickingPrompt: [
             '%s tá matutano aquele bordão solerte',
-            '%s tá com o tico teco a todo vapor pensano na frase',
-            '%s tá lembrando como se escreve pra soltar a frase'
+            '%s tá com o tico e teco a todo vapor pensano na frase',
+            '%s tá lembrando como se escreve pra soltar a frase',
+            '%s tá queimando a mufa pra fazer a gente rir',
+            '%s tá pesquisando no google um sinônimo pra solerte'
         ]
 
     }
