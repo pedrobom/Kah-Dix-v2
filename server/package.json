@@ -5,6 +5,7 @@
   "main": "src/index.js",
   "scripts": {
     "start": "nodemon src/index.js",
+    "start_heroku": "node src/index.js",
     "migrate": "cd src/ && npx dotenv -e ../.env sequelize db:migrate",
     "migrate:undo": "cd src/ && npx dotenv -e ../.env sequelize db:migrate:undo",
     "migrate:undo:all": "cd src/ && npx dotenv -e ../.env sequelize db:migrate:undo:all",
