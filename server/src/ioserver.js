@@ -51,7 +51,7 @@ app.use(cors());
 app.use(routes)
 
 // Client
-app.use(express.static('client'))
+app.use(express.static('../client/build'))
 
 module.exports = { io, server, app }
 
