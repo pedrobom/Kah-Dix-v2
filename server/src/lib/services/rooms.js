@@ -488,7 +488,7 @@ module.exports = class Rooms {
   }
 
   static sendUserMessageToRoom = ({userRoom, user, message, io}) => {
-    console.trace("Enviando mensagem [%s] do usuário [%s] para a sala [%s]", message, user.id, userRoom.name)
+    console.debug("Enviando mensagem [%s] do usuário [%s] para a sala [%s]", message, user.id, userRoom.name)
     io.to(userRoom.name).emit('message', { 
       user: user.name, 
       userId: user.id,

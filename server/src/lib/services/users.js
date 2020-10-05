@@ -102,5 +102,6 @@ module.exports = class Users {
   static changeUserName = (user, name) => {
     console.log(`Usuário [${user.id}] trocou o nome de [${user.name}] para [${name}]`)
     user.name = name
+    user.save()
   }
 }

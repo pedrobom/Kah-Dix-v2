@@ -43,9 +43,6 @@ server.on('request', (req, res) => {
 //   oldWriteHead.apply(this, arguments)
 // }
 
-// Servir o front aqui mesmo :)
-app.use('/', express.static('../client/build'))
-
 // Outros modulos do servidor
 app.use(cors());
 app.use(routes)

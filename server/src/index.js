@@ -86,6 +86,12 @@ io.on('connect', async (socket) => {
     socket.join(room.name)
     // Um usuário que já tem sala e só tem esse socket é um usuário que havia caido!
     if (user.socketIds.length == 1) {
+      // Gambiarra antes de resolver o banco de daods kkk
+      userRoom.players.forEach((player) => {
+        if (player.user.id == user.id) {
+          player.user = user
+        }
+      })
       console.debug("Enviando dados da sala para todos os usuários agora que um usuário voltou :)")
       Rooms.emitRoomDataForAll(room, io)
       Rooms.sendSystemMessageToRoom({ userRoom: room, message: `${user.name} tá na área de novo :)`, io })
