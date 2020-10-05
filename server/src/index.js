@@ -63,6 +63,8 @@ io.on('connect', async (socket) => {
   // Neste ponto já temos um usuário, entõa vamos associar a socket a ele :)
   // ASSOCIAR SOCKET AO USUÁRIO (para saber quais sockets )
   await Users.linkSocketToUser({ socket: socketDb, user })
+  // Gambiarra para fazer funcionar antes de acabar a implementação de banco kkk
+  user.socketIds = await user.getSockets().map(socket => socket.socketId)
 
   // 
   // SESSÃO DO USUÁRIO - ASSIM QUE CONECTA, ENVIAMOS OS DADOS
@@ -314,6 +316,8 @@ io.on('connect', async (socket) => {
     console.log("Usuário [%s] com socket [%s] desconectou do servidor", user.id, socket.id)
     // await Users.removeSocketFromUser({ user, socket: socketDb })
     await socketDb.destroy()
+    // Gambiarra para fazer funcionar antes de acabar a implementacao do banco kkk
+    user.socketIds.splice(user.socketIds.indexOf(socket.id), 1)
 
     userRoom = Rooms.getRoomOfUser(user)
 

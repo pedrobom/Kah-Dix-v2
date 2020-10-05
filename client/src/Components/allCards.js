@@ -1,7 +1,7 @@
 export default function AllCards () {
     const Allcards = []
         for (var i = 1; i <= 21; i++){
-            let card = {cardTitle: `Peq${i}`, src: require(`../assets/Cards/PeqDeck/Peq${i}.jpg`)}
+            let card = {cardTitle: `Peq${i}`, src: require(`../assets/Cards/PeqDeck/peq${i}.jpg`)}
             Allcards.push(card)
         }
         for (var i = 1; i <= 257; i++){
