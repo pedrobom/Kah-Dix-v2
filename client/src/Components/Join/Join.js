@@ -1,13 +1,18 @@
-import React, { useState , useContext} from "react";
+import React, { useState , useContext, useMemo} from "react";
 import { Link } from 'react-router-dom';
 import './Join.css'
 import { socket } from "../socket";
 import SessionContext from '../SessionContext'
-import { Redirect } from "react-router";
+import { Redirect, useLocation } from "react-router";
 import {isMobile} from 'react-device-detect';
 import snadesImg from "../../assets/images/snades";
 
 const Join = () => { 
+
+    const location = useLocation()
+
+    // Room name que veio com o link
+    const roomNameFromLink = useMemo(() => location && new URLSearchParams(location.search).get('roomName'))
 
     const [name, setName] = useState('');
     const [room, setRoom] = useState('');
@@ -32,6 +37,10 @@ const Join = () => {
         return <Redirect to="/GameRoom"/>
     }
 
+    if (roomNameFromLink) {
+        console.info("Renderizando com roomName do link [%s]", roomNameFromLink)
+    }
+
     const renderContent = () => {
         if (isMobile) {
             return <div><img id="snades" src={snadesImg} alt="snades"/>           
@@ -43,7 +52,7 @@ const Join = () => {
                     <h1 className="heading">Olá!</h1>
                     
                     <div><input placeholder="Escreve um apelido maroto..." className="joinInput mt-20" type="text" onChange={(event) => setName(event.target.value)} /></div>
-                    <div><input placeholder="Qual o nome da sala?" className="joinInput mt-20" type="text" onChange={(event) => setRoom(event.target.value)} /></div>
+                    <div><input placeholder="Qual o nome da sala?" className="joinInput mt-20" type="text" value={roomNameFromLink} onChange={(event) => setRoom(event.target.value)} /></div>
                     <Link onClick={event => (!name || !room) ? event.preventDefault() : CreateUser()}  to={`/GameRoom`}> 
                         <button className="button mt-20" type="submit">Manda bala</button>
                     </Link>
