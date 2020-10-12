@@ -63,15 +63,5 @@ app.use(bodyParser.json());
 // Roteamento de coisas com lógica customizada
 app.use(routes)
 
-
-// E para finalizar, com menos prioridade de todos, servir arquivos estáticos :)
-app.use(express.static('../client/build'))
-
-// E servir o arquivo index.html em caso de 404,
-// que deve saber lidar com isso no frontend
-app.use(function(req, res) {
-  res.send(fs.readFileSync('../client/build/index.html').toString())
-})
-
 module.exports = { io, server, app }
 
