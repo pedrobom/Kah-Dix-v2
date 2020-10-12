@@ -2,6 +2,7 @@ const http = require('http');
 const express = require('express');
 const socketio = require('socket.io');
 const cors = require('cors');
+const bodyParser = require('body-parser');
 const routes = require('./routes');
 
 const app = express();
@@ -45,9 +46,16 @@ server.on('request', (req, res) => {
 
 // Outros modulos do servidor
 app.use(cors());
+
+// Colocando middleware para parsear o body em objeto e o query string também
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.json());
+
+// Roteamento
 app.use(routes)
 
-// Client
+
+// E para finalizar, com menos prioridade de todos, servir arquivos estáticos :)
 app.use(express.static('../client/build'))
 
 module.exports = { io, server, app }
