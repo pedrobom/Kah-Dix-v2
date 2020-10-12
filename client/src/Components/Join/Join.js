@@ -12,12 +12,23 @@ const Join = () => {
     const location = useLocation()
 
     // Room name que veio com o link
-    const roomNameFromLink = useMemo(() => location && new URLSearchParams(location.search).get('roomName'))
+    const roomNameFromLink = location && new URLSearchParams(location.search).get('roomName')
 
     const [name, setName] = useState('');
-    const [room, setRoom] = useState('');
+    const [room, setRoom] = useState(roomNameFromLink || '');
 
     const { session, setSession } = useContext(SessionContext)
+
+    const EnterRoom = (event) => {
+        event.preventDefault()
+        console.log("Tentando entrar na sala!")
+        if (!name || !room) {
+            console.log("Ainda faltaw nome ou sala.. esperando mais")
+        } else {
+            console.log("Entrando na sala!")
+            CreateUser()
+        }
+    }
 
     const CreateUser = () => {
         socket.emit('join', { name, roomName: room }, (error, roomData) => {
@@ -34,7 +45,7 @@ const Join = () => {
     // Redireciona usuário para GameRoom se já houver alguma sala
     if (session && session.roomData) {
         console.log("Já estamos em uma sala! Redirecionando para GameRoom", session.roomData)
-        return <Redirect to="/GameRoom"/>
+        return <Redirect to={"/GameRoom/" + encodeURIComponent(session.roomData.name)}  />
     }
 
     if (roomNameFromLink) {
@@ -48,14 +59,13 @@ const Join = () => {
         }
         return <div className="joinOuterContainer">
                 <div className="joinInnerContainer">
-                    <div class="wordartblues"><span class="text">Versão de Teste!</span></div>
+                    <div className="wordartblues"><span className="text">Versão de Teste!</span></div>
                     <h1 className="heading">Olá!</h1>
-                    
-                    <div><input autoFocus placeholder="Escreve um apelido maroto..." className="joinInput mt-20" type="text" onChange={(event) => setName(event.target.value)} /></div>
-                    <div><input placeholder="Qual o nome da sala?" className="joinInput mt-20" type="text" value={roomNameFromLink} onChange={(event) => setRoom(event.target.value)} /></div>
-                    <Link onClick={event => (!name || !room) ? event.preventDefault() : CreateUser()}  to={`/GameRoom`}> 
+                    <form onSubmit={event => EnterRoom(event)}>
+                        <div><input autoFocus placeholder="Escreve um apelido maroto..." className="joinInput mt-20" type="text" onChange={(event) => setName(event.target.value)} /></div>
+                        <div><input placeholder="Qual o nome da sala?" className="joinInput mt-20" type="text" value={room} onChange={(event) => setRoom(event.target.value)} /></div>
                         <button className="button mt-20" type="submit">Manda bala</button>
-                    </Link>
+                    </form>
                 </div>
             </div>            
     }

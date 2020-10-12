@@ -4,10 +4,15 @@ const socketio = require('socket.io');
 const cors = require('cors');
 const bodyParser = require('body-parser');
 const routes = require('./routes');
+const fs = require('fs')
 
 const app = express();
 const server = http.createServer(app)
 const io = socketio(server);
+
+//
+// MIDDLEWARES
+//
 
 //
 // Implementação de sessões no socket e no servidor express :)
@@ -51,12 +56,22 @@ app.use(cors());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
-// Roteamento
+//
+// ROTEAMENTO
+//
+
+// Roteamento de coisas com lógica customizada
 app.use(routes)
 
 
 // E para finalizar, com menos prioridade de todos, servir arquivos estáticos :)
 app.use(express.static('../client/build'))
+
+// E servir o arquivo index.html em caso de 404,
+// que deve saber lidar com isso no frontend
+app.use(function(req, res) {
+  res.send(fs.readFileSync('../client/build/index.html').toString())
+})
 
 module.exports = { io, server, app }
 

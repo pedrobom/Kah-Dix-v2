@@ -11,7 +11,7 @@ import './GameRoom.css'
 
 import { socket } from "../socket.js"
 import TurnResults from "./TurnResults/TurnResults";
-import { Redirect } from "react-router";
+import { Redirect, useParams } from "react-router";
 import SessionContext from "../SessionContext"
 
 // Simple mock data for testing :)
@@ -24,11 +24,14 @@ export const RoomContext = React.createContext()
 
 
 export default ({ location }) => {   
+
+    const { roomName } = useParams()
+
     const { session } = useContext(SessionContext)
     const [roomDataFromEvent, setRoomDataFromEvent] = useState()
-    const roomData = useMemo(() => mock['_3players_vote_results'] || roomDataFromEvent || (session && session.roomData), [session, roomDataFromEvent]);
+    const roomData = useMemo(() => roomDataFromEvent || (session && session.roomData), [session, roomDataFromEvent]);
 
-    console.log("OUTSIDE %s", location)
+    console.log("OUTSIDE", location)
 
     // Efeitos para buscar informações no servidor e escutar coisas da sala
     useEffect(() => {
@@ -50,6 +53,12 @@ export default ({ location }) => {
 
     }, [])
 
+    
+    if (!roomName) {
+        console.log("Sem nome de sala! Voltando para a hoem")
+        return <Redirect to="/"/>
+    }
+
     // Esperando o servidor mandar dados :)
     if (!session || !session.user) {
         console.log("Ainda carregando dados da sala!")
@@ -59,13 +68,18 @@ export default ({ location }) => {
         </div>
     } 
 
+    // O usuário não tem uma sala ainda, vamos redirecionar ele para o join :)
+    // Deve ter pego o link de alguem
+    if (!roomData && roomName) {
+        console.log("Voltando para a home com link para a sala :)!")
+        return <Redirect to={"/?roomName=" + encodeURIComponent(roomName)}  />
+    }
+
     // Não existe sala para nós, então não podemos estar no GameRoom!
     if (!roomData) {
         console.log("Não estamos em uma sala! Vamos voltar para a lobby :)", roomData)
         return <Redirect to="/"/>
     }
-    
-
 
     return (
             <RoomContext.Provider value={roomData}>

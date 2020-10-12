@@ -2,7 +2,7 @@ import React, {useState, useEffect} from 'react';
 import './App.css'
 import socket from '../Components/socket'
 
-import { Redirect, BrowserRouter as Router, Route} from 'react-router-dom';
+import { Redirect, BrowserRouter as Router, Route, Switch} from 'react-router-dom';
 
 import Join from "../Components/Join/Join.js"
 import GameRoom from "../Components/GameRoom/GameRoom.jsx"
@@ -38,8 +38,11 @@ export default (props) => {
 
     return <SessionContext.Provider value={value}>
         <Router>
-            <Route path="/" exact component={Join} />
-            <Route path="/GameRoom" component={GameRoom} />
+            <Switch>
+                <Route path="/" exact component={Join} />
+                <Route path="/GameRoom/:roomName" exact component={GameRoom} />
+                <Redirect from="*" to="/"/>
+            </Switch>
         </Router>
     </SessionContext.Provider>
 
