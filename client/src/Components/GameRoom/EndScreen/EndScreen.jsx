@@ -60,7 +60,7 @@ function EndScreen (){
         socket.emit('quitRoom', (quit) => {
             if(quit){
             alert(quit)
-            window.location.replace("https://jonarius-test.netlify.app/");
+            window.location.replace("/");
             return false;
             } 
         })
