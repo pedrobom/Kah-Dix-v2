@@ -21,10 +21,10 @@ const sessionMiddleware = require("express-session")({
   secret: "agentequerboleteyesok123",
   resave: true,
   saveUninitialized: true,
-  // cookie: {
-  //   SameSite: 'none',
-  //   secure: true,
-  // }
+  cookie: {
+    // Cookie expira em um mes :), em millisegundos
+    maxAge: 30 * 24 * 60 * 60 * 1000,
+  }
 
 })
 
