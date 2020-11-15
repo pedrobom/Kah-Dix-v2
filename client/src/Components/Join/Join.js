@@ -53,10 +53,6 @@ const Join = () => {
     }
 
     const renderContent = () => {
-        if (isMobile) {
-            return <div><img id="snades" src={snadesImg} alt="snades"/>           
-            Se liga, por enquanto só dá pra jogar no computador. Quando tiver rolando no celular eu te aviso!</div>
-        }
         return <div className="joinOuterContainer">
                 <div className="joinInnerContainer">
                     <div className="wordartblues"><span className="text">Versão de Teste!</span></div>
