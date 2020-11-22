@@ -1,0 +1,6 @@
+DB_USERNAME=dixit
+DB_PASSWORD=a
+DB_HOST=localhost
+DB_NAME=dixit-local
+PORT=5000
+TEST_PORT=9000

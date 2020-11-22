@@ -41,7 +41,7 @@ function RoomLobby() {
     }, [victoryConditions])
 
     useEffect(() => {
-            if (roomData.players.length >= 3){  
+            if (roomData.players.length >= 1){  
                 setIsStartButtonReady(true)
             }  
             else if (roomData.players.length < 3) {

@@ -35,7 +35,7 @@
   }
   /* Sugerir ao usuario que ele use o device em "landscape" */
   @media screen and (orientation:portrait) {
-    .gameRoom {
+    .gameRoom, .joinOuterContainer {
       display: none !important
     }
   }

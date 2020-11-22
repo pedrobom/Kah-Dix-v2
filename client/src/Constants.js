@@ -2,7 +2,8 @@
 module.exports = {
 
     // Para onde vamos nos conectar?
-    apiAddress: '/',
+    // apiAddress: '/',
+    apiAddress: 'http://192.168.100.114:5000/',
     // apiAddress: 'https://jonarius-test-app.herokuapp.com/',
 
     // Isso define os possiveis estados de um jogo / sala
