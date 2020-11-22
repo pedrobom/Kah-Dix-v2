@@ -6,6 +6,7 @@ import { Redirect, BrowserRouter as Router, Route, Switch} from 'react-router-do
 
 import Join from "../Components/Join/Join.js"
 import GameRoom from "../Components/GameRoom/GameRoom.jsx"
+import RotatePhoneIcon from '../assets/icons/rotate_phone.svg'
 
 import SessionContext from "../Components/SessionContext"
 
@@ -37,6 +38,10 @@ export default (props) => {
     // }
 
     return <SessionContext.Provider value={value}>
+    <div className="mobile-orientation-notice-overlay">
+        <h1>Por favor jogue com celular<br></br> ou tablet deitado :)</h1>
+        <img src={RotatePhoneIcon} />
+    </div>
         <Router>
             <Switch>
                 <Route path="/" exact component={Join} />

@@ -1,0 +1,49 @@
+
+.mobile-orientation-notice-overlay {
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    background-image: url("../assets/background/bg_helio.png");
+    background-color: #1f3324;
+  
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    margin: 0;
+  }
+  
+  .mobile-orientation-notice-overlay h1 {
+  
+    font-weight: 100;
+    font-size: 2.0em;
+    text-justify: center;
+    text-align: center;
+    margin-top: 30px;
+    font-family: 'Luckiest Guy';
+    color: rgb(255, 255, 255);
+    text-shadow: -4px 3px 2px rgb(0, 0, 0);
+  }
+
+  .mobile-orientation-notice-overlay img {
+    width: 10%;
+    margin-top: 5%;
+    filter: invert(100%) drop-shadow(-4px 3px 2px rgb(0, 0, 0));
+  }
+  /* Sugerir ao usuario que ele use o device em "landscape" */
+  @media screen and (orientation:portrait) {
+    .gameRoom {
+      display: none !important
+    }
+  }
+  
+  /* Sugerir ao usuario que ele use o device em "landscape" */
+  @media screen and (orientation:landscape) {
+    .mobile-orientation-notice-overlay {
+        display: none
+    }
+  }
+  
