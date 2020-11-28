@@ -5,6 +5,7 @@ import { socket } from "../socket";
 import SessionContext from '../SessionContext'
 import { Redirect, useLocation } from "react-router";
 import {isMobile} from 'react-device-detect';
+import LoadingImg from '../../assets/images/loadingImg'
 import snadesImg from "../../assets/images/snades";
 
 const Join = () => { 
@@ -22,7 +23,15 @@ const Join = () => {
     const EnterRoom = (event) => {
         event.preventDefault()
         console.log("Tentando entrar na sala!")
+        if (!socket || !socket.connected) {
+            alert("Pera um segundinho que estamos conectando no servidor!")
+            console.error("Pera um segundinho que estamos conectando no servidor!")
+            return
+        }
+
+
         if (!name || !room) {
+            alert("Ei.. escreve um nome e uma sala!")
             console.log("Ainda faltaw nome ou sala.. esperando mais")
         } else {
             console.log("Entrando na sala!")
@@ -57,11 +66,11 @@ const Join = () => {
                 <div className="joinInnerContainer">
                     <div className="wordartblues"><span className="text">Jonarius</span></div>
                     <h1 className="heading">Vem escolher cartinha</h1>
-                    <form onSubmit={event => EnterRoom(event)}>
-                        <div><input autoFocus placeholder="Escreve um apelido maroto..." className="joinInput mt-20" type="text" onChange={(event) => setName(event.target.value)} autocorrect="off" autocapitalize="none"/></div>
-                        <div><input placeholder="Qual o nome da sala?" className="joinInput mt-20" type="text" value={room} onChange={(event) => setRoom(event.target.value)} autocorrect="off" autocapitalize="none"/></div>
-                        <button className="button mt-20" type="submit">Manda bala</button>
-                    </form>
+                        <form onSubmit={event => EnterRoom(event)}>
+                            <div><input autoFocus placeholder="Escreve um apelido maroto..." className="joinInput mt-20" type="text" onChange={(event) => setName(event.target.value)} autocorrect="off" autocapitalize="none"/></div>
+                            <div><input placeholder="Qual o nome da sala?" className="joinInput mt-20" type="text" value={room} onChange={(event) => setRoom(event.target.value)} autocorrect="off" autocapitalize="none"/></div>
+                            <button className="button button-join mt-20" type="submit">Manda bala</button>
+                        </form>
                 </div>
             </div>            
     }

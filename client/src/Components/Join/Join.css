@@ -65,6 +65,24 @@ html, body {
       display: inline-block;
       border: none;
       width: 100%;
+      cursor: pointer;
+  }
+
+  .header-loading {
+    color: #fff;
+    font: Roboto;
+    font-weight: 200;
+    font-size: 2em;
+  }
+
+  .button-join:hover, .button-join:active {
+    background: #246ce7;
+
+  }
+
+  .button-join:active {
+    position: relative;
+    top: 1px
   }
   
   .mt-20 {
