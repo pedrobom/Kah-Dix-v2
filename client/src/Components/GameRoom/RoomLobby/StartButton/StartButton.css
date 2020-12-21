@@ -1,10 +1,15 @@
 .my-super-cool-btn{
+  margin-top: 1em;
   position:relative;
   text-decoration:none;
   color:#fff;
   letter-spacing:1px;
   font-size:2rem;
   box-sizing:border-box;
+  opacity: 0.5;
+}
+.my-super-cool-btn.ready {
+  opacity: 1
 }
 .my-super-cool-btn span{
   position:relative;
@@ -12,8 +17,8 @@
   display:flex;
   align-items:center;
   justify-content:center;
-  width:200px;
-  height:200px;
+  width:140px;
+  height:140px;
 }
 .my-super-cool-btn span:before{
   content:'';
@@ -27,7 +32,7 @@
   transition: all .85s cubic-bezier(0.25, 1, 0.33, 1);
   box-shadow: 0 30px 85px rgba(0,0,0,0.14), 0 15px 35px rgba(0,0,0,0.14);
 }
-.my-super-cool-btn:hover span:before{
+.my-super-cool-btn.ready:hover span:before{
   transform:scale(0.8);
   box-shadow: 0 20px 55px rgba(0,0,0,0.14), 0 15px 35px rgba(0,0,0,0.14);
 }
@@ -36,7 +41,7 @@
   animation: intro 1.6s;
   animation-fill-mode: forwards;
 }
-.my-super-cool-btn .dot{
+.my-super-cool-btn.ready .dot{
   width:8px;
   height:8px;
   display:block;
@@ -45,7 +50,7 @@
   position:absolute;
   transition: all .85s cubic-bezier(0.25, 1, 0.33, 1);
 }
-.my-super-cool-btn .dot:nth-child(1){
+.my-super-cool-btn.ready .dot:nth-child(1){
   top:50px;
   left:50px;
   transform:rotate(-140deg);
@@ -53,7 +58,7 @@
   animation-fill-mode: forwards;
   opacity:0;
 }
-.my-super-cool-btn .dot:nth-child(2){
+.my-super-cool-btn.ready .dot:nth-child(2){
   top:50px;
   right:50px;
   transform:rotate(140deg);
@@ -61,7 +66,7 @@
   animation-fill-mode: forwards;
   opacity:0;
 }
-.my-super-cool-btn .dot:nth-child(3){
+.my-super-cool-btn.ready .dot:nth-child(3){
   bottom:50px;
   left:50px;
   transform:rotate(140deg);
@@ -69,7 +74,7 @@
   animation-fill-mode: forwards;
   opacity:0;
 }
-.my-super-cool-btn .dot:nth-child(4){
+.my-super-cool-btn.ready .dot:nth-child(4){
   bottom:50px;
   right:50px;
   transform:rotate(-140deg);
@@ -77,19 +82,19 @@
   animation-fill-mode: forwards;
   opacity:0;
 }
-.my-super-cool-btn:hover .dot:nth-child(1){
+.my-super-cool-btn.ready:hover .dot:nth-child(1){
   animation: swag1 0.3s;
   animation-fill-mode: forwards;
 }
-.my-super-cool-btn:hover .dot:nth-child(2){
+.my-super-cool-btn.ready:hover .dot:nth-child(2){
   animation: swag2 0.3s;
   animation-fill-mode: forwards;
 }
-.my-super-cool-btn:hover .dot:nth-child(3){
+.my-super-cool-btn.ready:hover .dot:nth-child(3){
   animation: swag3 0.3s;
   animation-fill-mode: forwards;
 }
-.my-super-cool-btn:hover .dot:nth-child(4){
+.my-super-cool-btn.ready:hover .dot:nth-child(4){
   animation: swag4 0.3s;
   animation-fill-mode: forwards;
 }

@@ -93,19 +93,29 @@ module.exports = class Rooms {
       return {}
   }
   
-  static startGame = ({user, room, isDeckDixit, isDeckPeq, isDeckEuro, isDeckNude, victoryCondition}) => {
-    console.log('isDeckDixit no rooms. 90', isDeckDixit)
-    console.log('isDeckNude no room. 98', isDeckNude)
-    console.log('victoryCondition no rooms.js linha 98', victoryCondition)
+  static startGame = ({user, room}) => {
     console.log("O jogador [%s] está iniciando o jogo na sala [%s]", user.id, room.name)
+    console.log("Os decks do jogo são [%s] e a condicao de vitoria é [%s]", room.selectedDecksIds, room.victory)
+    
     if(room.state != Room.States.WAITING_FOR_PLAYERS && room.state != Room.States.GAME_ENDED) {
       console.log("usuário [%s] está tentando iniciar o jogo na sala [%s] e o estado atual é [%s]", user.id, room.name, room.state)
       return {error: "Esse jogo ainda está rolando."}
     }
-    if (room.host.id != user.id) {
-      console.warn("Usuário [%s] está tentando começar o jogo na sala [%s] mas não é o host!", user.id, room.name)
-      return {error: "Você não pode começar o jogo nessa sala, você não é o anfitrião!"}
-    }  
+
+    // Temos jogadores o suficiente? :)
+    if (room.players.length < room.minimumPlayersToStart) {
+      console.log("usuário [%s] está tentando iniciar o jogo na sala [%s] com menos jogadores [%s] que o minimo [%s]", user.id, room.name, room.players.length, room.minimumPlayersToStart)
+      return {error: `Você precisa de pelo menos ${room.minimumPlayersToStart} jogadores para começar!`}
+    }
+    // Temos cartas o suficiente? :)
+    if (room.getTotalOfSelectedCards() < room.minimumCardsToStart) {
+      console.log("usuário [%s] está tentando iniciar o jogo na sala [%s] com menos cartas [%s] que o minimo [%s]", user.id, room.name, room.getNumberOfSelectedCards(), room.minimumCardsToStart)
+      return {error: `Você precisa de pelo menos ${room.minimumCardsToStart} cartas para começar!`}
+    }
+    
+
+  
+
     if(room.state == Room.States.GAME_ENDED){
       room.turn = 1
       room.players.forEach(player =>{
@@ -122,44 +132,26 @@ module.exports = class Rooms {
       room.results = []
       room.deck = []
     }
-    // ADICIONANDO CARTAS DE DIXIT NO NOVO DECK
-    if(isDeckDixit == true){
-      for (var i = 1; i <= 257; i++){
-          let card = `Dixit${i}`
-          room.deck.push(card)    
-      }        
-    }
+
+    console.log("Adicionando cartas dos decks selecionados ao baralho do jogo, com os baralhos!", room.selectedDecksIds.join(", "))
     
-    // ADICIONANDO CARTAS DO PEQ NO NOVO DECK 
-    if(isDeckPeq == true){
-      for (var i = 1; i <= 21; i++){
-          let card = `Peq${i}`
+    // Adicionar cartas de cada deck :)
+    room.getSelectedDecks().forEach(deck => {
+
+      for (var i = 1; i <= deck.totalCards; i++){
+          let card = `${deck.deckPrefix}${i}`
           room.deck.push(card)    
       }        
-    }
-    if(isDeckNude == true){
-      for (var i = 1; i <= 70; i++){
-          let card = `Nude${i}`
-          room.deck.push(card)    
-      }        
-    }
-    if(isDeckEuro == true){
-      for (var i = 1; i <= 35; i++){
-          let card = `Euro${i}`
-          room.deck.push(card)    
-      }
-    }
-    room.isDeckDixit = isDeckDixit
-    room.isDeckEuro = isDeckEuro
-    room.isDeckNude = isDeckNude
-    room.isDeckPeq = isDeckPeq       
-    room.victory = victoryCondition
+    })
+
+    console.log("Temos [%s] cartas para o deck da sala [%s]!", room.deck.length, room.id)
+
     Rooms.dealInitCardsWithoutReposition(room);
     room.players = shuffle(room.players)
     room.state = Room.States.PICKING_PROMPT
     
   
-    console.log("A sala [%s] está agora no estado PICKING_PROMPT");
+    console.log("A sala [%s] está agora no estado PICKING_PROMPT", room.id);
 
     return {}
   
@@ -192,10 +184,11 @@ module.exports = class Rooms {
       selectedCardCount: room.selectedCardCount,
       results: room.results,
       victory: room.victory,
-      isDeckDixit: room.isDeckDixit,
-      isDeckEuro: room.isDeckEuro,
-      isDeckNude: room.isDeckNude,
-      isDeckPeq: room.isDeckPeq,
+      availableDecks: room.availableDecks,
+      availableVictoryConditions: room.availableVictoryConditions,
+      minimumCardsToStart: room.minimumCardsToStart,
+      minimumPlayersToStart: room.minimumPlayersToStart,
+      selectedDecksIds: room.selectedDecksIds,
       votingCardsTurn: room.votingCardsTurn,
       players: room.players.map((player) => {
         return {
@@ -212,21 +205,19 @@ module.exports = class Rooms {
   }
 
   static setVictory = (victoryCondition, room) => {
+    console.log("Configurando a condição de vitória como [%s] para a sala [%s]", victoryCondition, room)
     room.victory = victoryCondition
   }
-  static setDeck = (isDeckDixit, isDeckEuro, isDeckNude, isDeckPeq, room) => {
-    room.isDeckDixit = isDeckDixit
-    room.isDeckEuro = isDeckEuro
-    room.isDeckNude = isDeckNude
-    room.isDeckPeq = isDeckPeq
-  }
-
-  static selectPeqDeck = (newValue, room) => {
-    room.isDeckPeq = newValue
-  }
-
-  static selectEuroDeck = (newValue, room) => {
-    room.isDeckEuro = newValue
+  static toggleDeck = (deckId, room) => {
+    console.log("Selecionando estado do deck [%s] para a sala [%s]",deckId, room.id)
+    var index = room.selectedDecksIds.indexOf(deckId)
+    if (index != -1) {
+      console.log("Removendo o deck [%s] da sala [%s]",deckId, room.id)
+      room.selectedDecksIds.splice(index, 1);
+    } else {
+      console.log("Adicionando o deck [%s] da sala [%s]",deckId, room.id)
+      room.selectedDecksIds.push(deckId)
+    }
   }
 
   static emitRoomDataForUserSocket = (room, user, socket) => {

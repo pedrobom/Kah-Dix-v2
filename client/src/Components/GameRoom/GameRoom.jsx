@@ -83,11 +83,13 @@ export default ({ location }) => {
 
     return (
             <RoomContext.Provider value={roomData}>
-                { roomData.state === "WAITING_FOR_PLAYERS" && <RoomLobby />}
                 <div className={"gameRoom "+ roomData.state}>
                     <Header />   
                     <Sidebar></Sidebar>
-                    <GameBoard/>
+                    { roomData.state === "WAITING_FOR_PLAYERS" ? 
+                        <RoomLobby />
+                          : <GameBoard/>
+                    }
                     {/* <img id="carinha-image" src={carinha} /> */}
                 </div>
                 { roomData.state === "GAME_ENDED" && <EndScreen />}

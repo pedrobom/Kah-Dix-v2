@@ -13,6 +13,19 @@ module.exports = class Room {
         GAME_ENDED: "GAME_ENDED"
     }
 
+    static AVAILABLE_DECKS = [
+        {name: "Cartas do Peq", id: 'peq', totalCards: 21, deckPrefix: 'Peq'},
+        {name: "Cartas de Nudes", id: 'nudes', totalCards: 70, deckPrefix: 'Nude'},
+        {name: "Cartas de Museus Europeus", id: 'euro', totalCards: 35, deckPrefix: 'Euro'},
+        {name: "Cartas de Dixit",  id:'dixit', totalCards: 257, deckPrefix: 'Dixit'},
+    ]
+
+    static POSSIBLE_VICTORY_CONDITIONS = [
+        {name: 'Corrida dos 30 pontos', id: 'points-victory'},
+        {name: 'Jogar até o baralho acabar', id: 'deck-victory'},
+    ]
+
+
     constructor({name, hostPlayer}){
         this.createdAt = new Date()
         this.name = name
@@ -28,14 +41,19 @@ module.exports = class Room {
         this.victory = "points-victory"
         this.votingCardsTurn = []
         this.winner = []
+        this.minimumPlayersToStart = 2
+        this.minimumCardsToStart = 50
+
+        // Default possible decks and conditions to win :)
+        this.availableDecks = Room.AVAILABLE_DECKS
+        this.availableVictoryConditions = Room.POSSIBLE_VICTORY_CONDITIONS
+
+        // Id of decks which have been selected so far :)
+        this.selectedDecksIds =[Room.AVAILABLE_DECKS[0].id]
 
         // Populates the deck
         this.deck = []
         this.morto = []
-        this.isDeckDixit = false
-        this.isDeckPeq = false
-        this.isDeckNude = false
-        this.isDeckEuro = false
 
     }
 
@@ -119,6 +137,16 @@ module.exports = class Room {
     // Retorna o jogador atual
     getCurrentPlayer() {
         return this.players[this.currentPlayerIndex]
+    }
+
+    // Retorna o total de cartas selecionadas
+    getTotalOfSelectedCards() {
+        return this.getSelectedDecks().reduce((total, deck) => total + deck.totalCards, 0)
+    }
+
+    // Retorna os decks selecionados com todas suas informacoes, não so os IDs
+    getSelectedDecks() {
+        return this.availableDecks.filter(deck => this.selectedDecksIds.indexOf(deck.id) != -1)
     }
 
 }

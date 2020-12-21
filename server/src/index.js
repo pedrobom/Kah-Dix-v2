@@ -156,40 +156,50 @@ io.on('connect', async (socket) => {
   // MÉTODO GAMESTART - USUÁRIO COMEÇANDO UM JOGO - PRECISA SER HOST
   //
 
-  socket.on('changeDeck', (isDeckDixit, isDeckEuro, isDeckNude, isDeckPeq) => {
+  socket.on('changeDeck', (deck) => {
     let userRoom = Rooms.getRoomOfUser(user)
-    Rooms.setDeck(isDeckDixit, isDeckEuro, isDeckNude, isDeckPeq, userRoom)
+    if (!userRoom) {
+      console.warn("Usuário [%s] tentando escolher deck sem estar em um jogo!", user.id)
+      return callback("Você precisa estar em um jogo para escolher um deck!")
+    }
+    if (userRoom.host.id != user.id) {
+      console.warn("Usuário [%s] tentando escolher deck sem ser o host!", user.id)
+      return callback("Você precisa estar ser o host para escolher um deck!")
+
+    }
+    
+    Rooms.toggleDeck(deck, userRoom)
     Rooms.emitRoomDataForAll(userRoom, io)
 
   })
 
   socket.on('victoryChange', victoryCondition => {
     let userRoom = Rooms.getRoomOfUser(user)
+    if (!userRoom) {
+      console.warn("Usuário [%s] tentando escolher condição de vitória sem estar em um jogo!", user.id)
+      return callback("Você precisa estar em um jogo para escolher a condição de vitória!")
+    }
+    if (userRoom.host.id != user.id) {
+      console.warn("Usuário [%s] tentando escolher a condição de vitória sem ser o host!", user.id)
+      return callback("Você precisa estar ser o host para escolher a condição de vitória!")
+    }
     Rooms.setVictory(victoryCondition, userRoom)
     Rooms.emitRoomDataForAll(userRoom, io)
   })
 
-  socket.on('selectPeqDeck', newBool => {
-    let userRoom = Rooms.getRoomOfUser(user)
-    Rooms.selectPeqDeck(newBool, userRoom)
-    Rooms.emitRoomDataForAll(userRoom, io)
-  })
-
-  socket.on('selectEuroDeck', newBool => {
-    let userRoom = Rooms.getRoomOfUser(user)
-    Rooms.selectEuroDeck(newBool, userRoom)
-    Rooms.emitRoomDataForAll(userRoom, io)
-  })
-
-  socket.on('gameStart', (isDeckDixit, isDeckPeq, isDeckEuro, isDeckNude, victoryCondition, callback) => {
+  socket.on('gameStart', (callback) => {
     let userRoom = Rooms.getRoomOfUser(user)
     if (!userRoom) {
       console.warn("Usuário [%s] tentando começar o jogo sem estar em um jogo!", user.id)
       return callback("Você precisa estar em um jogo para escolher uma carta!")
     }
-    console.log('isDeckDixit no index. 78', isDeckDixit)
-    console.log('isDeckNude no index. 78', isDeckNude)
-    const { error } = Rooms.startGame({ user, room: userRoom, isDeckDixit, isDeckPeq, isDeckEuro, isDeckNude, victoryCondition })
+    if (userRoom.host.id != user.id) {
+      console.warn("Usuário [%s] tentando começar o jogo sem ser o host!", user.id)
+      return callback("Você precisa ser o host para começar o jogo!")
+
+    }
+    
+    const { error } = Rooms.startGame({ user, room: userRoom})
     if (error) {
       console.log("Não foi possível começar o jogo: %s", error)
       return callback(error)
