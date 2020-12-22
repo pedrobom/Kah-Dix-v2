@@ -25,8 +25,8 @@ function Regras (){
     return (
         <>
         <p onClick={(e) => {expandRules(e)}}>Regras do Jogo</p>
-        <div className="background-regras-button" onClick={(e) => {closeRules(e)}}>
-            <div className="Regras-content">
+        <div className="background-regras-button popup-container" onClick={(e) => {closeRules(e)}}>
+            <div className="popup-content">
                 <h1>COMO JOGAR:</h1>
                 <p>Cada jogador recebe cinco cartas.</p>
                 <p>Um jogador aleatório dará início ao jogo escrevendo uma frase que remeta a carta da rodada.
@@ -44,7 +44,7 @@ function Regras (){
                 <p>Em Corrida de pontos o primeiro jogador a atingir 30 pontos torna-se o vencedor.</p>
                 <p>Jogar até acabar o baralho significa que quando não houverem mais cartas suficientes no baralho
                     o jogador que possuir mais pontos torna-se o vencedor.</p>
-                    <button className="regras-button" onClick={(e) => {closeRules(e)}}>Voltar</button>
+                    <button className="popup-button" onClick={(e) => {closeRules(e)}}>Voltar</button>
             </div> 
             
         </div>           

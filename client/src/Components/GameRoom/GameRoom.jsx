@@ -41,7 +41,7 @@ export default ({ location }) => {
 
         // Escutando dados da sala
         let onRoomData = (roomData) => {
-            console.log("socket.on('roomData') = [%x]", JSON.stringify(roomData, null, 2))
+            console.log("socket.on('roomData') = ", roomData)
             setRoomDataFromEvent(roomData)
         }
         socket.addEventListener('roomData', onRoomData)

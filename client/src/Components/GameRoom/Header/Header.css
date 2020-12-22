@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,200;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap');
 
 .header{
     grid-area: header;
@@ -8,7 +8,7 @@
     align-items: center;
     flex-wrap: nowrap;
     /* width: 100%; */
-    background-color: rgb(32, 37, 33);
+    background-color: rgba(0,0,0,0.6);
     font-family: 'Roboto', sans-serif;
 }
 
@@ -38,27 +38,26 @@ strong {
     justify-content: center;
     margin-left: 5px;
     margin-right: 100px;
-    font-weight: 100;
-    font-size: small;
     transition: 0.5s;
     
 }
 
-.header-links p {
+.header-links > p {
     cursor: pointer;
     margin-left: 15px;
     text-decoration: none;
     margin-left: 4vw;
-    font-size: 1.5em;
+    font-size: 1.5vw;
+    font-weight: 200;
     color: rgb(255, 255, 255);
 }
 
-.header-links p:hover{
+.header-links > p:hover{
     background-color: rgb(77, 77, 77);
     transition: 0.5s;
 }
 
-.header-links p:active {
+.header-links > p:active {
     transform: scale(0.8);
     transition: 0.2s;
 

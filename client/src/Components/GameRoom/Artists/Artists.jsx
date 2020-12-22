@@ -26,8 +26,8 @@ function  Artists () {
     return (
         <>
         <p onClick={(e) => {expandArtists(e)}}>Sobre os Artistas</p>
-        <div className="background-artists-button" >
-            <div className="Artists-content">
+        <div className="background-artists-button popup-container" >
+            <div className="Artists-content popup-content">
                     <div className="artist-info">
                         <img className="artist-foto" src={peqPicture} alt="Peq"/>
                         <h2 className="artist-name">PEQ</h2>
@@ -43,7 +43,7 @@ function  Artists () {
                         <div className="be-part-text">Participe também!</div>
 
                     </div>
-                    <button className="regras-button" onClick={(e) => {closeArtists(e)}}>FECHAR</button>
+                    <button className="popup-button" onClick={(e) => {closeArtists(e)}}>FECHAR</button>
             </div>       
         </div>           
         </>

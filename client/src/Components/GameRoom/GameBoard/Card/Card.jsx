@@ -6,7 +6,8 @@ import { socket } from '../../../socket'
 function Card (props) {
     const roomData = useContext(RoomContext)
 
-    return(      
+    return(  
+        <div className='card-container'>
         <img 
             className={
                 (props.class !== "" || props.class !== null) 
@@ -43,7 +44,8 @@ function Card (props) {
                 }
                 
             }} 
-        />       
+        />
+        </div>    
     )
 }
 

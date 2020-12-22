@@ -20,12 +20,13 @@ function Header () {
                 <div className="header-content-left">
                     <h3 className="logo">Jonarius-Dix!</h3>
                     <div className="header-links">
-                        <Regras />
-                        { (roomData.turn > 1) ? (<><p onClick={(e) => openResults(e)}>Último turno</p></>) : null}            
+                        
+                        { (roomData.turn > 1) ? (<><p onClick={(e) => openResults(e)}>Último turno</p></>) : null}
                     </div> 
                 </div>
                 <div className="header-content-right">
                     <div className="header-links">
+                        <Regras />
                         <Artists />
                         <p>Seja um Colaborador</p>
                     </div>

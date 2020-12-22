@@ -45,12 +45,12 @@
   background-color: rgba(255,255,255,0.95);
   box-sizing: border-box;;
   padding: 5%;  
+  margin: 1%;
 }
 
 .gamePromptInputMensagem {
   font-weight: 300;
-  font-size: 2em; 
-  text-align: justify;
+  font-size: 3vw; 
   line-height: 1.5em;
   margin-bottom: 3%;
 }

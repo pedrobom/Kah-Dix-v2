@@ -28,7 +28,7 @@ function InputPrompt() {
     return(
         <div className='gamePromptInputContainer'>
             <div className='gamePromptInputBox'>
-                <div className='gamePromptInputMensagem'>Tá na sua vez que mandar a frase.. diz aí!</div>
+                <div className='gamePromptInputMensagem'>Tá na sua vez de mandar a frase.. diz aí!</div>
                 <form>
                     <input type="text" name="name" placeholder="Digita sua frase marota!"
                         onChange={e => setInput(e.target.value)}    

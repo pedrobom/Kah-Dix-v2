@@ -1,19 +1,4 @@
-.background-artists-button{
-    display: none;
-    align-items: center;
-    justify-content: center;
-    margin:0;
-    padding:0;
-    position: fixed;
-    top: 0;
-    left:0;
-    width: 100vw;
-    height: 100vh;
-    background-color:#292929cb;
-    font-family: 'Montserrat', sans-serif;
-    transition: 0.5s;
-    z-index: 10;
-}
+
 .Artists-content {
     display: flex;
     position: fixed;
@@ -23,7 +8,6 @@
     height: auto    ;
     flex-flow: column wrap;
     background-color: rgb(114, 118, 173);
-    border-radius: 20px;
     transition: 0.5s;
 
 }
@@ -72,16 +56,4 @@
     border-radius: 10px;
 }
 .be-part-text{
-}
-
-.hide {
-    display: none;
-    transition: 0.5s;
-
-}
-
-.show {
-    display: flex;
-    transition: 0.5s;
-
 }
