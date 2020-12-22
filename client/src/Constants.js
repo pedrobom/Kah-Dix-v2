@@ -3,7 +3,7 @@ module.exports = {
 
     // Para onde vamos nos conectar?
     apiAddress: process.env.REACT_APP_API_ADDRESS || '/',
-    // apiAddress: 'http://192.168.100.114:5000/',
+    //apiAddress: 'http://192.168.100.114:5000/',
     // apiAddress: 'https://jonarius-test-app.herokuapp.com/',
 
     // Isso define os possiveis estados de um jogo / sala
@@ -14,6 +14,10 @@ module.exports = {
         SELECTING_CARDS: "SELECTING_CARDS",
         VOTING: "VOTING",
         GAME_ENDED: "GAME_ENDED"
+    },
+
+    DragTypes: {
+        PICKING_CARD: 'picking-card'
     },
 
     // Textos diferentes para deixar as coisas mais divertidas :)
