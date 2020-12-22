@@ -8,6 +8,7 @@ import cardBackSrc from '../../../../assets/images/cardBack'
 import Card from '../Card/Card'
 import Constants from '../../../../Constants'
 import SessionContext from '../../../SessionContext'
+import {useDrop} from 'react-dnd'
 
 export default function Table() {
     
@@ -15,46 +16,33 @@ export default function Table() {
     const {session} = useContext(SessionContext)
     const cardsArray = AllCards()
 
+    // Configuraçoes de dragn and drop :)
+    const [{ isOver, canDrop }, drop] = useDrop({
+        accept: Constants.DragTypes.PICKING_CARD,
+        drop: (card) => selectCard(card),
+        collect: (monitor) => ({
+            isOver: !!monitor.isOver(),
+            canDrop: !!monitor.canDrop(),
+        }),
+    });
+
     var myPlayer = useMemo(() => roomData.players.find((player) => player.id == session.user.id))
     var currentPlayer = useMemo(() => roomData.players[roomData.currentPlayerIndex])
     var amICurrentPlayer = useMemo(() => currentPlayer.id == myPlayer.id)
 
-    // Escutando drag/drop de cartas!
-    useEffect(() => {
-        const dropzone = document.querySelector('[dixit-drop-zone=drop]')
-        
-        if (roomData.state === "SELECTING_CARDS"){
-            
-            dropzone.ondragover = e => e.preventDefault()
-            dropzone.ondrop = function(e){
-
-                    e.preventDefault()
-                    console.log('soltando card')
-                    const id = e.dataTransfer.getData('card-id')
-                    const card = document.getElementById(id)
-                    console.debug("Carta sendo dropada:")
-                    console.debug(card)
-                    card
-                        ? playerSelectedACard(card)
-                        : console.log("A carta parece não existir! Verifique se o event listener 'ondragstart' está captando as informações corretamente")                
-                }
-        }
-
-    }, [roomData])
-
-    // Devemos mostrar os resultados! (Acabaram de votar agora)
-    function shouldShowVoteResults() {
-        return roomData.state == Constants.RoomStates.PICKING_PROMPT && roomData.turn > 1
-    }
-
-    // Um jogador escolheu uma carta
-    function playerSelectedACard(cardElement){
-        console.log('playerSelectedACard', cardElement.id)
-        socket.emit('selectCard', cardElement.id, (error) => {
+    // Seleciona uma carta :)
+    const selectCard = (card) => {
+        console.log("Cartã [%o] sendo selecionada", card)
+        socket.emit('selectCard', card.id, (error) => {
             if(error) {
                 alert(error);
             }
         });
+    }
+
+    // Devemos mostrar os resultados! (Acabaram de votar agora)
+    function shouldShowVoteResults() {
+        return roomData.state == Constants.RoomStates.PICKING_PROMPT && roomData.turn > 1
     }
 
     // Renderizar as cartas escondidas caso ainda estejamos selecionadno elas
@@ -90,10 +78,31 @@ export default function Table() {
             return(
                     <Card 
                         key={index} 
-                        class={`votingCards ${cardInfo.cardTitle}`}
+                        class={`votingCards card-${cardInfo.cardTitle}`}
                         id={cardInfo.cardTitle}
                         src={cardInfo.src} 
                         alt={`${cardInfo.cardTitle}`}
+                        onSelect={() => {
+                            let cardId = cardInfo.cardTitle
+                            console.log('Carta selecionada [%s]', cardId)
+                            if (roomData.state === Constants.RoomStates.VOTING) {
+                                console.log('Jogador tentou votar na carta: ', cardId)
+
+                                socket.emit('voteCard', cardId, (error) => {
+                                    if (error) {
+                                        return alert(error)
+                                    }
+                                    else {
+                                        let ele = document.querySelector(`.card-${cardId}`)
+                                        if (ele !== null)
+                                            ele.classList.add("votedCard")
+                                    }
+                                })
+
+
+                            }
+
+                        }}
                     />                        
             )
         })                
@@ -147,7 +156,10 @@ export default function Table() {
     return(
         <React.Fragment>
             { roomData.state === Constants.RoomStates.PICKING_PROMPT && amICurrentPlayer &&  <InputPrompt /> }
-            <div className={ "dealer-table " } dixit-drop-zone="drop">
+            <div className={"dealer-table " 
+                + (isOver ? "is-drag-over ":"")
+                + (canDrop ? "drag-can-drop ":"")}
+                 dixit-drop-zone="drop" ref={drop}>
                 { roomData.state == Constants.RoomStates.VOTING && renderVotingCards() }
                 { roomData.state == Constants.RoomStates.SELECTING_CARDS && renderCardBack() }
             </div>

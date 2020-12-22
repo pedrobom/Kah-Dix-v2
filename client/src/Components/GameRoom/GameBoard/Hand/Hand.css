@@ -43,15 +43,34 @@
   height: 100%;
   background-color: #000;
   position: relative;
+  border-radius: 10px;
+  cursor: pointer !important; 
 }
 .player-hand .card-container .card {
-  cursor: pointer;
+  
   display: block;
   position: absolute;
   border-radius: 10px;
   height: 100%;
   max-height: none;
   transform: translate(-50%, 0);
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.player-hand .card-container.dragging .card {
+  opacity: 0.5;
+}
+
+/* Dragging  cartas */
+.card.card-dragging-preview {
+  opacity: 1 !important;
+  z-index: 60000 !important;
+}
+
+.card.card-dragging-preview img { 
+  max-width: 20vw;
+  border-radius: 10px;
 }
 
 .player-hand .card-container .card:hover {

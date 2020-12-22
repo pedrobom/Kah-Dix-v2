@@ -1,4 +1,6 @@
-export default function AllCards () {
+const ALL_CARDS = GenerateAllCards()
+
+function GenerateAllCards () {
     const Allcards = []
         for (var i = 1; i <= 21; i++){
             let card = {cardTitle: `Peq${i}`, src: require(`../assets/Cards/PeqDeck/peq${i}.jpg`)}
@@ -19,3 +21,9 @@ export default function AllCards () {
     return Allcards
    // {cardTitle: 'card1', src: require('../assets/DixitDeck/card1.jpg')},
 }
+
+export default function AllCards() {
+    return ALL_CARDS
+}
+
+export const getCardInfo = cardInput => ALL_CARDS.find(card => card.cardTitle === cardInput)

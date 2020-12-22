@@ -5,7 +5,12 @@
     max-height: 28vh;
     /* object-fit: cover; */
     position: relative;
+    user-select: none;
 
+}
+
+.card-container {
+    background-color: transparent !important;
 }
 
 .selectingCards{

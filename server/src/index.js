@@ -296,8 +296,7 @@ io.on('connect', async (socket) => {
     }
 
     Rooms.emitRoomDataForAll(userRoom, io)
-    const success = "Carta Votada"
-    return callback(success)
+    return callback()
     //callback(null, Rooms.getRoomDataForUser({user, room: userRoom}))
   })
 
