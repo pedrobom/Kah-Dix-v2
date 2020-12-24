@@ -1,6 +1,7 @@
+
 .gameBoardHeader {
     grid-area: header;
-    height: 94px;
+    cursor: default;
 }
 
 
@@ -51,7 +52,10 @@
 }
 
 .gamePrompt .promptText { 
-    font-size: 1.4em;
+    font-size: 1.7em;
     font-weight: bold;
     margin: 4px 0px 0 8px;
+    font-family: 'Indie Flower', cursive;
+    color: #000;
+    text-shadow: 0 0 5px #FFF, 0 0 10px #FFF, 0 0 15px #FFF;
 }

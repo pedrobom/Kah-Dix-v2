@@ -39,8 +39,8 @@ export default (props) => {
           "haveIVoted": null,
           "mySelectedCard": null,
           "name": "oier",
-          "state": "SELECTING_CARDS",
-          "turn": 1,
+          "state": "VOTING",
+          "turn": 2,
           "currentPlayerIndex": 0,
           "host": {
             "id": 489,
@@ -49,8 +49,53 @@ export default (props) => {
             "updatedAt": "2020-12-22T17:09:24.210Z"
           },
           "prompt": "olé rsrs",
-          "selectedCardCount": 0,
-          "results": [],
+          "selectedCardCount": 8,
+          "results": [
+            {
+              "turn": 1,
+              "turnPlayer": "pipo",
+              "turnPrompt": "Pipo e isso rsrs que frase linda hein",
+              "turnPlayerCard": "Nude66",
+              "turnPlayerScore": 0,
+              "players": [
+                {
+                  "name": "pipo",
+                  "votedCard": null,
+                  "selectedCard": "Nude54",
+                  "turnScore": 0
+                },
+                {
+                  "name": "hey",
+                  "votedCard": "Nude55",
+                  "selectedCard": "Nude55",
+                  "turnScore": 0
+                },
+                {
+                  "name": "yolo",
+                  "votedCard": "Nude66",
+                  "selectedCard": "Nude65",
+                  "turnScore": 2
+                },
+                {
+                  "name": "lucastin",
+                  "votedCard": "Nude62",
+                  "selectedCard": "Nude61",
+                  "turnScore": 2
+                },
+                {
+                  "name": "heroku",
+                  "votedCard": "Nude64",
+                  "selectedCard": "Nude62",
+                  "turnScore": 2
+                },
+                {
+                  "name": "guigo",
+                  "votedCard": "Nude63",
+                  "selectedCard": "Nude60",
+                  "turnScore": 2
+                }
+              ]
+            }],
           "victory": "points-victory",
           "availableDecks": [
             {
@@ -94,7 +139,16 @@ export default (props) => {
             "peq",
             "euro"
           ],
-          "votingCardsTurn": [],
+          "votingCardsTurn": [
+            'Peq2',
+            'Dixit2',
+            'Dixit3',
+            'Dixit4',
+            'Dixit5',
+            'Dixit6',
+            'Dixit7',
+            'Dixit8',
+          ],
           "players": [
             {
               "name": "pipo",
@@ -122,7 +176,7 @@ export default (props) => {
         console.log("Escutando mudanças da minha sessão!")
         let onSessionData = (sessionData) => {
             console.log("Dados de sessão atualizados!", sessionData)
-              setSession(sessionData || {})
+              setSession( sessionData || {})
             //  setSession({ "user": null, "roomData": null })
         }
 
@@ -141,6 +195,7 @@ export default (props) => {
 
     return <DndProvider backend={isMobile ? TouchBackend : HTML5Backend}>
         <SessionContext.Provider value={value}>
+        <div className='test'>Oi</div>
             { isMobile ? 
                 <>
                     <DragPreview/>

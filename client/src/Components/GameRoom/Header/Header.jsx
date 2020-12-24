@@ -19,7 +19,7 @@ function Header () {
     return(  
             <header className="header">
                 <div className="header-content-left">
-                    <h3 className="logo">Jonarius-Dix!</h3>
+                    <h3 className="logo">Jonarius</h3>
                 </div>
                 <div className="header-content-right">
                     <div className="header-links">

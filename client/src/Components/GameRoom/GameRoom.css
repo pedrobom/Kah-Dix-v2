@@ -4,12 +4,13 @@
 .gameRoom {  
   display: grid;
   height: 100%;
-  width: 100vw;
+  width: 100%;
   gap: 0;
   grid-template: 
   "header header" 40px
   "gameboard sidebar" 1fr
-  / auto minmax(300px, 0.25fr)
+  / 1.5fr minmax(200px, 0.55fr);
+  overflow: hidden;
 
   /* flex-direction: column;
   justify-content: center;

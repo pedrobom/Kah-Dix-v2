@@ -1,3 +1,4 @@
+
 .dealer-table {
     grid-area: table;
     display: flex;
@@ -6,6 +7,16 @@
     align-items: center;
     background-color: rgba(255,255,255, 0.2);
     position: relative;
+    padding: 6vh 2vw 3vh 2vw;
+    min-height: 200px;
+    align-items: flex-start;
+}
+
+.gameRoom.SELECTING_CARDS .dealer-table {
+    flex-flow: row nowrap;
+    justify-content: space-evenly;
+    padding-left: 10%;
+    padding-right: 10%;
 }
  
 .dealer-table::before {
@@ -30,16 +41,66 @@
     background-color: rgba(255,255,255, 0.5);
 }
 
-.dealer-table .card {
+.dealer-table .card-container {
+    min-height: 180px;
+    max-width: 23%;
+    margin: 1%;
+}
+
+.dealer-table .card-container img {
+    max-height: 100%;
+    width: 100%;
+    height: auto;
+    flex-shrink: 0;
+}
+
+.dealer-table .card-container.selected {
+
+}
+
+  
+/* Quando estamos escolhendo carta, as cartas aparecem stackadas.. pq nao ? :) poupa espaco ! */
+.gameRoom.SELECTING_CARDS .dealer-table .card-container {
+    width: 0;
+    height: 100%;
+    background-color: #000;
+    position: relative;
     border-radius: 10px;
+    min-height: 180px;
+
+    cursor: pointer !important; 
+}
+.gameRoom.SELECTING_CARDS .dealer-table .card-container .card-image-container {
+    display: block;
+    position: absolute;
+    border-radius: 10px;
+    height: 100%;  max-height: none;
+    transform: translate(-50%, 0);
+    user-select: none;
+    -webkit-user-select: none;
 }
 
-.cardBackAtTable {
-    margin: 1vw;
-}
-.dealer-table .votingCards, .dealer-table .votedCards {
-    margin-right: 1vw;
 
+.gameRoom.SELECTING_CARDS .dealer-table .card-container .card-image-container img {
+    height: 100%;
+    width: auto;
+    object-fit: cover;;
+  }
+
+.dealer-table .card-container .card:hover {
+    -webkit-box-shadow: 0px 0px 40px -4px rgba(255,255,255,0.34);
+    -moz-box-shadow: 0px 0px 40px -4px rgba(255,255,255,0.34);
+    box-shadow: 0px 0px 40px -4px rgba(255,255,255,0.34);
+    box-shadow: blanchedalmond;
+}
+
+.gameRoom.VOTING .dealer-table .card-image-container {
+    cursor: pointer;
+}
+
+.gameRoom.VOTING .dealer-table .card-container.selected {
+    transform: scale(2);
+    z-index: 9999;
 }
 
 .votedCard {
@@ -48,8 +109,14 @@
     transform: scale(1.1);
 }
 
+.dealer-table .card-container .pre-voted {
+    transform: scale(1.5);
+    z-index: 9999;
+}
+
 /* Usado para esconder o resto da mesa durante os resultados de votos */
 .gameVoteResultsOverlay {
+    display: none;
     position: absolute;
     background-color: rgba(0,0,0,0.6);
     top: 0;

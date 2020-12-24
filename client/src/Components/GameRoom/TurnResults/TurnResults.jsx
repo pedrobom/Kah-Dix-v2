@@ -4,15 +4,19 @@ import { RoomContext } from '../GameRoom'
 import AllCards from '../../allCards'
 import Card from '../GameBoard/Card/Card'
 
-function TurnResults (){
+function TurnResults (props){
     console.log('renderizando Componente TurnResults')
     const roomData = useContext(RoomContext)
     const cardsArray = AllCards()
 
+    const resultsViewedCallback = props.resultsViewedCallback || (() => {})
+
     const closeResults = e => {
+        console.log("Fechando tela de resultados!")
         e.preventDefault()
         const resultsContainer = document.querySelector('.background-results')
         resultsContainer.classList.add('results-hide')
+        resultsViewedCallback()
     }
 
     const renderOtherPlayersResults = () =>{
@@ -27,23 +31,30 @@ function TurnResults (){
             cardsVotes[player.votedCard].push(player)
         })
 
-        return turnResults.players.map((player, index) => {
+        return turnResults.players
+            .sort((a, b) => a.turnScore > b.turnScore ? -1 : 1)
+            .map((player, index) => {
             if(player.name !== turnResults.turnPlayer) {
                 let playerCard = getCardInfo(player.selectedCard)
                 let votes = cardsVotes[player.selectedCard]
                 return (
                     <div className="otherPlayerResult">
-                            <img 
-                                className='resultCards'
-                                id={playerCard.cardTitle}
-                                src={playerCard.src} 
-                                alt={`Imagem da carta: ${playerCard.cardTitle}`}
-                            />                                
+                            <div className='playerCardContainer'>
+                                <img 
+                                    className='resultCards'
+                                    id={playerCard.cardTitle}
+                                    src={playerCard.src} 
+                                    alt={`Imagem da carta: ${playerCard.cardTitle}`}
+                                />                                
+                            </div>
                             <div className="playerName">Cartinha do <b>{player.name}</b></div>
-                            <div className="PlayerScore"><b>{player.name}</b> fez {player.turnScore} {player.turnScore == 1 ? "pontinho!" : "pontos!"} </div>
+                            <div className={"PlayerScore " + (player.turnScore > 0 ? 'positivo': ' ')}><b>{player.name}</b> fez {player.turnScore} {player.turnScore == 1 ? "pontinho!" : "pontos!"} </div>
                             <div className="VotedPlayers">
+                                <div className="VotedPlayersTitle">
+                                {!votes ? <>Não engana ninguém!</> : <>Batutinha(s) iludide(s):</>}
+                                </div>
                                 <ul>
-                                    {!votes ? 'Não engana ninguém!' : (<>Batutinha(s) iludide(s): <br />{votes.map(player => {return <li>{player.name}</li>})}</>)}
+                                     {votes && votes.map(player => {return <li>{player.name}</li>})}
                                 </ul>
                             </div>
                         </div>  
@@ -74,38 +85,45 @@ function TurnResults (){
             return (
                 <React.Fragment>
                 <div className="background-results">
+                    <button className="closeResultsButton" onClick={e => closeResults(e)}>Voltar para partida</button>
                     <div className="turnResultsBox">
+    
                         <div className="turnPlayerResult">
-                            <div className="card">
-                            <Card 
-                                class={'resultCards'}
-                                id={turnPlayerCard.cardTitle}
-                                src={turnPlayerCard.src} 
-                                alt={`Imagem da carta: ${turnPlayerCard.cardTitle}`}
-                            />                                
+                            <div className="turnCard">
+                                <Card 
+                                    class={'resultCards'}
+                                    id={turnPlayerCard.cardTitle}
+                                    src={turnPlayerCard.src} 
+                                    alt={`Imagem da carta: ${turnPlayerCard.cardTitle}`}
+                                />                                
                             </div>
-                            <div className="turnPrompt">"{turnResults.turnPrompt}"<br />
-                            - {turnResults.turnPlayer}
+                            <div className="resultDetails">
+                                <div className="turnPrompt">"{turnResults.turnPrompt}"</div>
+                                <div className="turnPlayer">
+                                    Cartinha e frase do <b>{turnResults.turnPlayer}</b>
+                                </div>
+                                <div className={"turnPlayerScore " + (turnResults.turnPlayerScore > 0 ? 'positive' : '') }>
+
+                                Fez {turnResults.turnPlayerScore} {turnResults.turnPlayerScore == 1 ? 'ponto!' : 'pontos!'}</div>
+                                <div className="turnPlayersVoters">
+                                    {
+                                        !votes 
+                                            ? 'Poetize incomprendide! :(' 
+                                            : (
+                                                <>
+                                                <div class='turnPlayerVotersTitle'>Batutinhas que sacaram:</div>   
+                                                <ul>{votes.map(player => <li>{player.name}</li>)}</ul>
+                                                </>
+                                                )                                      
+                                    }  
+                                </div>
                             </div>
-                            <div className="turnPlayersVoters">
-                                {
-                                    !votes 
-                                        ? 'Poetize incomprendide! :(' 
-                                        : (
-                                            <>
-                                            <h3>Batutinhas que sacaram:</h3>   
-                                            <ul>{votes.map(player => <li>{player.name}</li>)}</ul>
-                                            </>
-                                            )                                      
-                                }  
-                            </div>
-                            <div className="turnPlayerScore">{turnResults.turnPlayerScore} {turnResults.turnPlayerScore == 1 ? 'ponto!' : 'pontos!'}</div>
                         </div>
                         <div className="secondBox" >
                             <div className="otherPlayerResultsContainer">
                                 {renderOtherPlayersResults()}    
                             </div> 
-                            <button className="closeResultsButton" onClick={e => closeResults(e)}>Voltar para partida</button>                           
+                                                       
                         </div>
 
                             

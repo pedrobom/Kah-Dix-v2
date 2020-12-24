@@ -13,6 +13,7 @@ import {useDrop} from 'react-dnd'
 export default function Table() {
     
     const roomData = useContext(RoomContext)
+    const [PreVotedCard, setPreVotedCard] = useState(null)
     const {session} = useContext(SessionContext)
     const cardsArray = AllCards()
 
@@ -29,8 +30,9 @@ export default function Table() {
     var myPlayer = useMemo(() => roomData.players.find((player) => player.id == session.user.id))
     var currentPlayer = useMemo(() => roomData.players[roomData.currentPlayerIndex])
     var amICurrentPlayer = useMemo(() => currentPlayer.id == myPlayer.id)
+    var myVotedCard = useMemo(() => roomData && roomData.haveIVoted)
 
-    // Seleciona uma carta :)
+    // Seleciona uma carta e coloca na mesa :)
     const selectCard = (card) => {
         console.log("Cartã [%o] sendo selecionada", card)
         socket.emit('selectCard', card.id, (error) => {
@@ -39,6 +41,65 @@ export default function Table() {
             }
         });
     }
+
+
+    const handleOutsideClick = (e) => {
+        if (e.defaultPrevented) return
+        console.log("Clicked DOC")
+        setPreVotedCard(null);
+        return true
+    }
+
+    // Quando há um clique fora da carta.. vamos cancelar o "preview" :)
+    useEffect(() => {
+        document.addEventListener("click", handleOutsideClick);
+        return () => {
+          document.removeEventListener("click", handleOutsideClick);
+        };
+      }, []);
+
+    // Quando há um clique em uma carta na mesa :)
+    const cardClick = (cardId) => {
+        console.log("Carta da mesa clicada: [%s]", cardId)
+        if (roomData.state == Constants.RoomStates.VOTING) {
+            if (isCardPreVoted(cardId)) {
+                console.log("Carta já está pre-votada, então vamos finalizar o voto! :)")
+                if (myVotedCard) {
+                    console.log("Jogador já votou, vamos ignorar isso :)")
+                    alert("Você já votou! Agora espere os outros acabarem de votar :)")
+                    return
+                }
+                voteCard(cardId)
+            } else {
+                console.log("Pre-votando na carta [%s]", cardId)
+                setPreVotedCard(cardId)
+            }
+        }
+
+    }
+
+    // Vota em uma carta da mesa :)
+    const voteCard = (cardId) => {
+        console.log('Jogador votando na carta [%s]', cardId)
+        socket.emit('voteCard', cardId, (error) => {
+            if (error) {
+                return alert(error)
+            }
+            else {
+                setPreVotedCard(null)
+                let ele = document.querySelector(`.card-${cardId}`)
+                if (ele !== null)
+                    ele.classList.add("votedCard")
+            }
+        })
+    }
+
+    // Antes de escolher uma carta de fato, o usuário
+    // vai selecionar ela para "preview"
+    const isCardPreVoted = (cardId)  => {
+        return PreVotedCard == cardId
+    }
+
 
     // Devemos mostrar os resultados! (Acabaram de votar agora)
     function shouldShowVoteResults() {
@@ -75,34 +136,19 @@ export default function Table() {
         const getCardInfo = cardInput => cardsArray.find(card => card.cardTitle === cardInput)
         return roomData.votingCardsTurn.map((card, index) => {
             let cardInfo = getCardInfo(card)
+            var cardId = cardInfo.cardTitle
             return(
                     <Card 
                         key={index} 
-                        class={`votingCards card-${cardInfo.cardTitle}`}
-                        id={cardInfo.cardTitle}
-                        src={cardInfo.src} 
-                        alt={`${cardInfo.cardTitle}`}
-                        onSelect={() => {
-                            let cardId = cardInfo.cardTitle
-                            console.log('Carta selecionada [%s]', cardId)
-                            if (roomData.state === Constants.RoomStates.VOTING) {
-                                console.log('Jogador tentou votar na carta: ', cardId)
-
-                                socket.emit('voteCard', cardId, (error) => {
-                                    if (error) {
-                                        return alert(error)
-                                    }
-                                    else {
-                                        let ele = document.querySelector(`.card-${cardId}`)
-                                        if (ele !== null)
-                                            ele.classList.add("votedCard")
-                                    }
-                                })
-
-
+                        class={`votingCards card-${cardId} ` 
+                            + (isCardPreVoted(cardId) ? 'pre-voted ' : '')
+                            + (myVotedCard == cardId ? 'votedCard' : '')
                             }
-
-                        }}
+                        id={cardId}
+                        src={cardInfo.src} 
+                        alt={`${cardId}`}
+                        isPreVoted={isCardPreVoted(cardId)}
+                        onClick={cardClick}
                     />                        
             )
         })                

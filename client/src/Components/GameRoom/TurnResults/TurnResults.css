@@ -1,13 +1,16 @@
 @import url('https://fonts.googleapis.com/css?family=Montserrat:900');
 
 .closeResultsButton{
-  margin-top: 3em;
-  align-self: center;
   border: 0;
   text-transform: uppercase;
+  font-size: 0.75em;
   background-color: rgb(255, 255, 255);
   padding: 1em;
   cursor: pointer;
+  position: absolute;
+  right: 6px;
+  top: 6px;
+  z-index: 1000;
 }
 
 .closeResultsButton:hover {
@@ -15,20 +18,18 @@
 }
 
 .closeResultsButton:active {
-  position: relative;
-  top:1px;
-  left:1px;
+  top:7px;
+  right: 5px;
 }
 
 .background-results{
-  margin: 0;
-  padding: 10;
   position: absolute;
-  left: 0;
-  top: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0,0,0, 0.7);
+  left: 6px;
+  top: 6px;
+  bottom: 6px;
+  right: 0px;
+  box-sizing: border-box;
+  background-color:rgba(0,0,0, 0.3);
   ;
   font-family: 'TimesNewRoman', sans-serif;
   z-index: 20;
@@ -45,39 +46,55 @@
 	  margin: 0 auto;
     border-radius: 25px;
     padding: 10px;
+    position: relative;
 
 }
 .secondBox{
   display: flex;
   flex-flow: column nowrap;
   margin-top: 1%;
-  min-width: 45vw;
+  width: 100%;
   min-height: 60vh;
   padding: 20px;
-  background-color: rgba(0,0,0,0.6);
+  background-color: rgba(0,0,0,0.15);
   transition: 1s;
   overflow: scroll;  
 }
 .otherPlayerResultsContainer {
   display: flex;
   flex-flow: row wrap;
-  justify-content: space-around;
-
+  justify-content: flex-start;
+  align-items: flex-start;
 
 
 }
 
+.otherPlayerResult .playerCardContainer {
+  text-align: center;;
+}
+
+.otherPlayerResult .playerCardContainer .resultCards{
+  width: 100%;
+  height: auto;
+  max-height: 100%;
+}
 
 .resultCards{
-  height: 32vh;
   border-radius: 10px;
+  margin-bottom: 0.5em;
 }
 
 .otherPlayerResult{
   display:flex;
+  flex-grow: 1;
   margin: 10px;
   flex-direction: column;
   align-items: center;
+  background-color: rgba(0,0,0,0.2);
+  padding: 2%;
+  border-radius: 6px;
+  min-width: 180px;
+  max-width: 30%;
 }
 
 .playerName{
@@ -88,54 +105,102 @@
 
 .PlayerScore{
   margin-top: 0.5em;
-  color: #1ca254;
+  color: #d62b2b;
   font-weight: 1000;
 }
 
-.VotedPlayers{
-  margin-top: 0.5em;
-  color: #4081a0;
+.PlayerScore.positivo {
+  color: #1ca254;
+
 }
+
 
 .turnPlayerResult {
-  display: grid;
-  background-color: rgb(255,255,255,1);
-  width: 50vw;
-  height: 40vh;
-  gap: 20px;
-  grid-template: 
-  ". . . . . . . . . ." 10px
-  ". c pr pr pr pr pr s s s" 20px
-  ". c . . . . . . . ." 1fr
-  ". c . . . v v v . ." 1fr
-  ". . . . . v v v . ." 1fr
-  / 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
+  display: flex;
+  background-color: rgba(0,0,0,0.30);
+  color: #fff;
+  width: 100%;
+  height: auto;
+  padding: 2% 2%;
+  padding-top: 2em;
 }
 
 
-.turnPlayerResult .card {
-  grid-area: c;
+.turnPlayerResult .resultDetails {
+  display: block;
+  width: 70%;
+  padding-top: 3%;
+}
+.turnPlayerResult .turnCard {
+  display: block;
   border-radius: 10px;
+  width: 30%;
+  min-width: 160px;
+  margin-right: 3%;
+  
+  text-align: center;
 }
 
-.turnPrompt {
-  grid-area: pr;
-  font-size: 30px;
+.turnPlayerResult .turnCard .card {
+  flex-shrink: 0;
+  width: 100%;
+  height: auto;
+  max-height: 100%;
 }
 
-.turnPlayersVoters{
-  grid-area: v;
+
+.turnPlayerResult .turnPrompt {
+  font-size: 2em;
+  line-height: 1em;
+  margin-bottom: 3%;
+  font-family: 'Indie Flower', cursive;
+  text-shadow: 0 0 5px #FFF, 0 0 10px #FFF, 0 0 15px #FFF, 0 0 20px #49ff18, 0 0 30px #49FF18, 0 0 40px #49FF18, 0 0 55px #49FF18, 0 0 75px #49ff18, 2px 2px 0px rgba(206,89,55,0);
+}
+.turnPlayerResult .turnPlayer {
+  margin-bottom: 8%;
 }
 
-.turnPlayerScore {
-  grid-area: s;
+.turnPlayerResult .turnPlayerScore {
   font-size: 24px;
   align-self: center;
   justify-self: center;
+  color: #d62b2b;
+  margin-bottom: 12%;
 }
+
+.turnPlayerResult .turnPlayerScore.positive {
+  color: #1ca254;
+}
+
+.turnPlayerResult .turnPlayersVoters .turnPlayersVotersTitle, .VotedPlayers .VotedPlayersTitle{
+  color: #fff;
+  font-size: 0.9em;
+  margin-left: 6px;
+  display: block;
+}
+.VotedPlayers ul, .turnPlayersVoters ul {
+  margin-top: 0.2em;
+  list-style: none;
+  margin-left: -6px;
+}
+.VotedPlayers .VotedPlayersTitle {
+  margin-top: 1em;
+  margin-bottom: 0.6em;
+}
+
+.VotedPlayers ul li, .turnPlayersVoters ul li {
+  background-color: #275d47aa;
+  color: #7eb59f;
+  display: inline-block;
+  border-radius: 2px;
+  margin: 2px;
+  padding: 0.5em;
+  box-sizing: border-box;
+}
+
 .resultsInput{
-  width:100vw;
-  height:100vh;
+  width:100%;
+  height:100%;
   box-sizing:border-box;
   display:flex;
   flex-direction: column;

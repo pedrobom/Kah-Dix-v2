@@ -122,6 +122,11 @@ module.exports = class Room {
             player.votedCard = card
         }
     }
+    
+    // A carta dada está disponível para votação?
+    isCardAvailableForVoting(card) {
+        return this.players.find((player) => player.selectedCard == card).length > 0
+    }
 
     // Retorna o total de cartas votadas na sala
     getNumberOfVotedCards() {

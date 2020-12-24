@@ -26,14 +26,14 @@
 } */
 
 .gamePromptInputContainer {
-  position: absolute;
+  grid-area: input-prompt;
   display: flex;
   align-items: top;
   justify-content: center;
   padding-top: 2%;
   top: 0;
   left: 0;
-  background-color: rgba(0,0,0,0.7);
+  /* background-color: rgba(0,0,0,0.7); */
   right: 0;
   bottom: 0;
   z-index: 20000;

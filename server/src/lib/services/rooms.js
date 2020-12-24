@@ -334,6 +334,11 @@ module.exports = class Rooms {
       console.warn("Usuário [%s] tentando votar na própria carta [%s]", user, card)
       return ("Você não pode votar na sua carta!")
     }
+
+    if(room.isCardAvailableForVoting(card)) {
+      console.warn("Usuário [%s] tentando votar em uma carta [%s] que não está na votação na sala [%s]!", user, card, room)
+      return ("Você está tentando votar em uma carta que não está em votação! Isso pode ser um bug :o ")
+    }
   
     room.setVotedCardForUser(user, card)
     
