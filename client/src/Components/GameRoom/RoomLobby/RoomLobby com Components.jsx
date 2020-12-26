@@ -1,7 +1,7 @@
 import React, {useState, useEffect, useContext } from 'react'
 import './RoomLobby.css'
 import { socket } from '../../socket'
-import { RoomContext } from '../GameRoom'
+import GameContext from '../GameContext/GameContext'
 
 import StartButton from './StartButton/StartButton'
 import DeckSelector from './DeckSelector/DeckSelector'
@@ -9,7 +9,7 @@ import VictorySelector from './VictorySelector/VictorySelector'
 
 function RoomLobby (){
     console.log('renderizando Componente RoomLobby')
-    const roomData = useContext(RoomContext)
+    const {roomData} = useContext(GameContext)
     const [isStartButtonReady, setIsStartButtonReady] = useState(false)
     const [victoryConditions, setVictory] = useState("")
     console.log('victoryConditions', victoryConditions)

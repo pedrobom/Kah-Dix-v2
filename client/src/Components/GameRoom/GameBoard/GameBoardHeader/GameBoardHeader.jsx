@@ -1,26 +1,19 @@
 import React, { useMemo, useState, useEffect, useContext } from "react";
 
 import './GameBoardHeader.css'
-import SessionContext from "../../../SessionContext"
 import Constants from "../../../../Constants"
-
-import { RoomContext } from '../../GameRoom'
+import GameContext from '../../GameContext/GameContext'
 
 // Esse é um componente que representa a área jogável do jogo (e.g., escolher carta, votar, etc)
 export default () => {   
 
-    const roomData = useContext(RoomContext)
-    const { session } = useContext(SessionContext)
-
-    var myPlayer = useMemo(() => roomData.players.find((player) => player.id == session.user.id))
-    var currentPlayer = useMemo(() => roomData.players[roomData.currentPlayerIndex])
-    var amICurrentPlayer = useMemo(() => currentPlayer.id == myPlayer.id)
+    const { roomData, amICurrentPlayer, myPlayer, currentPlayer } = useContext(GameContext)
 
     // Define o que os jogadores devem ver como "estado atual do jogo" (e.g. "Escolheno as cartinha")
     var gameStateHeader = ''
     var gameStateClass = ''
 
-    console.debug("Renderizando GameBoardHeader! Session: ", session, " RoomData:, ", roomData, " Jogador da sessao, ", myPlayer, ", jogador atual:", currentPlayer)
+    console.debug("Renderizando GameBoardHeader! RoomData:, ", roomData, " Jogador da sessao, ", myPlayer, ", jogador atual:", currentPlayer)
 
     switch(roomData.state) {
 

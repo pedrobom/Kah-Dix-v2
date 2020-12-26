@@ -1,13 +1,12 @@
 import React, {useState, useContext } from 'react'
 import './DeckSelector.css'
-import { socket } from '../../../socket'
-import { RoomContext } from '../../GameRoom'
+import GameContext from '../../GameContext/GameContext'
 import SessionContext from '../../../SessionContext'
 
 
 function DeckSelector (){
     console.log('renderizando Componente DeckSelector')
-    const roomData = useContext(RoomContext)
+    const {roomData, amIHost} = useContext(GameContext)
     const [isDeckPeq, setDeckPeq] = useState(false)
     const [isDeckDixit, setDeckDixit] = useState(false)
 
@@ -20,14 +19,14 @@ function DeckSelector (){
     return (
         <div id="build-deck">
             <h2>Seu Baralho é do caralho!</h2>
-            {(session.user.id === roomData.host.id) ? (<><div className="deck-input"><input
+            {(amIHost) ? (<><div className="deck-input"><input
             name="Deck do Peq"
             type="checkbox"
             onChange={(e) => {
                 let checked=e.target.checked;
                 setDeckPeq(checked)
             }}/><h3>Cartas do Peq</h3></div></>) : null}
-            {(session.user.id === roomData.host.id) ? (<><div className="deck-input"><input
+            {(amIHost) ? (<><div className="deck-input"><input
             name="Deck de Dixit"
             type="checkbox"
             onChange={(e) => {

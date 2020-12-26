@@ -4,22 +4,15 @@ import { useState, useEffect } from 'react'
 import Card from '../Card/Card'
 import AllCards from '../../../allCards' 
 import { useContext, useMemo } from 'react'
-import{ RoomContext } from '../../GameRoom'
-import SessionContext from '../../../SessionContext'
+import GameContext from '../../GameContext/GameContext'
 import Constants from '../../../../Constants'
 
 
 function Hand () {
     console.log('renderizando Componente Hand')
 
-    const roomData = useContext(RoomContext)
-    const {session} = useContext(SessionContext)
+    const { roomData, amICurrentPlayer, myPlayer, currentPlayer } = useContext(GameContext)
     const cardsArray = AllCards()
-
-    var myPlayer = useMemo(() => roomData.players.find((player) => player.id == session.user.id))
-    var currentPlayer = useMemo(() => roomData.players[roomData.currentPlayerIndex])
-    var amICurrentPlayer = useMemo(() => currentPlayer.id == myPlayer.id)
-
 
     //ENCONTRAR UMA FORMA MAIS EFICIÊNTE DE FAZER ISSO!
     const renderCards = () => {   

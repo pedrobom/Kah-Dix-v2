@@ -1,7 +1,7 @@
 import React, {useState, useEffect, useContext } from 'react'
 import './EndScreen.css'
 import { socket } from '../../socket'
-import { RoomContext } from '../../GameRoom/GameRoom'
+import GameContext from '../../GameRoom/GameContext/GameContext'
 import SessionContext from '../../SessionContext'
 
 import StartButton from '../RoomLobby/StartButton/StartButton'
@@ -12,7 +12,7 @@ import snadesImg from '../../../assets/images/snades'
 
 function EndScreen (){
     console.log('renderizando Componente EndScreen')
-    const roomData = useContext(RoomContext)
+    const {roomData} = useContext(GameContext)
     const [isStartButtonReady, setIsStartButtonReady] = useState(false)
     const [isDeckPeq, setDeckPeq] = useState(false)
     const [isDeckDixit, setDeckDixit] = useState(false)

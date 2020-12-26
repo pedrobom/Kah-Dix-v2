@@ -1,6 +1,6 @@
 import React, { useEffect, useContext, useMemo } from 'react'
 import { DragPreviewImage,useDrag } from 'react-dnd'
-import{ RoomContext } from '../../GameRoom'
+import GameContext from '../../GameContext/GameContext'
 import './Card.css'
 import { socket } from '../../../socket'
 import Constants from '../../../../Constants'
@@ -11,7 +11,7 @@ function Card (props) {
 			
     // Tirado daqui: https://react-dnd.github.io/react-dnd/docs/overview :)
 
-    const roomData = useContext(RoomContext)
+    const {roomData} = useContext(GameContext)
     const canDrag = useMemo(() => props.type == "hand" && roomData.state == Constants.RoomStates.SELECTING_CARDS)
 
     const [{ isDragging }, drag, preview] = useDrag({

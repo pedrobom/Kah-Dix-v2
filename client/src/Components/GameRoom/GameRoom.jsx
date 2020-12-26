@@ -8,52 +8,37 @@ import Sidebar from "./Sidebar/Sidebar";
 import LoadingImg from '../../assets/images/loadingImg'
 import carinha from '../../assets/images/carinha'
 import './GameRoom.css'
-
-import { socket } from "../socket.js"
-import TurnResults from "./TurnResults/TurnResults";
 import { Redirect, useParams } from "react-router";
 import SessionContext from "../SessionContext"
+import GameContext, {GameContextProvider} from "./GameContext/GameContext"
 
 // Simple mock data for testing :)
 import mock from '../../game-room-tests'
 
-// import io from 'socket.io-client'
-// let socket;
 
-export const RoomContext = React.createContext()
+// Um wrapper simples ao redor do GameRoom para colocar o contexto :)
+export default (props) => {
+    return <GameContextProvider>
+        <GameRoom {...props}>{props.children}</GameRoom>
+    </GameContextProvider>
+}
 
-
-export default ({ location }) => {   
+// O GameRoom de fato, com o contexto colocado!
+const GameRoom = ({ location }) => {   
 
     const { roomName } = useParams()
+    const {roomData} = useContext(GameContext)
 
     const { session } = useContext(SessionContext)
-    const [roomDataFromEvent, setRoomDataFromEvent] = useState()
-    const roomData = useMemo(() => roomDataFromEvent || (session && session.roomData), [session, roomDataFromEvent]);
+    const [shouldOpenTurnResults, setShouldOpenTurnResults] = useState(false)
 
     console.log("OUTSIDE", location)
 
-    // Efeitos para buscar informações no servidor e escutar coisas da sala
-    useEffect(() => {
+    const openTurnResults = () => {
+        console.log("Mostrando resultados do ultimo turno!")
+        setShouldOpenTurnResults(true)
+    }
 
-        // Carregar os dados
-        console.log("Carregando os dados da sala no GameRoom e escutando mudança de dados da sala!")
-
-        // Escutando dados da sala
-        let onRoomData = (roomData) => {
-            console.log("socket.on('roomData') = ", roomData)
-            setRoomDataFromEvent(roomData)
-        }
-        socket.addEventListener('roomData', onRoomData)
-
-        return () => {
-            console.log('Cleanup of GameRoom')
-            socket.removeListener('roomData', onRoomData)
-        }
-
-    }, [])
-
-    
     if (!roomName) {
         console.log("Sem nome de sala! Voltando para a hoem")
         return <Redirect to="/"/>
@@ -82,19 +67,18 @@ export default ({ location }) => {
     }
 
     return (
-            <RoomContext.Provider value={roomData}>
-                <div className={"gameRoom "+ roomData.state}>
-                    <Header />   
-                    <Sidebar></Sidebar>
-                    { roomData.state === "WAITING_FOR_PLAYERS" ? 
-                        <RoomLobby />
-                          : <GameBoard/>
-                    }
-                    {/* <img id="carinha-image" src={carinha} /> */}
-                </div>
-                { roomData.state === "GAME_ENDED" && <EndScreen />}
-                    
-            </RoomContext.Provider>
+        <>
+        <div className={"gameRoom "+ roomData.state}>
+            <Header openTurnResults={openTurnResults}/>   
+            <Sidebar></Sidebar>
+            { roomData.state === "WAITING_FOR_PLAYERS" ? 
+                <RoomLobby />
+                : <GameBoard />
+            }
+            {/* <img id="carinha-image" src={carinha} /> */}
+        </div>
+        { roomData.state === "GAME_ENDED" && <EndScreen />}
+        </>
     )        
 
 

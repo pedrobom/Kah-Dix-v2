@@ -1,21 +1,22 @@
 import React, {useMemo, useEffect, useState, useContext } from 'react'
 import './Table.css'
 import { socket } from '../../../socket'
-import{ RoomContext } from '../../GameRoom'
 import InputPrompt from '../InputPrompt/InputPrompt'
 import AllCards from '../../../allCards'
 import cardBackSrc from '../../../../assets/images/cardBack'
 import Card from '../Card/Card'
 import Constants from '../../../../Constants'
 import SessionContext from '../../../SessionContext'
+
+import GameContext from '../../GameContext/GameContext'
 import {useDrop} from 'react-dnd'
 
 export default function Table() {
     
-    const roomData = useContext(RoomContext)
     const [PreVotedCard, setPreVotedCard] = useState(null)
     const {session} = useContext(SessionContext)
     const cardsArray = AllCards()
+    const { roomData, amICurrentPlayer, myPlayer, currentPlayer , myVotedCard} = useContext(GameContext)
 
     // Configuraçoes de dragn and drop :)
     const [{ isOver, canDrop }, drop] = useDrop({
@@ -26,11 +27,6 @@ export default function Table() {
             canDrop: !!monitor.canDrop(),
         }),
     });
-
-    var myPlayer = useMemo(() => roomData.players.find((player) => player.id == session.user.id))
-    var currentPlayer = useMemo(() => roomData.players[roomData.currentPlayerIndex])
-    var amICurrentPlayer = useMemo(() => currentPlayer.id == myPlayer.id)
-    var myVotedCard = useMemo(() => roomData && roomData.haveIVoted)
 
     // Seleciona uma carta e coloca na mesa :)
     const selectCard = (card) => {

@@ -1,20 +1,14 @@
 import React, { useContext } from 'react'
 import './Header.css'
-import { RoomContext } from '../GameRoom'
+import GameContext from '../GameContext/GameContext'
 import socket from '../../socket'
 import Regras from '../Regras/Regras'
 import Artists from '../Artists/Artists'
 
 
-function Header () {
-    const roomData = useContext(RoomContext)
+function Header (props) {
+    const {roomData} = useContext(GameContext)
 
-    const openResults = e => {
-        console.log("Vendo resultandos do último turno!")
-        e.preventDefault()
-        const resultsContainer = document.querySelector('.background-results')
-        if(resultsContainer)resultsContainer.classList.toggle('results-hide')
-    }
 
     return(  
             <header className="header">
@@ -23,7 +17,7 @@ function Header () {
                 </div>
                 <div className="header-content-right">
                     <div className="header-links">
-                    { (roomData.turn > 1) ? (<><p onClick={(e) => openResults(e)}>Ver Último turno</p></>) : null}
+                    { (roomData.turn > 1) ? (<><p onClick={() => props.openTurnResults && props.openTurnResults()}>Ver Último turno</p></>) : null}
                         <Regras />
                         <Artists />
                         <p>Seja um Colaborador</p>

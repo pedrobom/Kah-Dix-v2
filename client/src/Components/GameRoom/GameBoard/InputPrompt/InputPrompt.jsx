@@ -1,11 +1,9 @@
 import React, {useState, useEffect, useContext} from 'react'
 import './InputPrompt.css'
 import { socket } from '../../../socket'
-import { RoomContext }  from '../../GameRoom'
 
 function InputPrompt() {
 
-    const roomData = useContext(RoomContext)
     const [input, setInput] = useState('')
     
     function submitPrompt(e){

@@ -1,12 +1,10 @@
 import React, { useContext } from 'react';
-import { RoomContext } from '../../../../../GameRoom/GameRoom'
 import SessionContext from '../../../../../SessionContext'
 import './ChatMessage.css';
 
 import ReactEmoji from 'react-emoji';
 
 export default ({ message }) => {
-  const roomData = useContext(RoomContext)
   const { session } = useContext(SessionContext)
   let isSentByCurrentUser = false;
   

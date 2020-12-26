@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useContext,useMemo } from 'react'
 import './RoomLobby.css'
 import { socket } from '../../socket'
-import { RoomContext } from '../GameRoom'
+import GameContext from '../GameContext/GameContext'
 import StartButton from './StartButton/StartButton'
 import SessionContext from "../../SessionContext"
 import { Redirect } from 'react-router'
@@ -10,7 +10,7 @@ import DeckSelector from './DeckSelector/DeckSelector'
 function RoomLobby() {
 
     console.log('renderizando Componente RoomLobby')
-    const roomData = useContext(RoomContext)
+    const {roomData, amIHost } = useContext(GameContext)
 
     const [selectedDecksIds, setSelectedDecks] = useState([])
     const [selectedVictory, setSelectedVictory] = useState(null)
@@ -22,13 +22,12 @@ function RoomLobby() {
     const availableDecks = useMemo(() => roomData && roomData.availableDecks || [])
     // Soma o total de cartas sempre que a selecao de decks muda
     const numberOfCards = useMemo(() => availableDecks.filter(deck => selectedDecksIds.indexOf(deck.id) != -1).reduce((total, deck) => total + deck.totalCards, 0));
-    const isHost = useMemo(() => session.user.id === roomData.host.id)
     // Guarda quais sao as condicoes de vitoria disponiveis, baseado no roomData
     const availableVictoryConditions = useMemo(() => roomData && roomData.availableVictoryConditions || [])
 
     // Estamos prontos para começar? :)
     const isStartButtonReady = useMemo(() => {
-        console.log("Computando botão de start", roomData, numberOfCards)
+        console.log("Computando botão de start", roomData, numberOfCards, amIHost)
         return roomData 
             && roomData.minimumPlayersToStart <= roomData.players.length
             && roomData.minimumCardsToStart <= numberOfCards
@@ -158,7 +157,7 @@ function RoomLobby() {
         <div className="roomLobby">
             <div id="background-start-button">
                 <div id="wrapper">
-                    {isHost
+                    {amIHost
                         ? <h1>Ajuste as configurações abaixo e comece o jogo!</h1>
                         : <h1>Esperando <b>{roomData.host.name}</b> iniciar a partida!</h1>
                     }
@@ -166,7 +165,7 @@ function RoomLobby() {
                     {decksAndVictoryConditions}
                     
                     {
-                        (isHost)
+                        (amIHost)
                             ? <StartButton ready={isStartButtonReady}/>
                             : null
                     }

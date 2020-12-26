@@ -2,12 +2,12 @@
 import React, {  useContext } from 'react'
 
 import './PlayerList.css'
-import { RoomContext } from '../../GameRoom'
+import GameContext from '../../GameContext/GameContext'
 import SessionContext from '../../../SessionContext'
 import Constants from '../../../../Constants'
 
 export default React.memo(function PlayerList() {
-    const roomData = useContext(RoomContext)
+    const {roomData} = useContext(GameContext)
     const { session } = useContext(SessionContext)
 
     const renderRows = () =>{ 
@@ -35,10 +35,8 @@ export default React.memo(function PlayerList() {
                 // Caso seja a hora de escolher carta , todo mundo mostra o estado: está escolhendo ou já escolheu
                 // menos o jogador do turno :)
                 case Constants.RoomStates.SELECTING_CARDS:
-                    if (player.id != currentPlayer.id) {
-                        playerStateClass = player.selectedCard ? 'cardSelected' : 'selectingCard'
-                        playerStateIcon = player.selectedCard ? <i className='fas fa-check' title='Já escolheu a carta'></i> : <i className='fas fa-question' title='Tá escolheno a carta'></i>
-                    }
+                    playerStateClass = player.selectedCard ? 'cardSelected' : 'selectingCard'
+                    playerStateIcon = player.selectedCard ? <i className='fas fa-check' title='Já escolheu a carta'></i> : <i className='fas fa-question' title='Tá escolheno a carta'></i>
                     break;
                 // Caso seja a hora de votar uma carta , todo mundo mostra o estado: está votando ou já votou
                 // menos o jogador do turno :)

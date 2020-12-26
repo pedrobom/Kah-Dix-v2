@@ -8,26 +8,29 @@ import TurnResults from '../TurnResults/TurnResults'
 import './GameBoard.css'
 import SessionContext from "../../SessionContext"
 
-import { RoomContext } from '../GameRoom'
+import GameContext, { GameContextProvider } from '../GameContext/GameContext'
 import GameBoardHeader from "./GameBoardHeader/GameBoardHeader";
 import Constants from '../../../Constants'
 
 // Esse é um componente que representa a área jogável do jogo (e.g., escolher carta, votar, etc)
-export default () => {   
+export default (props) => {   
 
-    const roomData = useContext(RoomContext)
+    const {roomData, myPlayer, currentPlayer, amIPickingPrompt} = useContext(GameContext)
     const { session } = useContext(SessionContext)
     const [lastTurnResultViewed, setLastTurnResultViewed] = useState(0)
-
-    var myPlayer = useMemo(() => roomData.players.find((player) => player.id == session.user.id))
-    var currentPlayer = useMemo(() => roomData.players[roomData.currentPlayerIndex])
-    var amIPickingPrompt = useMemo(() => currentPlayer.id == myPlayer.id && roomData.state == Constants.RoomStates.PICKING_PROMPT)
     
     // Devemos mostrar os resultados? Só se o usuário ainda não viu o resultado :)
-    var shouldShowTurnResult = useMemo(() => lastTurnResultViewed < roomData.turn && (roomData.state === Constants.RoomStates.PICKING_PROMPT && roomData.turn > 1 && roomData.results))
+    var shouldShowTurnResult = useMemo(() => {
+        return props.shouldOpenTurnResults 
+            || (
+                lastTurnResultViewed < roomData.turn 
+                && roomData.state === Constants.RoomStates.PICKING_PROMPT 
+                && roomData.turn > 1 && roomData.results)
+    })
 
     const resultsViewedCallback = () => {
         console.log("Usuário viu os resultados e fechou  tela :)")
+        props.setShouldOpenTurnResults && props.setShouldOpenTurnResults(false)
         setLastTurnResultViewed(roomData.turn)
     }
 

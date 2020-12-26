@@ -1,12 +1,12 @@
 import React, { useContext } from 'react'
 import './TurnResults.css'
-import { RoomContext } from '../GameRoom'
+import GameContext from '../GameContext/GameContext'
 import AllCards from '../../allCards'
 import Card from '../GameBoard/Card/Card'
 
 function TurnResults (props){
     console.log('renderizando Componente TurnResults')
-    const roomData = useContext(RoomContext)
+    const {roomData} = useContext(GameContext)
     const cardsArray = AllCards()
 
     const resultsViewedCallback = props.resultsViewedCallback || (() => {})
@@ -54,7 +54,7 @@ function TurnResults (props){
                                 {!votes ? <>Não engana ninguém!</> : <>Batutinha(s) iludide(s):</>}
                                 </div>
                                 <ul>
-                                     {votes && votes.map(player => {return <li>{player.name}</li>})}
+                                     {votes && votes.map(player => {return <li key={player.name}>{player.name}</li>})}
                                 </ul>
                             </div>
                         </div>  
@@ -63,12 +63,12 @@ function TurnResults (props){
         })
     }
 
-    const renderTurnResults = () =>{
-        let turnResults = roomData.results[roomData.turn -2]        
+    const renderTurnResults = () => {
+        let turnResults = roomData.results[roomData.turn - 2]
         let cardsVotes = {}
 
         turnResults.players.forEach(player => {
-            if(!cardsVotes[player.votedCard]) {
+            if (!cardsVotes[player.votedCard]) {
                 cardsVotes[player.votedCard] = []
             }
             cardsVotes[player.votedCard].push(player)
@@ -76,65 +76,66 @@ function TurnResults (props){
 
 
         const getCardInfo = cardInput => cardsArray.find(card => card.cardTitle === cardInput)
-        if(roomData.state == "PICKING_PROMPT" && roomData.turn > 1){
-            console.log('Results', roomData.results)            
-            let turnPlayerCard = getCardInfo(turnResults.turnPlayerCard)
-            let votes = cardsVotes[turnResults.turnPlayerCard]
-            console.log('votes on TurnPlayer', votes)
-            if (roomData.state == "PICKING_PROMPT" && roomData.turn > 1)
-            return (
-                <React.Fragment>
+
+
+        console.log('Results', roomData.results)
+        let turnPlayerCard = getCardInfo(turnResults.turnPlayerCard)
+        let votes = cardsVotes[turnResults.turnPlayerCard]
+
+        console.log('votes on TurnPlayer', votes)
+        return (
+            <React.Fragment>
                 <div className="background-results">
                     <button className="closeResultsButton" onClick={e => closeResults(e)}>Voltar para partida</button>
                     <div className="turnResultsBox">
-    
+
                         <div className="turnPlayerResult">
                             <div className="turnCard">
-                                <Card 
-                                    class={'resultCards'}
+                                <Card
+                                    className={'resultCards'}
                                     id={turnPlayerCard.cardTitle}
-                                    src={turnPlayerCard.src} 
+                                    src={turnPlayerCard.src}
                                     alt={`Imagem da carta: ${turnPlayerCard.cardTitle}`}
-                                />                                
+                                />
                             </div>
                             <div className="resultDetails">
                                 <div className="turnPrompt">"{turnResults.turnPrompt}"</div>
                                 <div className="turnPlayer">
                                     Cartinha e frase do <b>{turnResults.turnPlayer}</b>
                                 </div>
-                                <div className={"turnPlayerScore " + (turnResults.turnPlayerScore > 0 ? 'positive' : '') }>
+                                <div className={"turnPlayerScore " + (turnResults.turnPlayerScore > 0 ? 'positive' : '')}>
 
-                                Fez {turnResults.turnPlayerScore} {turnResults.turnPlayerScore == 1 ? 'ponto!' : 'pontos!'}</div>
+                                    Fez {turnResults.turnPlayerScore} {turnResults.turnPlayerScore == 1 ? 'ponto!' : 'pontos!'}</div>
                                 <div className="turnPlayersVoters">
                                     {
-                                        !votes 
-                                            ? 'Poetize incomprendide! :(' 
+                                        !votes
+                                            ? 'Poetize incomprendide! :('
                                             : (
                                                 <>
-                                                <div class='turnPlayerVotersTitle'>Batutinhas que sacaram:</div>   
-                                                <ul>{votes.map(player => <li>{player.name}</li>)}</ul>
+                                                    <div className='turnPlayerVotersTitle'>Batutinhas que sacaram:</div>
+                                                    <ul>{votes.map(player => <li key={player.name}>{player.name}</li>)}</ul>
                                                 </>
-                                                )                                      
-                                    }  
+                                            )
+                                    }
                                 </div>
                             </div>
                         </div>
                         <div className="secondBox" >
                             <div className="otherPlayerResultsContainer">
-                                {renderOtherPlayersResults()}    
-                            </div> 
-                                                       
+                                {renderOtherPlayersResults()}
+                            </div>
+
                         </div>
 
-                            
-                        
+
+
                     </div>
                 </div>
-                </React.Fragment>
-                
-            )                
-        }
-        
+            </React.Fragment>
+
+        )
+
+
     }
     return (
         <>

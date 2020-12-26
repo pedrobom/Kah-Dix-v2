@@ -2,11 +2,11 @@
 import React, {  useContext } from 'react'
 
 import './RoomDetails.css'
-import { RoomContext } from '../../GameRoom'
+import GameContext from '../../GameContext/GameContext'
 import socket from '../../../socket'
 
 export default React.memo(function RoomDetails() {
-    const roomData = useContext(RoomContext)
+    const {roomData} = useContext(GameContext)
 
 
     const quitRoom = () => {

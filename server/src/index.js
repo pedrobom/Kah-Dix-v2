@@ -224,7 +224,7 @@ io.on('connect', async (socket) => {
       return callback("Você precisa estar em um jogo para escolher o prompt!")
     }
     //
-    else if (userRoom.players[userRoom.currentPlayerIndex].user != user) {
+    else if (userRoom.players[userRoom.currentPlayerIndex].user.id != user.id) {
       console.warn("Usuário [%s] tentando escolher o prompt [%s] mas não é a vez dele!", user.name, prompt)
       return callback("Não é a sua vez de escolher uma frase!")
     }
