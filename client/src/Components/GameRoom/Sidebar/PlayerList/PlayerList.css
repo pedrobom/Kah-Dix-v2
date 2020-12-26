@@ -18,7 +18,7 @@
 }
 
 .playerList .player.thisIsMe .playerName {
-    font-weight: bold;
+    font-weight: normal;
 }
 
 .playerList .player.disconnected .playerName .name {

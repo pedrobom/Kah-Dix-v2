@@ -54,7 +54,7 @@ export default React.memo(function PlayerList() {
 
             return <tr key={index} className={'player ' + (isSessionPlayer ? "thisIsMe " : "") + (isDisconnected ? 'disconnected': '')}>
                 <td className='playerName'>
-                    { isCurrentPlayer ? <i title='É o turno dessa pessoa escolher a frase :)' className='fas currentPlayerIcon fa-long-arrow-right'></i> : ''}
+                    { isCurrentPlayer ? <i title='É o turno dessa pessoa escolher a frase :)' className='fas currentPlayerIcon fa-pencil-alt'></i> : ''}
                     <span className='name'>{player.name} </span>
                     { isSessionPlayer ? <i title='Esse/a é você :)' className='fas sessionPlayerIcon fa-user'></i> : ''}
                     { isHostPlayer ? <i title='Essa pessoa aqui é dona da sala.. fica esprt' className='fas hostPlayerIcon fa-star'></i> : ''}

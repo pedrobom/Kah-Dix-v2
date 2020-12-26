@@ -15,33 +15,15 @@ import Constants from '../../../Constants'
 // Esse é um componente que representa a área jogável do jogo (e.g., escolher carta, votar, etc)
 export default (props) => {   
 
-    const {roomData, myPlayer, currentPlayer, amIPickingPrompt} = useContext(GameContext)
+    const {roomData, myPlayer, currentPlayer, amIPickingPrompt, shouldShowTurnResults} = useContext(GameContext)
     const { session } = useContext(SessionContext)
-    const [lastTurnResultViewed, setLastTurnResultViewed] = useState(0)
-    
-    // Devemos mostrar os resultados? Só se o usuário ainda não viu o resultado :)
-    var shouldShowTurnResult = useMemo(() => {
-        return props.shouldOpenTurnResults 
-            || (
-                lastTurnResultViewed < roomData.turn 
-                && roomData.state === Constants.RoomStates.PICKING_PROMPT 
-                && roomData.turn > 1 && roomData.results)
-    })
-
-    const resultsViewedCallback = () => {
-        console.log("Usuário viu os resultados e fechou  tela :)")
-        props.setShouldOpenTurnResults && props.setShouldOpenTurnResults(false)
-        setLastTurnResultViewed(roomData.turn)
-    }
 
     console.debug("Rendering GameBoard! %s")   
-    
-    
 
     return (
         <div className="gameBoard-container">
                 {
-                    shouldShowTurnResult ? <TurnResults resultsViewedCallback={resultsViewedCallback} />
+                    shouldShowTurnResults ? <TurnResults />
                     :
                     
                     <div className={"gameBoard " + (amIPickingPrompt ? 'iAmPickingPrompt' : '')}>

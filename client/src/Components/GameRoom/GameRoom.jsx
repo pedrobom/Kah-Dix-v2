@@ -30,14 +30,8 @@ const GameRoom = ({ location }) => {
     const {roomData} = useContext(GameContext)
 
     const { session } = useContext(SessionContext)
-    const [shouldOpenTurnResults, setShouldOpenTurnResults] = useState(false)
 
     console.log("OUTSIDE", location)
-
-    const openTurnResults = () => {
-        console.log("Mostrando resultados do ultimo turno!")
-        setShouldOpenTurnResults(true)
-    }
 
     if (!roomName) {
         console.log("Sem nome de sala! Voltando para a hoem")
@@ -69,11 +63,11 @@ const GameRoom = ({ location }) => {
     return (
         <>
         <div className={"gameRoom "+ roomData.state}>
-            <Header openTurnResults={openTurnResults}/>   
+            <Header/>   
             <Sidebar></Sidebar>
             { roomData.state === "WAITING_FOR_PLAYERS" ? 
                 <RoomLobby />
-                : <GameBoard />
+                : <GameBoard/>
             }
             {/* <img id="carinha-image" src={carinha} /> */}
         </div>

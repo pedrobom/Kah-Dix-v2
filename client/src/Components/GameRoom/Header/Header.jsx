@@ -7,8 +7,12 @@ import Artists from '../Artists/Artists'
 
 
 function Header (props) {
-    const {roomData} = useContext(GameContext)
+    const {roomData, setShouldShowTurnResults} = useContext(GameContext)
 
+    const showLastTurnResults = () => {
+        console.log("Mostrando resultados do ultimo turno!")
+        setShouldShowTurnResults(true)
+    }
 
     return(  
             <header className="header">
@@ -17,7 +21,7 @@ function Header (props) {
                 </div>
                 <div className="header-content-right">
                     <div className="header-links">
-                    { (roomData.turn > 1) ? (<><p onClick={() => props.openTurnResults && props.openTurnResults()}>Ver Último turno</p></>) : null}
+                    { (roomData.turn > 1) ? (<><p onClick={showLastTurnResults}>Ver Último turno</p></>) : null}
                         <Regras />
                         <Artists />
                         <p>Seja um Colaborador</p>
