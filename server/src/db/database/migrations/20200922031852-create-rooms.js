@@ -15,7 +15,7 @@ module.exports = {
         allowNull: false,
         defaultValue: "WAITING_FOR_PLAYERS"
       },
-      roomName: {
+      name: {
         type: Sequelize.STRING,
         unique: true,
         allowNull: false
@@ -40,9 +40,26 @@ module.exports = {
         type: Sequelize.INTEGER,
         allowNull: true
       },
-      isWinner: {
-        type: Sequelize.BOOLEAN,
-        allowNull: true
+      winner: {
+        type: Sequelize.ARRAY(Sequelize.STRING)
+      },
+      minimumPlayersToStart: {
+        type: Sequelize.INTEGER
+      },
+      minimumCardsToStart: {
+        type: Sequelize.INTEGER
+      },
+      selectedDecksIds: {
+        type: Sequelize.ARRAY(Sequelize.STRING)
+      },
+      deck: {
+        type: Sequelize.ARRAY(Sequelize.STRING)
+      },
+      morto: {
+        type: Sequelize.ARRAY(Sequelize.STRING)
+      },
+      results: {
+        type: Sequelize.STRING
       },
       createdAt: {
         type: Sequelize.DATE,

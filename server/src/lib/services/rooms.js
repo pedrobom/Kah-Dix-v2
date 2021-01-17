@@ -3,6 +3,7 @@ const Room = require("../models/room");
 const Results = require("../models/results")
 const io = require('../../ioserver');
 const users = require("./users");
+const RoomsDB = require('../../db/models/Room')
 
 
 
@@ -10,10 +11,20 @@ const users = require("./users");
 const rooms = [];
 
 module.exports = class Rooms {
+  static AVAILABLE_DECKS = [
+    {name: "Cartas do Peq", id: 'peq', totalCards: 21, deckPrefix: 'Peq'},
+    {name: "Cartas de Nudes", id: 'nudes', totalCards: 70, deckPrefix: 'Nude'},
+    {name: "Cartas de Museus Europeus", id: 'euro', totalCards: 35, deckPrefix: 'Euro'},
+    {name: "Cartas de Dixit",  id:'dixit', totalCards: 257, deckPrefix: 'Dixit'},
+  ]
+
+  static POSSIBLE_VICTORY_CONDITIONS = [
+    {name: 'Corrida dos 30 pontos', id: 'points-victory'},
+    {name: 'Jogar até o baralho acabar', id: 'deck-victory'},
+  ]
 
 
-
-  static createRoom = ({ roomName, hostPlayer }) => {
+  static createRoom = async ({ roomName, hostPlayer }) => {
 
     if (!hostPlayer) {
         console.log("Tentativa de criar uma sala com nome [%s] sem um jogador definido", roomName)
@@ -28,7 +39,7 @@ module.exports = class Rooms {
     console.debug("Criando uma sala com nome [%s] para o hostPlayer [%s]", roomName, hostPlayer.name)
     roomName = roomName.trim();
   
-    const existingRoom = Rooms.getRoom(roomName)
+    const existingRoom = await Rooms.getRoom(roomName)
     console.debug("Procurando uma sala existente [%s]", existingRoom == undefined ? "Sala disponível" : "Sala indisponível")
   
   
@@ -39,7 +50,30 @@ module.exports = class Rooms {
   
     // Isso é o que uma nova sala representa
     
-    const room = new Room({name: roomName, hostPlayer})
+    const room = await RoomsDB.create(
+      {
+        name: roomName,
+        host: hostPlayer,
+        state: RoomsDB.States.WAITING_FOR_PLAYERS,
+        turn: 1,
+        currentPlayerIndex: 0,
+        prompt: null,
+        selectedCardCount: 0,
+        results: [],
+        victory: "points-victory",
+        votingCardsTurn: [],
+        winner: [],
+        minimumPlayersToStart: 2,
+        minimumCardsToStart: 50,
+        availableDecks: RoomsDB.AVAILABLE_DECKS,
+        availableVictoryConditions: RoomsDB.POSSIBLE_VICTORY_CONDITIONS,
+        selectedDecksIds: [RoomsDB.AVAILABLE_DECKS[0].id],
+        deck: [],
+        morto: []     
+      })
+
+
+
 
     rooms.push(room);
     console.log(room.deck)
@@ -57,9 +91,14 @@ module.exports = class Rooms {
   //   if(index !== -1) return users.splice(index, 1)[0];
   // }
   
-  static getRoom = (roomName) => {
+  static getRoom = async (roomName) => {
     console.debug("Buscando uma sala com nome [%s]", roomName)
-    return rooms.find((room) => room.name === roomName);
+
+    return await Room.findOne({
+      where: { roomName: roomName }
+    })
+
+    //return rooms.find((room) => room.name === roomName);
   }
   
   // Eu pedro mudei o conceito findIndex(user) para indexOf porque dava erro.
@@ -184,8 +223,8 @@ module.exports = class Rooms {
       selectedCardCount: room.selectedCardCount,
       results: room.results,
       victory: room.victory,
-      availableDecks: room.availableDecks,
-      availableVictoryConditions: room.availableVictoryConditions,
+      availableDecks: Room.AVAILABLE_DECKS,
+      availableVictoryConditions: Room.POSSIBLE_VICTORY_CONDITIONS,
       minimumCardsToStart: room.minimumCardsToStart,
       minimumPlayersToStart: room.minimumPlayersToStart,
       selectedDecksIds: room.selectedDecksIds,

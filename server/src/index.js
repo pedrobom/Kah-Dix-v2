@@ -103,7 +103,7 @@ io.on('connect', async (socket) => {
   //
 
   // Este metodo representa um usuário tentando entrar em uma sala
-  socket.on('join', ({ name, roomName }, callback) => {
+  socket.on('join', async ({ name, roomName }, callback) => {
     console.log("Usuário [%s] tentando entrar com nome [%s] na sala com nome [%s]", user.id, name, roomName)
 
     // Se o usuário já está em uma sala, não pode fazer isso!
@@ -116,7 +116,7 @@ io.on('connect', async (socket) => {
     // 1 - Não poderá haver duas pessoas com o mesmo nome em uma sala
     // ou - Duas pessoas não podem ter o mesmo nome independente da sala
     //
-    Users.changeUserName(user, name)
+    await Users.changeUserName(user, name)
 
     var room = Rooms.getRoom(roomName)
     // Sala ainda não existe.. vamos criar uma :)

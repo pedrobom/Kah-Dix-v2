@@ -99,9 +99,9 @@ module.exports = class Users {
 
 
 
-  static changeUserName = (user, name) => {
+  static changeUserName = async (user, name) => {
     console.log(`Usuário [${user.id}] trocou o nome de [${user.name}] para [${name}]`)
     user.name = name
-    user.save()
+    await user.save()
   }
 }
