@@ -113,6 +113,7 @@ html, body {
   transition: 0.5s;
   justify-content: center;
   align-content: center;
+  white-space: normal;
 
 }
 /* ::-webkit-scrollbar-track {
