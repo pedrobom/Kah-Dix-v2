@@ -24,5 +24,24 @@
 }
 
 .roomDetails .roomControls a {
-    text-decoration: underline;
+    text-decoration: none;
+    cursor: pointer;
+    background-color: rgba(0,0,0, 0.3);
+    padding: 0.4em;
+    display:inline-block;
+    position: relative;
+    user-select: none;
+    text-transform: uppercase;
+}
+
+.roomDetails .roomControls a:hover, .roomDetails .roomControls a:active {
+    background-color: rgba(0,0,0, 0.6);
+}
+
+.roomDetails .roomControls a:focus  {
+    border: 1px solid #900;
+}
+
+.roomDetails .roomControls a:active  {
+    top: 1px;
 }

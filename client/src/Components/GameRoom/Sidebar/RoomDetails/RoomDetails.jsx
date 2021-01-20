@@ -31,7 +31,6 @@ export default React.memo(function RoomDetails() {
                 Sala: <span>{ roomData.name }</span>
             </div>
             <div className="roomControls">
-                <a>detalhes</a><br/>
                 <a onClick={quitRoom}>sair</a>
             </div>
         </div>
