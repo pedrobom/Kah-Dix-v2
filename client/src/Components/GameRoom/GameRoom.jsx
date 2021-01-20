@@ -65,13 +65,12 @@ const GameRoom = ({ location }) => {
         <div className={"gameRoom "+ roomData.state}>
             <Header/>   
             <Sidebar></Sidebar>
-            { roomData.state === "WAITING_FOR_PLAYERS" ? 
-                <RoomLobby />
-                : <GameBoard/>
+            { roomData.state === "GAME_ENDED" || roomData.state ==="WAITING_FOR_PLAYERS" 
+                ? <RoomLobby />
+                  : <GameBoard/>
             }
             {/* <img id="carinha-image" src={carinha} /> */}
         </div>
-        { roomData.state === "GAME_ENDED" && <EndScreen />}
         </>
     )        
 

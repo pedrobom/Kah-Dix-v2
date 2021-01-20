@@ -6,6 +6,8 @@ import StartButton from './StartButton/StartButton'
 import SessionContext from "../../SessionContext"
 import { Redirect } from 'react-router'
 import DeckSelector from './DeckSelector/DeckSelector'
+import loadingImg from '../../../assets/images/loadingImg'
+import snadesImg from '../../../assets/images/snades'
 
 function RoomLobby() {
 
@@ -24,6 +26,9 @@ function RoomLobby() {
     const numberOfCards = useMemo(() => availableDecks.filter(deck => selectedDecksIds.indexOf(deck.id) != -1).reduce((total, deck) => total + deck.totalCards, 0));
     // Guarda quais sao as condicoes de vitoria disponiveis, baseado no roomData
     const availableVictoryConditions = useMemo(() => roomData && roomData.availableVictoryConditions || [])
+
+    // O jogo já acabou ou estamos começando?
+    const hasGameEnded = useMemo(() => roomData && roomData.state == 'GAME_ENDED')
 
     // Estamos prontos para começar? :)
     const isStartButtonReady = useMemo(() => {
@@ -83,6 +88,47 @@ function RoomLobby() {
     }
 
     let decksAndVictoryConditions = null
+
+    // Renderizacao do fim de jogo
+    const renderEndScreen = () => {
+        return <div className="room-lobby-end-screen">
+            { roomData && renderChampion() }
+            { roomData && renderPlayersScores() }
+        </div>
+    }
+
+    // Renderiza os vencedores! Só é usado se for o fim do jogo :)
+    const renderChampion = () => {
+        return roomData.winner.map(player => {
+            return (
+                <div className="championBox">
+                    <img id="snades" src={snadesImg} alt="snades"/>           
+                    <div class="parabens rainbow"><span class="text">PARABÉNS!</span></div>
+                    <div class="nome superhero"><span class="text">{player.name}</span></div> 
+                    <div class="score tilt"><span class="text">Fez {player.score} pontos!</span></div>    
+                    <img id="jonas" src={loadingImg} alt="Jonas"/>           
+                </div>
+            )            
+        })
+    }
+
+    //Renderiza o total de pontos de cada jogador :)
+    function renderPlayersScores(){
+        if(roomData){
+            return <div className="players-scores">
+                { roomData.players
+                        .sort((a, b) => a.score > b.score ? -1 : 1)
+                        .map((player, index) => {
+                        return(
+                            <div className="player-score" key={index}>{player.name} ({player.score} pontos)</div>
+                        )
+                    })   
+                }
+            </div>          
+        }
+    }
+
+
 
     // Somos o host?
     // Separando a logica para mostrar os decks e condicoes de vitoria
@@ -157,14 +203,23 @@ function RoomLobby() {
         <div className="roomLobby">
             <div id="background-start-button">
                 <div id="wrapper">
-                    {amIHost
+                    {
+                        // Se o jogo acabou, vamos mostrar o fim do jogo
+                        hasGameEnded && renderEndScreen()
+                    }
+                    {
+                        // cabecalho
+                        amIHost
                         ? <h1>Ajuste as configurações abaixo e comece o jogo!</h1>
-                        : <h1>Esperando <b>{roomData.host.name}</b> iniciar a partida!</h1>
+                        : <h1>Esperando <b>{roomData.host.name}</b> iniciar {hasGameEnded ? 'uma nova' : 'a'} partida!</h1>
                     }
 
-                    {decksAndVictoryConditions}
+                    {
+                        // Detalhes sobre os decks e as coisas de vitoria
+                        decksAndVictoryConditions}
                     
                     {
+                        // botao de start
                         (amIHost)
                             ? <StartButton ready={isStartButtonReady}/>
                             : null

@@ -28,7 +28,7 @@ export const GameContextProvider = ({children}) => {
         // Escutando dados da sala
         let onRoomData = (roomData) => {
             console.log("socket.on('roomData') = ", roomData)
-            setRoomDataFromEvent(roomData)
+            //setRoomDataFromEvent(roomData)
         }
         socket.addEventListener('roomData', onRoomData)
 
