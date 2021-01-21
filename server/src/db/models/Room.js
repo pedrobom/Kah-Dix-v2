@@ -1,4 +1,5 @@
-const { Model, DataTypes } = require('sequelize')
+const { Model, DataTypes } = require('sequelize');
+const User = require('./User');
 
 class Room extends Model {
     static init(connection) {
@@ -84,20 +85,29 @@ class Room extends Model {
     }
 
     isUserWithNameInRoom(name){
-        return this.players.find((player) => {
-            if(player.user.name == name){
-                return player
-            }    
-        })
+        return this.getPlayers(
+            {
+                include: {
+                    association: 'playerOwner',
+                    where: { name: name }
+                }
+            }
+        ).then( players => players && players.length > 0)
     }
 
     // Retorna o RoomPlayer relativo ao usuário
     getPlayerForUser(user) {
-        return this.players && this.players.find((player) => {
-            if (player.user.id == user.id) {
-                return player
+       return this.getPlayers(
+            {
+                where: { userId: user.id }
             }
-        })
+        ).then(players => players && players[0])
+
+        // return this.players && this.players.find((player) => {
+        //     if (player.user.id == user.id) {
+        //         return player
+        //     }
+        // })
     }
 
     // O usuário dado está na sala?

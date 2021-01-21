@@ -3,7 +3,8 @@ const Room = require("../models/room");
 const Results = require("../models/results")
 const io = require('../../ioserver');
 const users = require("./users");
-const RoomsDB = require('../../db/models/Room')
+const RoomsDB = require('../../db/models/Room');
+const User = require("../../db/models/User");
 
 
 
@@ -54,6 +55,10 @@ module.exports = class Rooms {
       {
         name: roomName,
         host: hostPlayer,
+        players: [{
+          userId: hostPlayer.id,
+
+        }], //  um ato de fé
         state: RoomsDB.States.WAITING_FOR_PLAYERS,
         turn: 1,
         currentPlayerIndex: 0,
@@ -65,9 +70,9 @@ module.exports = class Rooms {
         winner: [],
         minimumPlayersToStart: 2,
         minimumCardsToStart: 50,
-        availableDecks: RoomsDB.AVAILABLE_DECKS,
-        availableVictoryConditions: RoomsDB.POSSIBLE_VICTORY_CONDITIONS,
-        selectedDecksIds: [RoomsDB.AVAILABLE_DECKS[0].id],
+        availableDecks: Rooms.AVAILABLE_DECKS,
+        availableVictoryConditions: Rooms.POSSIBLE_VICTORY_CONDITIONS,
+        selectedDecksIds: [Rooms.AVAILABLE_DECKS[0].id],
         deck: [],
         morto: []     
       })
@@ -94,28 +99,40 @@ module.exports = class Rooms {
   static getRoom = async (roomName) => {
     console.debug("Buscando uma sala com nome [%s]", roomName)
 
-    return await Room.findOne({
-      where: { roomName: roomName }
+    return await RoomsDB.findOne({
+      where: { name: roomName }
     })
 
     //return rooms.find((room) => room.name === roomName);
   }
   
   // Eu pedro mudei o conceito findIndex(user) para indexOf porque dava erro.
-  static getRoomOfUser = (user) => {
+  static getRoomOfUser = async (user) => {
       console.debug("verificando nome da sala do jogador [%s] se ele estiver em uma", user.name)
-      return rooms.find(room => room.isUserInRoom(user))
+      const room = await RoomsDB.findOne(
+        {
+        include: {
+            association: 'players',
+            include: {
+                association: 'playerOwner',
+                where: { id: user.id }
+            }
+        }
+    })
+
+    return room
+    
   }
   
-  static addUserToRoom = ({room, user}) => {
-      const isPlayerInRoom = !!Rooms.getRoomOfUser(user)
+  static addUserToRoom = async ({room, user}) => {
+      const isPlayerInRoom = await room.getPlayerForUser(user)
   
       console.debug("Tentando adicionar usuário [%s] na sala [%s]", user.name, room.name)
       if (isPlayerInRoom){
           console.debug("Usuário [%s] já está em uma sala", user)
           return { error: "Você já está em uma sala em andamento." }
       } 
-      else if (room.isUserWithNameInRoom(user.name)){
+      else if (await room.isUserWithNameInRoom(user.name)){
         console.debug("usuário [%s] tentando entrar na sala [%s] com nome já existente.", user.name, room.name )
         return { error: "esse nome de usuário já existe na sala!"}
       }
@@ -126,7 +143,8 @@ module.exports = class Rooms {
 
       else {
           console.debug("Adicionando usuário [%s] à sala [%s]", user, room)
-          room.players.push(new RoomPlayer({user: user}))        
+          await room.addPlayer({playerOwner: user}, {include: [User]})
+          // room.players.push(new RoomPlayer({user: user}))        
       }
   
       return {}
@@ -196,21 +214,21 @@ module.exports = class Rooms {
   
   }
   
-  static emitRoomDataForAll = (room, io) => {
+  static emitRoomDataForAll = async (room, io) => {
     console.info("Emitindo roomData para os sockets conectados na sala [%s]", room.name)
-    room.players.forEach((player) => {
+    (await room.getPlayers()).forEach((player) => {
       Rooms.emitRoomDataForPlayer(room, player, io)      
     })
   }
 
-  static getRoomDataForUser = ({ room , user }) => {
-    let player = room.getPlayerForUser(user)
-    return  Rooms.getRoomDataForPlayer(room , player)
+  static getRoomDataForUser = async ({ room , user }) => {
+    let player = await room.getPlayerForUser(user)
+    return Rooms.getRoomDataForPlayer(room , player)
   }
 
-  static getRoomDataForPlayer = ( room , player) => {
+  static getRoomDataForPlayer = async ( room , player) => {
     return  {
-      myUserName: player.user.name ,
+      myUserName: (await player.getPlayerOwner()).name,
       myHand: player.hand,
       haveIVoted: player.votedCard,
       mySelectedCard: player.mySelectedCard,
@@ -229,14 +247,15 @@ module.exports = class Rooms {
       minimumPlayersToStart: room.minimumPlayersToStart,
       selectedDecksIds: room.selectedDecksIds,
       votingCardsTurn: room.votingCardsTurn,
-      players: room.players.map((player) => {
+      players: (await room.getPlayers({include: User})).map((player) => {
         return {
           name: player.user.name,
           id: player.user.id,
           score: player.score,
           selectedCard: room.state == Room.States.PICKING_PROMPT ? player.selectedCard : !!player.selectedCard,
           votedCard: room.state.PICKING_PROMPT ? player.votedCard : !!player.votedCard,
-          isDisconnected: !player.user.socketIds.length
+          isDisconnected: false
+          // !player.user.socketIds.length
         }
       }),
       winner: room.winner,

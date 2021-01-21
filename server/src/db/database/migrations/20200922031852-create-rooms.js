@@ -32,12 +32,15 @@ module.exports = {
         type: Sequelize.STRING,
         allowNull: true
       },
+      votingCardsTurn: {
+        type: Sequelize.ARRAY(Sequelize.STRING),
+      },
       selectedCardCount: {
         type: Sequelize.INTEGER,
         allowNull: true
       },
       victory: {
-        type: Sequelize.INTEGER,
+        type: Sequelize.STRING,
         allowNull: true
       },
       winner: {

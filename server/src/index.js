@@ -72,18 +72,18 @@ io.on('connect', async (socket) => {
   //
   // Vamos mandar esses dados para o usuário :)
   console.log("Enviando dados de sessão para o usuário [%s]", user)
-  let userRoom = Rooms.getRoomOfUser(user)
+  let userRoom = await Rooms.getRoomOfUser(user)
 
   console.log('verificando se existem dados de partida para o usuário')
   let sessionData = {
     user: user,
-    roomData: userRoom ? Rooms.getRoomDataForUser({ user, room: userRoom }) : null
+    roomData: userRoom ? await Rooms.getRoomDataForUser({ user, room: userRoom }) : null
   }
   socket.emit('sessionData', sessionData)
 
   // Colocar o usuário no grupo de sockets da sala :)
-  if (userRoom !== undefined) {
-    socket.join(room.name)
+  if (userRoom) {
+    socket.join(userRoom.name)
     // Um usuário que já tem sala e só tem esse socket é um usuário que havia caido!
     if (user.socketIds.length == 1) {
       // Gambiarra antes de resolver o banco de daods kkk
@@ -107,7 +107,7 @@ io.on('connect', async (socket) => {
     console.log("Usuário [%s] tentando entrar com nome [%s] na sala com nome [%s]", user.id, name, roomName)
 
     // Se o usuário já está em uma sala, não pode fazer isso!
-    var userRoom = Rooms.getRoomOfUser(user);
+    var userRoom = await Rooms.getRoomOfUser(user);
     if (userRoom) {
       console.error("O usuário [%s] já está na sala [%s] mas está tentando entrar na sala [%s]", user.id, userRoom.name, roomName)
       return callback("Você já está em uma sala!")
@@ -118,11 +118,11 @@ io.on('connect', async (socket) => {
     //
     await Users.changeUserName(user, name)
 
-    var room = Rooms.getRoom(roomName)
+    var room = await Rooms.getRoom(roomName)
     // Sala ainda não existe.. vamos criar uma :)
     if (!room) {
       console.info("A sala que o usuário tentou entrar [%s] não existe ainda, vamos criar uma para ele", roomName)
-      var { error, room } = Rooms.createRoom({ roomName, hostPlayer: user })
+      var { error, room } = await Rooms.createRoom({ roomName, hostPlayer: user })
       if (error) {
         console.error("Não foi possivel criar a sala! [%s]", error)
         return callback(error)
@@ -132,7 +132,7 @@ io.on('connect', async (socket) => {
     // Sala já existe, então vamos jogar nosso usuário lá dentro!
     else {
       console.info("A sala [%s] que o usuário [%s] está tentando acessar já existe, colocando ele como jogador!", roomName, user.id)
-      var { error } = Rooms.addUserToRoom({ room, user })
+      var { error } = await Rooms.addUserToRoom({ room, user })
       if (error) {
         console.error("Não foi possivel entrar na sala [%s]: [%s]", roomName, error)
         return callback(error)
@@ -145,9 +145,9 @@ io.on('connect', async (socket) => {
     socket.join(room.name);
 
     Rooms.sendSystemMessageToRoom({ io, userRoom: room, message: `${user.name} tá na área!` })
-    Rooms.emitRoomDataForAll(room, io)
+    await Rooms.emitRoomDataForAll(room, io)
 
-    callback(null, Rooms.getRoomDataForUser({ user, room }))
+    callback(null, await Rooms.getRoomDataForUser({ user, room }))
 
   });
 
