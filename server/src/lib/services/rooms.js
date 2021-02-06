@@ -215,7 +215,7 @@ module.exports = class Rooms {
   }
   
   static emitRoomDataForAll = async (room, io) => {
-    console.info("Emitindo roomData para os sockets conectados na sala [%s]", room.name)
+    console.info("Emitindo roomData para os sockets conectados na sala [%s]", room.name);
     (await room.getPlayers()).forEach((player) => {
       Rooms.emitRoomDataForPlayer(room, player, io)      
     })
