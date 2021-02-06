@@ -1,0 +1,2 @@
+CREATE DATABASE dixit_db;
+ALTER USER postgres WITH PASSWORD '1234';

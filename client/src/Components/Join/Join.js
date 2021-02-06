@@ -21,6 +21,14 @@ const Join = () => {
     const { session, setSession } = useContext(SessionContext)
 
     const EnterRoom = (event) => {
+
+        console.log(process.env.REACT_APP_API_ADDRESS)
+        
+        fetch(`${process.env.REACT_APP_API_ADDRESS}/test`)
+            .then(res => res.text())
+            .then(console.log)
+            .catch(console.log)
+
         event.preventDefault()
         console.log("Tentando entrar na sala!")
         if (!socket || !socket.connected) {

@@ -10,6 +10,7 @@ const UserDB = require('./db/models/User')
 
 require('./db/database/index')
 
+
 io.on('connect', async (socket) => {
 
   const socketDb = await SocketDB.create({ socketId: socket.id })

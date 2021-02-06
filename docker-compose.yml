@@ -1,0 +1,51 @@
+version: '3'
+
+volumes:
+  pg_data:
+
+networks: 
+  database:
+  web:
+
+services:
+
+  db:
+    image: postgres:9.6
+    container_name: db
+    volumes:
+      - pg_data:/var/lib/postgresql/pg_data
+      - ./server/scripts_db:/scripts
+      - ./server/scripts_db/db_container_init.sql:/docker-entrypoint-initdb.d/db_container_init.sql
+    networks: 
+      - database
+    environment: 
+      - POSTGRES_PASSWORD=1234
+
+
+  client:
+    build: 
+      context: ./client
+      dockerfile: Dockerfile
+    container_name: client
+    ports:
+      - 80:80
+    networks: 
+      - web
+    depends_on: 
+      - server
+  
+  server:
+    build: 
+      context: ./server
+      dockerfile: Dockerfile
+    container_name: server
+    env_file: 
+      - .env_docker-compose_server
+    networks: 
+      - database
+      - web
+    depends_on: 
+      - db
+    ports: 
+      - 5000:5000
+                

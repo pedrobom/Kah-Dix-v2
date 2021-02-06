@@ -3,7 +3,7 @@ const express = require('express');
 const socketio = require('socket.io');
 const cors = require('cors');
 const bodyParser = require('body-parser');
-const routes = require('./routes');
+// const routes = require('./routes');
 const fs = require('fs')
 
 const app = express();
@@ -56,12 +56,15 @@ app.use(cors());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
+app.get('/test', (req, res) => {
+  res.send("<h1>Hello from Docker!!!</h1>")
+})
+
 //
 // ROTEAMENTO
 //
 
 // Roteamento de coisas com lógica customizada
-app.use(routes)
+// app.use(routes)
 
 module.exports = { io, server, app }
-
