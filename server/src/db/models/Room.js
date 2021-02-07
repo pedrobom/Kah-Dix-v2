@@ -72,7 +72,7 @@ class Room extends Model {
     static associate(models) {
         this.hasMany(models.RoomPlayer, { foreignKey: 'roomId', as: 'players' })
         this.hasMany(models.Socket, { foreignKey: 'roomId', as: 'socketsIds' })
-        this.belongsTo(models.User, { foreignKey: 'hostId' })
+        this.belongsTo(models.User, { foreignKey: 'hostId'})
     }
 
     static States = {

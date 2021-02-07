@@ -1,10 +1,12 @@
 const RoomPlayer = require("../models/room_player");
+const RoomPlayerDB = require("../../db/models/RoomPlayer")
 const Room = require("../models/room");
 const Results = require("../models/results")
 const io = require('../../ioserver');
 const users = require("./users");
 const RoomsDB = require('../../db/models/Room');
 const User = require("../../db/models/User");
+const SocketDB = require("../../db/models/Socket")
 
 
 
@@ -75,6 +77,8 @@ module.exports = class Rooms {
         selectedDecksIds: [Rooms.AVAILABLE_DECKS[0].id],
         deck: [],
         morto: []     
+      }, {
+        include: [ {model: RoomPlayerDB, as: "players"} ]
       })
 
 
@@ -100,7 +104,19 @@ module.exports = class Rooms {
     console.debug("Buscando uma sala com nome [%s]", roomName)
 
     return await RoomsDB.findOne({
-      where: { name: roomName }
+      where: { name: roomName },
+      include: [
+        {
+          model: RoomPlayerDB, as: "players", include: {
+            model: User, as: 'playerOwner'
+          }
+        },
+
+        { 
+          model: User 
+        }
+
+      ]
     })
 
     //return rooms.find((room) => room.name === roomName);
@@ -142,8 +158,8 @@ module.exports = class Rooms {
       }
 
       else {
-          console.debug("Adicionando usuário [%s] à sala [%s]", user, room)
-          await room.addPlayer({playerOwner: user}, {include: [User]})
+          console.debug("Adicionando usuário [%s] à sala [%s]", user, room.name)
+          const roomPlayer = await RoomPlayerDB.create({ userId: user.id, room: room })
           // room.players.push(new RoomPlayer({user: user}))        
       }
   
@@ -216,19 +232,34 @@ module.exports = class Rooms {
   
   static emitRoomDataForAll = async (room, io) => {
     console.info("Emitindo roomData para os sockets conectados na sala [%s]", room.name);
-    (await room.getPlayers()).forEach((player) => {
-      Rooms.emitRoomDataForPlayer(room, player, io)      
+    
+    const players = await RoomPlayerDB.findAll({
+      where: {
+        roomId: room.id
+      },
+      include: [{model: User, as: 'playerOwner',
+        include: [{model: SocketDB, as: "sockets"}]
+      }]
     })
+    
+    players.forEach( player => {
+      Rooms.emitRoomDataForPlayer(room, player, io) 
+    })
+
   }
 
   static getRoomDataForUser = async ({ room , user }) => {
     let player = await room.getPlayerForUser(user)
+    
+    await player.getPlayerOwner()
+    
     return Rooms.getRoomDataForPlayer(room , player)
+
   }
 
-  static getRoomDataForPlayer = async ( room , player) => {
+  static getRoomDataForPlayer = (room , player) => {
     return  {
-      myUserName: (await player.getPlayerOwner()).name,
+      myUserName: player.playerOwner.name,
       myHand: player.hand,
       haveIVoted: player.votedCard,
       mySelectedCard: player.mySelectedCard,
@@ -241,19 +272,19 @@ module.exports = class Rooms {
       selectedCardCount: room.selectedCardCount,
       results: room.results,
       victory: room.victory,
-      availableDecks: Room.AVAILABLE_DECKS,
-      availableVictoryConditions: Room.POSSIBLE_VICTORY_CONDITIONS,
+      availableDecks: Rooms.AVAILABLE_DECKS,
+      availableVictoryConditions: Rooms.POSSIBLE_VICTORY_CONDITIONS,
       minimumCardsToStart: room.minimumCardsToStart,
       minimumPlayersToStart: room.minimumPlayersToStart,
       selectedDecksIds: room.selectedDecksIds,
       votingCardsTurn: room.votingCardsTurn,
-      players: (await room.getPlayers({include: User})).map((player) => {
+      players: room.players.map((player) => {
         return {
-          name: player.user.name,
-          id: player.user.id,
+          name: player.playerOwner.name,
+          id: player.playerOwner.id,
           score: player.score,
-          selectedCard: room.state == Room.States.PICKING_PROMPT ? player.selectedCard : !!player.selectedCard,
-          votedCard: room.state.PICKING_PROMPT ? player.votedCard : !!player.votedCard,
+          selectedCard: room.state == RoomsDB.States.PICKING_PROMPT ? player.selectedCard : !!player.selectedCard,
+          votedCard: room.state == RoomsDB.States.PICKING_PROMPT ? player.votedCard : !!player.votedCard,
           isDisconnected: false
           // !player.user.socketIds.length
         }
@@ -285,11 +316,11 @@ module.exports = class Rooms {
   }
 
   static emitRoomDataForPlayer = (room, player, io) => {
-    console.debug("emitindo RoomData para todos os sockets do usuário [%s]", player.user.id)
+    console.debug("emitindo RoomData para todos os sockets do usuário [%s]", (player.playerOwner.id))
     var roomData = Rooms.getRoomDataForPlayer(room, player)
-    player.user.socketIds.forEach((socketId) => {
-      console.debug("emitindo roomData para o socket [%s] do usuário [%s]", socketId, player.user.id)
-      io.to(socketId).emit('roomData', roomData)
+    player.playerOwner.sockets.forEach(socket => {
+      console.debug("emitindo roomData para o socket [%s] do usuário [%s]", socket.socketId, player.playerOwner.id)
+      io.to(socket.socketId).emit('roomData', roomData)
     })
   }
   static setOnGoingGameRoomState = (room) => {

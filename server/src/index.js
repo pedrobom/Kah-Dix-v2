@@ -121,10 +121,12 @@ io.on('connect', async (socket) => {
     await Users.changeUserName(user, name)
 
     var room = await Rooms.getRoom(roomName)
+    console.log(room)
     // Sala ainda não existe.. vamos criar uma :)
     if (!room) {
       console.info("A sala que o usuário tentou entrar [%s] não existe ainda, vamos criar uma para ele", roomName)
       var { error, room } = await Rooms.createRoom({ roomName, hostPlayer: user })
+
       if (error) {
         console.error("Não foi possivel criar a sala! [%s]", error)
         return callback(error)
@@ -142,7 +144,7 @@ io.on('connect', async (socket) => {
     }
 
 
-    console.debug("Sala atual é: %s", room)
+    console.debug("Sala atual é: %s", room.name)
     console.info("Adicionando usuário [%s] para a sala [%s] no socket", user.id, room.name)
     socket.join(room.name);
 
