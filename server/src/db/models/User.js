@@ -12,7 +12,7 @@ class User extends Model {
 
     static associate(models) {
         this.hasOne(models.RoomPlayer, { foreignKey: 'userId', as: 'player' })
-        this.hasOne(models.Room, { foreignKey: 'hostId', as: 'host' })
+        this.belongsTo(models.Room, { foreignKey: 'hostId', as: 'host' })
         this.hasMany(models.Socket, { foreignKey: 'userId', as: 'sockets' })
     }
 

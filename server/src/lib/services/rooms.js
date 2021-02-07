@@ -56,7 +56,7 @@ module.exports = class Rooms {
     const room = await RoomsDB.create(
       {
         name: roomName,
-        host: hostPlayer,
+        hostId: hostPlayer.id,
         players: [{
           userId: hostPlayer.id,
 
@@ -159,7 +159,7 @@ module.exports = class Rooms {
 
       else {
           console.debug("Adicionando usuário [%s] à sala [%s]", user, room.name)
-          const roomPlayer = await RoomPlayerDB.create({ userId: user.id, room: room })
+          const roomPlayer = await RoomPlayerDB.create({ userId: user.id, roomId: room.id })
           // room.players.push(new RoomPlayer({user: user}))        
       }
   
@@ -249,12 +249,10 @@ module.exports = class Rooms {
   }
 
   static getRoomDataForUser = async ({ room , user }) => {
+    console.log("Pegando player do usuário [%s] na sala [%s]", user.id, room.id)
     let player = await room.getPlayerForUser(user)
     
-    await player.getPlayerOwner()
-    
     return Rooms.getRoomDataForPlayer(room , player)
-
   }
 
   static getRoomDataForPlayer = (room , player) => {

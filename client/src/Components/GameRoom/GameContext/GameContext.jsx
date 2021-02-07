@@ -49,8 +49,8 @@ export const GameContextProvider = ({children}) => {
     var myPlayer = useMemo(() => roomData && roomData.players.find((player) => player.id == session.user.id))
     var currentPlayer = useMemo(() => roomData && roomData.players[roomData.currentPlayerIndex])
 
-    var amIPickingPrompt = useMemo(() => roomData && currentPlayer.id == myPlayer.id && roomData.state == Constants.RoomStates.PICKING_PROMPT)
-    var amICurrentPlayer = useMemo(() => roomData && currentPlayer.id == myPlayer.id)
+    var amIPickingPrompt = useMemo(() => roomData && myPlayer && currentPlayer.id == myPlayer.id && roomData.state == Constants.RoomStates.PICKING_PROMPT)
+    var amICurrentPlayer = useMemo(() => roomData && myPlayer && currentPlayer.id == myPlayer.id)
 
     var amIHost = useMemo(() => roomData && (roomData.host.id == session.user.id))
     var myVotedCard = useMemo(() => roomData && roomData.haveIVoted)

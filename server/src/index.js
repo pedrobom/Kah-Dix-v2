@@ -126,6 +126,7 @@ io.on('connect', async (socket) => {
     if (!room) {
       console.info("A sala que o usuário tentou entrar [%s] não existe ainda, vamos criar uma para ele", roomName)
       var { error, room } = await Rooms.createRoom({ roomName, hostPlayer: user })
+      room = await Rooms.getRoom(roomName)
 
       if (error) {
         console.error("Não foi possivel criar a sala! [%s]", error)

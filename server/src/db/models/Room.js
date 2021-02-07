@@ -72,7 +72,7 @@ class Room extends Model {
     static associate(models) {
         this.hasMany(models.RoomPlayer, { foreignKey: 'roomId', as: 'players' })
         this.hasMany(models.Socket, { foreignKey: 'roomId', as: 'socketsIds' })
-        this.belongsTo(models.User, { foreignKey: 'hostId'})
+        this.hasOne(models.User, { foreignKey: 'hostId', as: 'host'})
     }
 
     static States = {
@@ -99,7 +99,8 @@ class Room extends Model {
     getPlayerForUser(user) {
        return this.getPlayers(
             {
-                where: { userId: user.id }
+                where: { userId: user.id },
+                include: [{model: User, as: "playerOwner"}]
             }
         ).then(players => players && players[0])
 
