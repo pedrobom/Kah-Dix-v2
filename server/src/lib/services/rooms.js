@@ -104,16 +104,22 @@ module.exports = class Rooms {
     console.debug("Buscando uma sala com nome [%s]", roomName)
 
     return await RoomsDB.findOne({
-      where: { name: roomName },
+      where: { 
+        name: roomName 
+      },
       include: [
         {
-          model: RoomPlayerDB, as: "players", include: {
-            model: User, as: 'playerOwner'
+          model: RoomPlayerDB, 
+          as: "players", 
+          include: 
+          {
+            model: User, 
+            as: 'playerOwner'
           }
         },
-
         { 
-          model: User 
+          model: User, 
+          as: 'host'
         }
 
       ]
@@ -124,12 +130,13 @@ module.exports = class Rooms {
   
   // Eu pedro mudei o conceito findIndex(user) para indexOf porque dava erro.
   static getRoomOfUser = async (user) => {
-      console.debug("verificando nome da sala do jogador [%s] se ele estiver em uma", user.name)
+      console.debug("retornando a sala do jogador [%s] se ele estiver em uma", user.name)
       const room = await RoomsDB.findOne(
         {
         include: {
             association: 'players',
-            include: {
+            include: 
+            {
                 association: 'playerOwner',
                 where: { id: user.id }
             }
@@ -291,11 +298,12 @@ module.exports = class Rooms {
     }
   }
 
-  static setVictory = (victoryCondition, room) => {
+  static setVictory = async (victoryCondition, room) => {
     console.log("Configurando a condição de vitória como [%s] para a sala [%s]", victoryCondition, room)
     room.victory = victoryCondition
+    await room.save()
   }
-  static toggleDeck = (deckId, room) => {
+  static toggleDeck = async (deckId, room) => {
     console.log("Selecionando estado do deck [%s] para a sala [%s]",deckId, room.id)
     var index = room.selectedDecksIds.indexOf(deckId)
     if (index != -1) {
@@ -305,6 +313,7 @@ module.exports = class Rooms {
       console.log("Adicionando o deck [%s] da sala [%s]",deckId, room.id)
       room.selectedDecksIds.push(deckId)
     }
+    await room.save()
   }
 
   static emitRoomDataForUserSocket = (room, user, socket) => {
@@ -349,7 +358,7 @@ module.exports = class Rooms {
   }
   
   // Selecionar o prompt para um usuário da sala
-  static setPromptForUser = ({user, prompt, room}) => {
+  static setPromptForUser = async ({user, prompt, room}) => {
     console.log("Usuário [%s] escolhendo o prompt [%s] na mesa [%s]", user.id, prompt, room.name)
     
     // ATUALIZAR!!! Não foi implementado
@@ -362,11 +371,11 @@ module.exports = class Rooms {
     room.prompt = prompt
     console.log("Usuário [%s] escolheu o prompt [%s] na mesa [%s], passando para o próximo estado!", user.id, prompt, room.name)
     room.state = Room.States.SELECTING_CARDS
-  
+    await room.save()
   }
   
   // Selecionar uma carta para um determinado usuário em uma sala
-  static setSelectedCardForUser = (user, room, card, callback, io) => {
+  static setSelectedCardForUser = async (user, room, card, callback, io) => {
     console.debug("Selecionar a carta [%s] para o usuário [%s] na sala [%s]", card, user.name, room.name)
   
     // Estado inválido para selecionar cartas!
@@ -376,15 +385,15 @@ module.exports = class Rooms {
     }
   
     
-    if (room.getSelectedCardForUser(user)) {
+    if (await room.getSelectedCardForUser(user)) {
       console.warn("Usuário [%s] tentando selecionar uma carta [%s] após já ter selecionado uma carta!", user, card)
       return callback("Você já selecionou uma carta!")
     }
   
-    room.setSelectedCardForUser(user, card)
+    await room.setSelectedCardForUser(user, card)
     Rooms.sendSystemMessageToRoom({io: io, userRoom: room, message: `${user.name} colocou uma carta na mesa!`})
 
-    let totalSelectedCards = room.getNumberOfSelectedCards()
+    let totalSelectedCards = await room.getNumberOfSelectedCards()
     console.debug("Carta [%s] escolhida para o jogador [%s] na sala [%s], agora temos um total de [%s] carta(s) e [%s] jogador(es)", card, user.id, room.name, totalSelectedCards, room.players.length)
     //
     // Todas as cartas já foram escolhidas? Então devemos passar de estado para VOTING :)
@@ -392,18 +401,20 @@ module.exports = class Rooms {
       console.info("Cartas suficientes escolhidas na sala [%s], vamos passar de estado [%s]!", room.name, room.state)
       room.selectedCardCount = totalSelectedCards
       room.state = Room.States.VOTING
-      room.votingCardsTurn =  room.players.map((player) => {return player.selectedCard})
+      room.votingCardsTurn =  (await room.getPlayers()).map((player) => {return player.selectedCard})
       shuffle(room.votingCardsTurn)
       Rooms.sendSystemMessageToRoom({io: io, userRoom: room, message: `Já podem votar na carta`})
     } else {
       room.selectedCardCount = totalSelectedCards
       console.log('selectedCardCount :', room.selectedCardCount)
     }
+
+    await room.save()
   
   }
 
   // Escolhendo a carta votada para um determinado usuário :)
-  static setVotedCardForUser = ({user, card, room}, io) => {
+  static setVotedCardForUser = async ({user, card, room}, io) => {
     console.debug("Votando na carta [%s] para o usuário [%s] na sala [%s]", card, user.id, room.name)
     
     // Estado inválido para votar em cartas!
@@ -412,32 +423,32 @@ module.exports = class Rooms {
       return ("Você não pode votar em uma carta nesse momento do jogo!")
     }
   
-    if (room.getVotedCardForUser(user)) {
+    if (await room.getVotedCardForUser(user)) {
       console.warn("Usuário [%s] tentando votar uma carta [%s] após já ter votado uma carta!", user, card)
       return ("Você já votou em uma carta!")
     }
 
-    if(card == room.getSelectedCardForUser(user)){
+    if(card == await room.getSelectedCardForUser(user)){
       console.warn("Usuário [%s] tentando votar na própria carta [%s]", user, card)
       return ("Você não pode votar na sua carta!")
     }
 
-    if(room.isCardAvailableForVoting(card)) {
+    if(await room.isCardAvailableForVoting(card)) {
       console.warn("Usuário [%s] tentando votar em uma carta [%s] que não está na votação na sala [%s]!", user, card, room)
       return ("Você está tentando votar em uma carta que não está em votação! Isso pode ser um bug :o ")
     }
   
-    room.setVotedCardForUser(user, card)
+    await room.setVotedCardForUser(user, card)
     
     Rooms.sendSystemMessageToRoom({io: io, userRoom: room, message: `${user.name} votou!`})
-    let totalVotedCards = room.getNumberOfVotedCards()
+    let totalVotedCards = await room.getNumberOfVotedCards()
     console.debug("Carta [%s] votada para o jogador [%s] na sala [%s], agora temos um total de [%s] carta(s) e [%s] jogador(es)", card, user.id, room.name, totalVotedCards, room.players.length)
     //
     // Todas as cartas já foram votadas? Então devemos passar de estado para PICKING_PROMPT :)
     // Com isso devemos também garantir que todos os usuários tem 5 cartas e que temos cartas suficientes, ou acabar o jogo :)
     if (totalVotedCards >= room.players.length - 1) {
     console.info("Cartas suficientes votadas na sala [%s], vamos passar de estado!", room.name)
-      
+  
     console.info("Pontuando jogadores da rodada!")
       // então hora de pontuar :)
       const currentPlayer = room.getCurrentPlayer()
@@ -591,38 +602,39 @@ module.exports = class Rooms {
     });
   }
 
-  static removePlayerFromRoom = (userRoom, user, io) => {
+  static removePlayerFromRoom = async (userRoom, user, io) => {
 
-    const player = userRoom.getPlayerForUser(user)
+    const player = await userRoom.getPlayerForUser(user)
 
+    console.log("checando se o jogador atual está na última posição da fila.")
     if (userRoom.currentPlayerIndex == userRoom.players.length - 1){
+      console.log("jogador atual na última posição. Alterando o currentPlayerIndex para 0.")
       userRoom.currentPlayerIndex = 0
     }    
-    const userIndex = userRoom.players.indexOf(player)
-    userRoom.players.splice(userIndex, 1)
+
+    // TALVEZ PRECISE DESSE SPLICE PRA ATUALIZAR O ROOMDATA DENTRO DA ROOM!!!!
+    // const userIndex = userRoom.players.map(player => player.id).indexOf(player.id)
+    // userRoom.players.splice(userIndex, 1)
+
+    console.log("removendo roomPlayer de id [%d] da sala [%s]", player.id, userRoom.name)
+    await userRoom.removePlayer(player)
     console.log('Agora temos [%s] usuários na sala', userRoom.players.length)
-    if (player.user == userRoom.host){
+    if (user.id == userRoom.hostId){
       if(userRoom.players.length > 1){
-        userRoom.host = userRoom.players[0].user
-        console.log('new host is: [%s]', userRoom.host)
+        userRoom.hostId = userRoom.players[0].userId
+        userRoom.host = userRoom.players[0].playerOwner // só estamos fazendo isso para que roomData receba os dados atualizados na hora de enviar!
+        console.log('new host is: [%s]', userRoom.hostId)
+        await userRoom.save()
         Rooms.sendSystemMessageToRoom({io: io, userRoom, message: `${userRoom.players[0].user.name} está decidindo as configurações de sala.`}) 
       }
     }
     if(userRoom.players.length == 0) {
       console.log('numero de jogadores na sala [%s]', userRoom.players.length)
-      console.log('Vamos deletar a sala [%s]', userRoom)
-      this.removeRoom(userRoom)      
-    }
-
-
-     
+      console.log('Vamos deletar a sala [%s]', userRoom.name)
+      await userRoom.destroy()
+    }     
   }
 
-  static removeRoom = (userRoom) => {
-    let emptyRoomIndex = rooms.indexOf(userRoom)
-    rooms.splice(emptyRoomIndex, 1)
-    console.log('Sala [%s] removida, agora temos [%s] salas',userRoom.name , rooms.length)
-  }
 }
 
 

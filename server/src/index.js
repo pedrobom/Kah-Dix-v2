@@ -33,7 +33,13 @@ io.on('connect', async (socket) => {
   // Essa socket já tem um usuário conectado!
   if (session && session.userId) {
     // user = Users.getUser(session.userId)
-    user = await UserDB.findByPk(session.userId)
+    user = await UserDB.findByPk(session.userId, 
+      {
+        include: 
+        {
+          model: SocketDB, as: 'sockets'
+        }
+    })
 
     if (!user) {
       console.error("Não foi possivel encontrar o usuário do socket [%s], com ID [%s]", socket.id, session.userId)
@@ -41,7 +47,7 @@ io.on('connect', async (socket) => {
       return;
     }
     console.log("Detectei o usuário com id [%s] para a socket com id [%s]", user.id, socket.id)
-    var room = Rooms.getRoomOfUser(user)
+    var room = await Rooms.getRoomOfUser(user)
     if (room) {
       console.log("O usuário [%s] já está na sala [%s], vou mandar os dados da sala para ele!", user.id, room.name)
       console.log('adicionando socket.id [%s] na socketRoom [%s]', socket.id, room.name)
@@ -65,8 +71,6 @@ io.on('connect', async (socket) => {
   // Neste ponto já temos um usuário, entõa vamos associar a socket a ele :)
   // ASSOCIAR SOCKET AO USUÁRIO (para saber quais sockets )
   await Users.linkSocketToUser({ socket: socketDb, user })
-  // Gambiarra para fazer funcionar antes de acabar a implementação de banco kkk
-  user.socketIds = await user.getSockets().map(socket => socket.socketId)
 
   // 
   // SESSÃO DO USUÁRIO - ASSIM QUE CONECTA, ENVIAMOS OS DADOS
@@ -75,6 +79,7 @@ io.on('connect', async (socket) => {
   // Vamos mandar esses dados para o usuário :)
   console.log("Enviando dados de sessão para o usuário [%s]", user)
   let userRoom = await Rooms.getRoomOfUser(user)
+  console.log("sala [%s] encontrada", userRoom ? userRoom.name : "NÃO ENCONTRADA NA QUERY" )
 
   console.log('verificando se existem dados de partida para o usuário')
   let sessionData = {
@@ -87,16 +92,10 @@ io.on('connect', async (socket) => {
   if (userRoom) {
     socket.join(userRoom.name)
     // Um usuário que já tem sala e só tem esse socket é um usuário que havia caido!
-    if (user.socketIds.length == 1) {
-      // Gambiarra antes de resolver o banco de daods kkk
-      userRoom.players.forEach((player) => {
-        if (player.user.id == user.id) {
-          player.user = user
-        }
-      })
+    if (user.sockets.length == 1) {
       console.debug("Enviando dados da sala para todos os usuários agora que um usuário voltou :)")
-      Rooms.emitRoomDataForAll(room, io)
-      Rooms.sendSystemMessageToRoom({ userRoom: room, message: `${user.name} tá na área de novo :)`, io })
+      Rooms.emitRoomDataForAll(userRoom, io)
+      Rooms.sendSystemMessageToRoom({ userRoom: userRoom, message: `${user.name} tá na área de novo :)`, io })
     }
   }
 
@@ -149,6 +148,8 @@ io.on('connect', async (socket) => {
     console.info("Adicionando usuário [%s] para a sala [%s] no socket", user.id, room.name)
     socket.join(room.name);
 
+    await room.reload()
+
     Rooms.sendSystemMessageToRoom({ io, userRoom: room, message: `${user.name} tá na área!` })
     await Rooms.emitRoomDataForAll(room, io)
 
@@ -161,44 +162,44 @@ io.on('connect', async (socket) => {
   // MÉTODO GAMESTART - USUÁRIO COMEÇANDO UM JOGO - PRECISA SER HOST
   //
 
-  socket.on('changeDeck', (deck) => {
-    let userRoom = Rooms.getRoomOfUser(user)
+  socket.on('changeDeck', async (deck) => {
+    let userRoom = await Rooms.getRoomOfUser(user)
     if (!userRoom) {
       console.warn("Usuário [%s] tentando escolher deck sem estar em um jogo!", user.id)
       return callback("Você precisa estar em um jogo para escolher um deck!")
     }
-    if (userRoom.host.id != user.id) {
+    if (userRoom.hostId != user.id) {
       console.warn("Usuário [%s] tentando escolher deck sem ser o host!", user.id)
       return callback("Você precisa estar ser o host para escolher um deck!")
 
     }
     
-    Rooms.toggleDeck(deck, userRoom)
+    await Rooms.toggleDeck(deck, userRoom)
     Rooms.emitRoomDataForAll(userRoom, io)
 
   })
 
-  socket.on('victoryChange', victoryCondition => {
-    let userRoom = Rooms.getRoomOfUser(user)
+  socket.on('victoryChange', async victoryCondition => {
+    let userRoom = await Rooms.getRoomOfUser(user)
     if (!userRoom) {
       console.warn("Usuário [%s] tentando escolher condição de vitória sem estar em um jogo!", user.id)
       return callback("Você precisa estar em um jogo para escolher a condição de vitória!")
     }
-    if (userRoom.host.id != user.id) {
+    if (userRoom.hostId != user.id) {
       console.warn("Usuário [%s] tentando escolher a condição de vitória sem ser o host!", user.id)
       return callback("Você precisa estar ser o host para escolher a condição de vitória!")
     }
-    Rooms.setVictory(victoryCondition, userRoom)
+    await Rooms.setVictory(victoryCondition, userRoom)
     Rooms.emitRoomDataForAll(userRoom, io)
   })
 
-  socket.on('gameStart', (callback) => {
-    let userRoom = Rooms.getRoomOfUser(user)
+  socket.on('gameStart', async (callback) => {
+    let userRoom = await Rooms.getRoomOfUser(user)
     if (!userRoom) {
       console.warn("Usuário [%s] tentando começar o jogo sem estar em um jogo!", user.id)
       return callback("Você precisa estar em um jogo para escolher uma carta!")
     }
-    if (userRoom.host.id != user.id) {
+    if (userRoom.hostId != user.id) {
       console.warn("Usuário [%s] tentando começar o jogo sem ser o host!", user.id)
       return callback("Você precisa ser o host para começar o jogo!")
 
@@ -221,9 +222,9 @@ io.on('connect', async (socket) => {
   //
 
   // Quando o jogador escolhe a prompt em PICKING_PROMPT, é isso que acontece :)
-  socket.on('pickPrompt', (prompt, callback) => {
+  socket.on('pickPrompt', async (prompt, callback) => {
     // O jogador está em um jogo?
-    let userRoom = Rooms.getRoomOfUser(user)
+    let userRoom = await Rooms.getRoomOfUser(user)
     if (!userRoom) {
       console.warn("Usuário [%s] tentando escolher o prompt [%s] sem estar em um jogo!", user.id, prompt)
       return callback("Você precisa estar em um jogo para escolher o prompt!")
@@ -234,7 +235,7 @@ io.on('connect', async (socket) => {
       return callback("Não é a sua vez de escolher uma frase!")
     }
 
-    Rooms.setPromptForUser({ user, room: userRoom, prompt })
+    await Rooms.setPromptForUser({ user, room: userRoom, prompt })
     // if (error) {
     //   console.error("Não foi possivel escolher a carta [%s] do usuário [%s] na sala [%s]: [%s]", card, user.id,  userRoom.name, error)
     //   return callback(error)
@@ -252,9 +253,9 @@ io.on('connect', async (socket) => {
   //
 
   // Quando o jogador seleciona uma carta na fase SELECTING_CARDS, é isso que acontece :)
-  socket.on('selectCard', (card, callback) => {
+  socket.on('selectCard', async  (card, callback) => {
     // O jogador está em um jogo?
-    let userRoom = Rooms.getRoomOfUser(user)
+    let userRoom = await Rooms.getRoomOfUser(user)
     if (!userRoom) {
       console.warn("Usuário [%s] tentando selecionar uma carta [%s] sem estar em um jogo!", user.id, card)
       return callback("Você precisa estar em um jogo para escolher uma carta!")
@@ -336,34 +337,29 @@ io.on('connect', async (socket) => {
     console.log("Usuário [%s] com socket [%s] desconectou do servidor", user.id, socket.id)
     // await Users.removeSocketFromUser({ user, socket: socketDb })
     await socketDb.destroy()
-    // Gambiarra para fazer funcionar antes de acabar a implementacao do banco kkk
-    user.socketIds.splice(user.socketIds.indexOf(socket.id), 1)
 
-    userRoom = Rooms.getRoomOfUser(user)
+    userRoom = await Rooms.getRoomOfUser(user)
+    const userSockets = await user.getSockets()
 
     // SE O USUARIO ESTIVER EM UMA SALA
-    if (userRoom !== undefined) {
+    if (userRoom) {
       // SE O USUARIO ESTIVER NO MEIO DO JOGO
       
-      if (user.socketIds.length == 0 && userRoom.state !== "WAITING_FOR_PLAYERS") {
+      if (userSockets.length == 0 && userRoom.state !== "WAITING_FOR_PLAYERS") {
         Rooms.sendSystemMessageToRoom({ io, message: `Aí, se liga, ${user.name} caiu.`, userRoom })
         Rooms.sendSystemMessageToRoom({ io, message: `Bora marcar um 10 (5min) e se não voltar a gente continua?`, userRoom })
         Rooms.emitRoomDataForAll(userRoom, io)
       }
       // SE O USUARIO ESTIVER NO ROOMLOBBY
-      else if (user.socketIds.length == 0 && userRoom.state == "WAITING_FOR_PLAYERS") {
+      else if (userSockets.length == 0 && userRoom.state == "WAITING_FOR_PLAYERS") {
         Rooms.removePlayerFromRoom(userRoom, user, io)
         Rooms.sendSystemMessageToRoom({ io, message: `${user.name} meteu o pé.`, userRoom })
         Rooms.emitRoomDataForAll(userRoom, io)
       }
-
-      // SE O USUARIO ESTIVER NUMA PARTIDA ONDE SÓ TEM ELE MESMO
-      else if (user.socketIds.length == 0 && userRoom.state !== "WAITING_FOR_PLAYERS" && userRoom.players.length == 1) {
-        Rooms.removePlayerFromRoom(userRoom, user)
-        Rooms.removeRoom(userRoom)
-      }
-
       // FALTA CRIAR ELIMINAR SALA ONDE TENHA JOGADORES MAS TODOS ESTÃO SEM SOCKETS   
+      else {
+        console.log("CONDIÇÃO AINDA NÃO IMPLEMENTADA!")
+      }
     }
 
     // DESCOBRIR SE É POSSÍVEL RECONECTAR

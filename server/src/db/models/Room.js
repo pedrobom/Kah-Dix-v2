@@ -72,7 +72,7 @@ class Room extends Model {
     static associate(models) {
         this.hasMany(models.RoomPlayer, { foreignKey: 'roomId', as: 'players' })
         this.hasMany(models.Socket, { foreignKey: 'roomId', as: 'socketsIds' })
-        this.hasOne(models.User, { foreignKey: 'hostId', as: 'host'})
+        this.belongsTo(models.User, { foreignKey: 'hostId', as: 'host' })
     }
 
     static States = {
@@ -99,8 +99,16 @@ class Room extends Model {
     getPlayerForUser(user) {
        return this.getPlayers(
             {
-                where: { userId: user.id },
-                include: [{model: User, as: "playerOwner"}]
+                where: { 
+                    userId: user.id 
+                },
+                include: 
+                [
+                    {
+                        model: User, 
+                        as: "playerOwner"
+                    }
+                ]
             }
         ).then(players => players && players[0])
 
@@ -118,57 +126,59 @@ class Room extends Model {
     }
 
     // Retorna a carta seleciona para o usuário 
-    getSelectedCardForUser(user) {
-        let player = this.getPlayerForUser(user)
+    async getSelectedCardForUser(user) {
+        let player = await this.getPlayerForUser(user)
         return player && player.selectedCard
     }
 
     // Seta a carta para o usuário 
-    setSelectedCardForUser(user, card) {
-        let player = this.getPlayerForUser(user)
+    async setSelectedCardForUser(user, card) {
+        let player = await this.getPlayerForUser(user)
         if (player) {
             player.selectedCard = card
             player.mySelectedCard = card
             player.hand.splice(player.hand.indexOf(card), 1)
             this.morto.push(card)
             console.log('setSelectedCardforUser = card', card)
+            await player.save()
         }
     }
 
     // Retorna o total de cartas selecionadas na sala
-    getNumberOfSelectedCards() {
+    async getNumberOfSelectedCards() {
         var total = 0
-        this.players.forEach((player) => {
+        (await this.getPlayers()).forEach((player) => {
             if (player.selectedCard) {
-                total+=1
+                total += 1
             }
         })
         return total
     }
 
     // Retorna a carta votada para o usuário 
-    getVotedCardForUser(user) {
-        let player = this.getPlayerForUser(user)
+    async getVotedCardForUser(user) {
+        let player = await this.getPlayerForUser(user)
         return player && player.votedCard
     }
 
     // Vota na carta para o usuário 
-    setVotedCardForUser(user, card) {
-        let player = this.getPlayerForUser(user)
+    async setVotedCardForUser(user, card) {
+        let player = await this.getPlayerForUser(user)
         if (player) {
             player.votedCard = card
+            player.save()
         }
     }
     
     // A carta dada está disponível para votação?
-    isCardAvailableForVoting(card) {
-        return this.players.find((player) => player.selectedCard == card).length > 0
+    async isCardAvailableForVoting(card) {
+        return (await this.getPlayers()).find((player) => player.selectedCard == card).length > 0
     }
 
     // Retorna o total de cartas votadas na sala
-    getNumberOfVotedCards() {
+    async getNumberOfVotedCards() {
         var total = 0
-        this.players.forEach((player) => {
+        (await this.getPlayers()).forEach((player) => {
             if (player.votedCard) {
                 total+=1
             }
