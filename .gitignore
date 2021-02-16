@@ -2,3 +2,4 @@
 .env
 .envLocal
 .env_docker-compose_server
+*.log

@@ -1,3 +1,4 @@
+require('./setup-logging')
 
 const { io, app, server } = require('./ioserver')
 
